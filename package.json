@@ -1,0 +1,50 @@
+{
+	"name": "sun",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"prettier-all": "prettier --write .",
+		"dev": "cross-env NODE_ENV=development webpack server --config ./config/webpack-lib.dev.config.js",
+		"prod": "cross-env NODE_ENV=development webpack --config ./config/webpack-lib.prod.config.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ctime-zliang/sun.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/ctime-zliang/sun/issues"
+	},
+	"homepage": "https://github.com/ctime-zliang/sun#readme",
+	"devDependencies": {
+		"@babel/core": "^7.13.10",
+		"@babel/plugin-proposal-decorators": "^7.14.2",
+		"@babel/plugin-transform-modules-commonjs": "^7.14.0",
+		"@babel/plugin-transform-runtime": "^7.13.10",
+		"@babel/preset-env": "^7.13.10",
+		"@babel/preset-typescript": "^7.13.0",
+		"@types/node": "^15.6.1",
+		"@types/webpack": "^5.28.0",
+		"babel-loader": "^8.2.2",
+		"babel-plugin-import": "^1.13.3",
+		"babel-plugin-transform-class-properties": "^6.24.1",
+		"babel-polyfill": "^6.26.0",
+		"core-js": "^2.6.12",
+		"cross-env": "^7.0.3",
+		"esbuild-loader": "^2.13.1",
+		"happypack": "^5.0.0",
+		"mini-css-extract-plugin": "^1.6.0",
+		"prettier": "^2.2.1",
+		"ts-loader": "^8.0.17",
+		"ts-node": "^10.0.0",
+		"typescript": "^4.2.2",
+		"webpack": "^5.44.0",
+		"webpack-cli": "^4.7.2",
+		"webpack-dev-server": "^3.11.2",
+		"webpack-merge": "^5.8.0"
+	}
+}
