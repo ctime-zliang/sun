@@ -3,12 +3,16 @@ const webpack = require('webpack')
 const HappyPack = require('happypack')
 const OS = require('os')
 const { ESBuildPlugin } = require('esbuild-loader')
-const rules = require('./webpack.rules')
+const rules = require('./webpack-test.rules')
+const utils = require('./utils')
 
 // const HappyThreadPoolCase = HappyPack.ThreadPool({ size: OS.cpus().length })
 const webpackConfigBase = {
 	resolve: {
-		extensions: ['.js', '.ts'],
+		extensions: ['.js', '.ts', '.tsx', '.jsx'],
+		alias: {
+			'@': utils.resolveDirectory('./src/'),
+		},
 	},
 	module: {
 		rules: rules(),

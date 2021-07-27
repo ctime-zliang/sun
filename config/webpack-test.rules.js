@@ -31,8 +31,8 @@ const jsxEsbuildLoader = {
 	options: {
 		loader: 'jsx',
 		target: 'es2015',
-		jsxFactory: 'React.createElement',
-		jsxFragment: 'React.Fragment',
+		jsxFactory: 'Sun.createElement',
+		jsxFragment: 'Sun.Fragment',
 	},
 }
 const tsxEsbuildLoader = {
@@ -42,8 +42,8 @@ const tsxEsbuildLoader = {
 	options: {
 		loader: 'tsx',
 		target: 'es2015',
-		jsxFactory: 'React.createElement',
-		jsxFragment: 'React.Fragment',
+		jsxFactory: 'Sun.createElement',
+		jsxFragment: 'Sun.Fragment',
 	},
 }
 
