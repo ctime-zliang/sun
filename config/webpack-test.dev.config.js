@@ -10,7 +10,7 @@ const webpackConfig = {
 	// target: 'web',
 	mode: 'development',
 	entry: {
-		main: utils.resolveDirectory(`./tests/index.jsx`)
+		main: utils.resolveDirectory(`./tests/index.jsx`),
 	},
 	output: {
 		path: utils.resolveDirectory(`./build-test-dev`),
@@ -24,7 +24,7 @@ const webpackConfig = {
 			template: utils.resolveDirectory(`./tests/template/index.ejs`),
 			inject: true,
 		}),
-	]
+	],
 }
 
 module.exports = merge(webpackConfig, webpackLibBaseConfig)

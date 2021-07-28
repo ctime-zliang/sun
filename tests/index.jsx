@@ -1,20 +1,34 @@
-/* 
-	https://jelly.jd.com/article/60aceb6b27393b0169c85231
-	https://pomb.us/build-your-own-react/
- */
-
 import Sun from '@/'
 import { View } from './component/view'
 
 const App = (
-	<div style="color: red;">
-		<span>666</span>
+	<div id="divId" style="color: red;">
+		<span id="spanId">Span Element</span>
+		<strong>Strong Element</strong>
 	</div>
 )
-
+/* 
+const App = Sun.createElement(
+	'div',
+	{
+		id: 'divId',
+		style: 'color: red;'
+	},
+	Sun.createElement(
+		'span',
+		{
+			id: 'spanId'
+		},
+		'Span Element'
+	),
+	Sun.createElement(
+		'strong',
+		null,
+		'Strong Element'
+	)
+)
+ */
 Sun.render(App, document.querySelector(`#app`))
-
-
 
 // const taskQueue = [
 // 	() => {
