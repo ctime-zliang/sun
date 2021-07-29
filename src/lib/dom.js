@@ -48,7 +48,6 @@ export function updateDOM(dom, oldProps, newProps) {
 		.filter(isProperty)
 		.filter(isNewly(oldProps, newProps))
 		.forEach((item, index) => {
-			console.log(item, newProps[item])
 			dom[item] = newProps[item]
 		})
 	/*

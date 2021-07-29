@@ -13,7 +13,7 @@ export function workLoop(deadline) {
 		 */
 		RT_PROFILE.nextWorkUnitFiber = performUnitWork(RT_PROFILE.nextWorkUnitFiber)
 		shouldYield = deadline.timeRemaining() < 1
-		// console.log(`当前帧的剩余时间: ${deadline.timeRemaining()}ms`)
+		console.log(`当前帧的剩余时间: ${deadline.timeRemaining()}ms`)
 	}
 
 	/* 
