@@ -17,6 +17,8 @@ export function generateStructFiber(args) {
 		sibling: null,
 		alternate: null,
 		effectTag: null,
+		/* hooks */
+		hooks: [],
 	}
 	return {
 		...defaults,
@@ -43,6 +45,10 @@ export function isProperty(key) {
 export function isSystemEvent(key) {
 	return key[0] === 'o' && key[1] === 'n'
 	// return key.startsWith('on')
+}
+
+export function isFunctionComponent(fiber) {
+	return fiber && fiber.type && fiber.type instanceof Function
 }
 
 export function syncBlock(delay = 1000) {

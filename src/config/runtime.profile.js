@@ -1,4 +1,10 @@
 export const RT_PROFILE = {
-	deletions: [],
+	workInProgressRootFiber: null,
+	workInProgressFiber: null,
+	nextWorkUnitFiber: null,
 	currentRoot: null,
+	/* ... */
+	deletions: [],
+	/* ... */
+	hookIndex: 0,
 }

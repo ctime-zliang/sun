@@ -1,20 +1,27 @@
-import Sun from '@/'
+import Sun, { useState } from '@/'
 import { View } from './component/view'
 
-const App = (
-	<div 
-		id="divId"
-		style="color: red; min-height: 10px; background: gray;"
-		onClick={() => {alert(1)}}
-	>
-		<span id="spanId"></span>
-		<em></em>
-		<strong id="strongId"></strong>
-	</div>
-)
+const App = () => {
+	const [state, setState] = useState(1)
+	const onInput = e => {
+		console.log(e.target.value)
+	}
+	const btnAction = () => {
+		setState(state => {
+			return state + 1
+		})
+	}
+	// const state = 1
+	return (
+		<div id="divId">
+			<input onInput={onInput} value={state} />
+			<button onClick={btnAction}>Btn</button>
+		</div>
+	)
+}
 
-console.log(App)
-Sun.render(App, document.querySelector(`#app`))
+console.log(<App />)
+Sun.render(<App />, document.querySelector(`#app`))
 
 // const taskQueue = [
 // 	() => {

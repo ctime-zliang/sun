@@ -15,7 +15,7 @@ export function reconcileChilren(workInProgressFiber, children) {
 		const sameType = oldFiber && element && element.type == oldFiber.type
 		if (sameType) {
 			newChildFiber = generateStructFiber({
-				dom: null,
+				dom: oldFiber.dom,
 				type: element.type,
 				props: element.props,
 				parent: workInProgressFiber,
@@ -57,6 +57,6 @@ export function reconcileChilren(workInProgressFiber, children) {
 		}
 		prevSiblingFiber = newChildFiber
 	}
-	console.log(`当前的 Fiber ===>`, workInProgressFiber)
+	// console.log(`当前的 Fiber ===>`, workInProgressFiber)
 	return workInProgressFiber
 }

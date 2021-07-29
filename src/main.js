@@ -1,6 +1,6 @@
 import { NODE_TYPE } from './config/config'
 import { RT_PROFILE } from './config/runtime.profile'
-import { initWorkLoop } from './lib/scheduler'
+import { workLoop } from './lib/scheduler'
 import { generateStructFiber, generateStructVDOM } from './utils/utils'
 
 /**
@@ -31,8 +31,34 @@ export function createTextElement(text) {
 	})
 }
 
+export function useState(initValue) {
+	const alternate = RT_PROFILE.workInProgressFiber.alternate
+	const oldHook = alternate && alternate.hooks && alternate.hooks[RT_PROFILE.hookIndex]
+	const actions = oldHook ? oldHook.queue : []
+	const hook = {
+		state: oldHook ? oldHook.state : initValue,
+		queue: [],
+	}
+	actions.forEach((item, index) => {
+		hook.state = item(hook.state)
+	})
+	const setState = action => {
+		hook.queue.push(action)
+		RT_PROFILE.nextWorkUnitFiber = RT_PROFILE.workInProgressRootFiber = generateStructFiber({
+			dom: RT_PROFILE.currentRoot.dom,
+			type: RT_PROFILE.currentRoot.dom.nodeName.toLowerCase(),
+			props: RT_PROFILE.currentRoot.props,
+			alternate: RT_PROFILE.currentRoot,
+		})
+		RT_PROFILE.deletions = []
+	}
+	RT_PROFILE.workInProgressFiber.hooks.push(hook)
+	RT_PROFILE.hookIndex++
+	return [hook.state, setState]
+}
+
 export function render(element, container) {
-	const workInProgressFiberRoot = generateStructFiber({
+	RT_PROFILE.nextWorkUnitFiber = RT_PROFILE.workInProgressRootFiber = generateStructFiber({
 		dom: container,
 		type: container.nodeName.toLowerCase(),
 		props: {
@@ -41,7 +67,6 @@ export function render(element, container) {
 		alternate: RT_PROFILE.currentRoot,
 	})
 	RT_PROFILE.deletions.length = 0
-	console.log(`Root.Fiber 初始化 ===> `, workInProgressFiberRoot)
-	const workLoop = initWorkLoop(workInProgressFiberRoot)
+	console.log(`Root.Fiber 初始化 ===> `, RT_PROFILE.workInProgressRootFiber)
 	window.requestIdleCallback(workLoop)
 }

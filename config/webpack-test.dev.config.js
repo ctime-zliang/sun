@@ -10,7 +10,7 @@ const webpackConfig = {
 	// target: 'web',
 	mode: 'development',
 	entry: {
-		main: utils.resolveDirectory(`./tests/index.jsx`),
+		main: utils.resolveDirectory(`./app/index.jsx`),
 	},
 	output: {
 		path: utils.resolveDirectory(`./build-test-dev`),
@@ -21,7 +21,7 @@ const webpackConfig = {
 	plugins: [
 		new HtmlWebpackPlugin({
 			filename: `./index.html`,
-			template: utils.resolveDirectory(`./tests/template/index.ejs`),
+			template: utils.resolveDirectory(`./app/template/index.ejs`),
 			inject: true,
 		}),
 	],

@@ -26,11 +26,11 @@ export function updateDOM(dom, oldProps, newProps) {
 	Object.keys(oldProps)
 		.filter(isSystemEvent)
 		.filter((item, index) => {
-			return !(item in newProps) || isNewly(prevProps, newProps)(item)
+			return !(item in newProps) || isNewly(oldProps, newProps)(item)
 		})
 		.forEach((item, index) => {
 			const eventType = item.toLowerCase().substring(2)
-			dom.removeEventListener(eventType, prevProps[item])
+			dom.removeEventListener(eventType, oldProps[item])
 		})
 	/* 
 		删除旧属性
@@ -48,6 +48,7 @@ export function updateDOM(dom, oldProps, newProps) {
 		.filter(isProperty)
 		.filter(isNewly(oldProps, newProps))
 		.forEach((item, index) => {
+			console.log(item, newProps[item])
 			dom[item] = newProps[item]
 		})
 	/*
