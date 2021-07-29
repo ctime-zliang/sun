@@ -2,32 +2,18 @@ import Sun from '@/'
 import { View } from './component/view'
 
 const App = (
-	<div id="divId" style="color: red;">
-		<span id="spanId">Span Element</span>
-		<strong>Strong Element</strong>
+	<div 
+		id="divId"
+		style="color: red; min-height: 10px; background: gray;"
+		onClick={() => {alert(1)}}
+	>
+		<span id="spanId"></span>
+		<em></em>
+		<strong id="strongId"></strong>
 	</div>
 )
-/* 
-const App = Sun.createElement(
-	'div',
-	{
-		id: 'divId',
-		style: 'color: red;'
-	},
-	Sun.createElement(
-		'span',
-		{
-			id: 'spanId'
-		},
-		'Span Element'
-	),
-	Sun.createElement(
-		'strong',
-		null,
-		'Strong Element'
-	)
-)
- */
+
+console.log(App)
 Sun.render(App, document.querySelector(`#app`))
 
 // const taskQueue = [

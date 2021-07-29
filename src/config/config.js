@@ -1,3 +1,9 @@
 export const NODE_TYPE = {
 	TEXT_NODE: 'TEXT_NODE',
 }
+
+export const RECONCILE_TYPE = {
+	UPDATE: 'UPDATE',
+	PLACEMENT: 'PLACEMENT',
+	DELETION: 'DELETION',
+}
