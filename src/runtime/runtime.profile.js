@@ -1,4 +1,4 @@
-export const RT_PROFILE = {
+export const __RUNTIME_PROFILE___ = {
 	workInProgressRootFiber: null,
 	workInProgressFiber: null,
 	nextWorkUnitFiber: null,

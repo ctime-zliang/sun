@@ -1,38 +1,40 @@
-import { RT_PROFILE } from '../config/runtime.profile'
+import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
 import { RECONCILE_TYPE } from '../config/config'
 import { updateDOM } from './dom'
 import { updateFunctionComponent, updateHostComponent } from './component'
 import { isFunctionComponent } from '../utils/utils'
 
 export function workLoop(deadline) {
-	// console.log(`执行 rIC, 检测当前帧的剩余时间: ${deadline.timeRemaining()}ms`)
 	let shouldYield = false
-	while (RT_PROFILE.nextWorkUnitFiber && !shouldYield) {
+	while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
 		/*
 			 处理"一层" fiber 节点
 		 */
-		RT_PROFILE.nextWorkUnitFiber = performUnitWork(RT_PROFILE.nextWorkUnitFiber)
+		__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber)
 		shouldYield = deadline.timeRemaining() < 1
-		console.log(`当前帧的剩余时间: ${deadline.timeRemaining()}ms`)
 	}
 
 	/* 
-		RT_PROFILE.nextWorkUnitFiber 不存在时
+		__RUNTIME_PROFILE___.nextWorkUnitFiber 不存在时
 			即 整个 fiber 树已经构建并遍历完成
 			即可以开始提交并更新 DOM
 	 */
-	if (!RT_PROFILE.nextWorkUnitFiber && RT_PROFILE.workInProgressRootFiber) {
+	// if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.workInProgressRootFiber) {
+	if (!__RUNTIME_PROFILE___.nextWorkUnitFiber) {
 		console.time(`Commit Work`)
-		commitWork(RT_PROFILE.workInProgressRootFiber.child)
-		RT_PROFILE.currentRoot = RT_PROFILE.workInProgressRootFiber
-		RT_PROFILE.workInProgressRootFiber = null
+		commitWork(__RUNTIME_PROFILE___.workInProgressRootFiber.child)
+		__RUNTIME_PROFILE___.currentRoot = __RUNTIME_PROFILE___.workInProgressRootFiber
+		// __RUNTIME_PROFILE___.workInProgressRootFiber = null
 		console.timeEnd(`Commit Work`)
-		console.log('commitWork ===> ', RT_PROFILE.currentRoot)
+		console.log('commitWork ===> ', __RUNTIME_PROFILE___.currentRoot)
 	}
 	window.requestIdleCallback(workLoop)
 }
 
 export function performUnitWork(fiber) {
+	/*
+		处理顶层节点对应的 fiber 时, 一般视作非函数节点执行 
+	 */
 	if (isFunctionComponent(fiber)) {
 		updateFunctionComponent(fiber)
 	} else {
@@ -40,7 +42,6 @@ export function performUnitWork(fiber) {
 	}
 
 	/*
-		只有父 fiber 节点才有可能存在 child fiber 节点
 		当存在 child fiber 节点时, 即在下一次遍历时从该 child fiber 节点开始
 	 */
 	if (fiber.child) {

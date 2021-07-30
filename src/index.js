@@ -9,7 +9,8 @@
     https://jelly.jd.com/article/5fd0aaef46e72e0141248ac4
  */
 
-import { createElement, createTextElement, useState as useStateHook, render } from './main'
+import { createElement, createTextElement, render } from './main'
+import { useState as useStateHook } from './hooks/use.state'
 
 const Sun = Object.create(null)
 

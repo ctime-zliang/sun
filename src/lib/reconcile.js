@@ -1,15 +1,17 @@
 import { RECONCILE_TYPE } from '../config/config'
-import { RT_PROFILE } from '../config/runtime.profile'
+import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
 import { generateStructFiber } from '../utils/utils'
 
-export function reconcileChilren(workInProgressFiber, children) {
-	let oldFiber = workInProgressFiber.alternate && workInProgressFiber.alternate.child
+export function reconcileChilren(wipFiber, children = null) {
+	children = children || wipFiber.props.children
+	let oldFiber = wipFiber.alternate && wipFiber.alternate.child
 	let prevSiblingFiber = null
 
 	/* 
         处理该层 fiber 树的所有子节点
      */
-	for (let i = 0; i < children.length || oldFiber != null; i++) {
+	let i = 0;
+	for (; i < children.length || oldFiber != null; i++) {
 		let newChildFiber = null
 		const element = children[i]
 		const sameType = oldFiber && element && element.type == oldFiber.type
@@ -18,7 +20,7 @@ export function reconcileChilren(workInProgressFiber, children) {
 				dom: oldFiber.dom,
 				type: element.type,
 				props: element.props,
-				parent: workInProgressFiber,
+				parent: wipFiber,
 				alternate: oldFiber,
 				effectTag: RECONCILE_TYPE.UPDATE,
 			})
@@ -28,17 +30,17 @@ export function reconcileChilren(workInProgressFiber, children) {
 				dom: null,
 				type: element.type,
 				props: element.props,
-				parent: workInProgressFiber,
+				parent: wipFiber,
 				alternate: null,
 				effectTag: RECONCILE_TYPE.PLACEMENT,
 			})
 		}
-		if (oldFiber && !sameType) {
+		if (!sameType && oldFiber) {
 			oldFiber.effectTag = RECONCILE_TYPE.DELETION
 			/* 
                 记录需要删除的 fiber
              */
-			RT_PROFILE.deletions.push(oldFiber)
+			__RUNTIME_PROFILE___.deletions.push(oldFiber)
 		}
 		if (oldFiber) {
 			oldFiber = oldFiber.sibling
@@ -46,17 +48,17 @@ export function reconcileChilren(workInProgressFiber, children) {
 
 		if (i === 0) {
 			/* 
-				将本次执行 work 时传入的"根" fiber 节点与其第一个 child fiber 节点"串联"
+				将第一个 child fiber 节点作为本次执行 reconcile 时所对应的 fiber 节点的子节点
 			 */
-			workInProgressFiber.child = newChildFiber
+			wipFiber.child = newChildFiber
 		} else {
 			/* 
-				将 fiber  兄弟节点"串联"
+				将 fiber 兄弟节点"串联"
 			 */
 			prevSiblingFiber.sibling = newChildFiber
 		}
 		prevSiblingFiber = newChildFiber
 	}
-	// console.log(`当前的 Fiber ===>`, workInProgressFiber)
-	return workInProgressFiber
+	console.log(`当前的 Fiber ===>`, wipFiber)
+	// return wipFiber
 }

@@ -1,5 +1,5 @@
 import { NODE_TYPE } from './config/config'
-import { RT_PROFILE } from './config/runtime.profile'
+import { __RUNTIME_PROFILE___ } from './runtime/runtime.profile'
 import { workLoop } from './lib/scheduler'
 import { generateStructFiber, generateStructVDOM } from './utils/utils'
 
@@ -13,7 +13,7 @@ import { generateStructFiber, generateStructVDOM } from './utils/utils'
 export function createElement(type, props, ...children) {
 	return generateStructVDOM(type, {
 		...props,
-		children: children.map((child, index) => {
+		children: children.map((child) => {
 			return typeof child === 'object' ? child : createTextElement(child)
 		}),
 	})
@@ -31,42 +31,21 @@ export function createTextElement(text) {
 	})
 }
 
-export function useState(initValue) {
-	const alternate = RT_PROFILE.workInProgressFiber.alternate
-	const oldHook = alternate && alternate.hooks && alternate.hooks[RT_PROFILE.hookIndex]
-	const actions = oldHook ? oldHook.queue : []
-	const hook = {
-		state: oldHook ? oldHook.state : initValue,
-		queue: [],
-	}
-	actions.forEach((item, index) => {
-		hook.state = item(hook.state)
-	})
-	const setState = action => {
-		hook.queue.push(action)
-		RT_PROFILE.nextWorkUnitFiber = RT_PROFILE.workInProgressRootFiber = generateStructFiber({
-			dom: RT_PROFILE.currentRoot.dom,
-			type: RT_PROFILE.currentRoot.dom.nodeName.toLowerCase(),
-			props: RT_PROFILE.currentRoot.props,
-			alternate: RT_PROFILE.currentRoot,
-		})
-		RT_PROFILE.deletions = []
-	}
-	RT_PROFILE.workInProgressFiber.hooks.push(hook)
-	RT_PROFILE.hookIndex++
-	return [hook.state, setState]
-}
-
 export function render(element, container) {
-	RT_PROFILE.nextWorkUnitFiber = RT_PROFILE.workInProgressRootFiber = generateStructFiber({
+	/*
+		创建根节点(容器节点)的 fiber 对象
+			此时的 child 不存在, 由后续处理时写入
+	 */
+	__RUNTIME_PROFILE___.workInProgressRootFiber = generateStructFiber({
 		dom: container,
 		type: container.nodeName.toLowerCase(),
 		props: {
 			children: [element],
 		},
-		alternate: RT_PROFILE.currentRoot,
+		alternate: __RUNTIME_PROFILE___.currentRoot,
 	})
-	RT_PROFILE.deletions.length = 0
-	console.log(`Root.Fiber 初始化 ===> `, RT_PROFILE.workInProgressRootFiber)
+	__RUNTIME_PROFILE___.nextWorkUnitFiber = __RUNTIME_PROFILE___.workInProgressRootFiber
+	__RUNTIME_PROFILE___.deletions = []
+	console.log(`Root.Fiber 初始化 ===> `, __RUNTIME_PROFILE___.workInProgressRootFiber)
 	window.requestIdleCallback(workLoop)
 }
