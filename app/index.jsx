@@ -8,21 +8,12 @@ const App = () => {
 			return state + 1
 		})
 	}
-	const [count2, setCount2] = useState(0)
-	const setCountAction2 = () => {
-		setCount2(state => {
-			return state + 1
-		})
-	}
 	return (
 		<main>
+			<View />
 			<div class="row1">
-				<button onClick={setCountAction1}>Button</button>
+				<button onClick={setCountAction1}>Button Root</button>
 				<strong>{count1}</strong>
-			</div>
-			<div class="row2">
-				<button onClick={setCountAction2}>Button</button>
-				<strong>{count2}</strong>
 			</div>
 		</main>
 	)
@@ -42,7 +33,8 @@ const Index = (
 )
 
 console.log(Index)
-console.log(<App />)  // 调用函数组件
+console.log(<App />)
+console.log(<View />)
 Sun.render(<App />, document.querySelector(`#app`))
 
 // const syncBlock = (delay = 500) => {

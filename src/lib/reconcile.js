@@ -10,7 +10,7 @@ export function reconcileChilren(wipFiber, children = null) {
 	/* 
         处理该层 fiber 树的所有子节点
      */
-	let i = 0;
+	let i = 0
 	for (; i < children.length || oldFiber != null; i++) {
 		let newChildFiber = null
 		const element = children[i]

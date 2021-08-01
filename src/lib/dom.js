@@ -2,9 +2,33 @@ import { NODE_TYPE } from '../config/config'
 import { isProperty, isOld, isNewly, isSystemEvent } from '../utils/utils'
 
 /**
+ * 追加 DOM
+ * @param {object} childDom 被追加的子节点
+ * @param {object} parentDom 目标父节点
+ * @return {htmlelement} 元素 HTMLElement 对象
+ */
+export function commitAppendChild(childDom, parentDom) {
+	parentDom.appendChild(childDom)
+}
+
+/**
+ * 移除 DOM
+ * @param {object} fiber fiber 节点对象
+ * @param {object} parentDom 目标父节点
+ * @return {htmlelement} 元素 HTMLElement 对象
+ */
+export function commitDeleteChild(fiber, parentDom) {
+	if (fiber.dom) {
+		parentDom.removeChild(fiber)
+	} else {
+		commitDeletion(fiber.child, parentDom)
+	}
+}
+
+/**
  * 创建 标准 DOM 对象
  * @param {object} fiber fiber 节点对象
- * @return {Element} 元素 HTMLElement 对象
+ * @return {htmlelement} 元素 HTMLElement 对象
  */
 export function createDOM(fiber) {
 	const dom = fiber.type === NODE_TYPE.TEXT_NODE ? document.createTextNode(``) : document.createElement(fiber.type)
@@ -17,7 +41,7 @@ export function createDOM(fiber) {
  * @param {object} dom HTMLElement 节点对象
  * @param {object} oldProps Props 属性对象
  * @param {object} newProps Props 属性对象
- * @return {Element} 元素 DOM 对象
+ * @return {htmlelement} 元素 DOM 对象
  */
 export function updateDOM(dom, oldProps, newProps) {
 	/*

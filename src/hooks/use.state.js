@@ -14,13 +14,17 @@ export function useState(initValue) {
 	})
 	const setState = action => {
 		hook.queue.push(action)
-		__RUNTIME_PROFILE___.workInProgressRootFiber = generateStructFiber({
+		/*
+			创建新的起始 fiber 对象
+		 */
+		const startFiber = generateStructFiber({
 			dom: __RUNTIME_PROFILE___.currentRoot.dom,
-			type: __RUNTIME_PROFILE___.currentRoot.dom.nodeName.toLowerCase(),
+			type: __RUNTIME_PROFILE___.currentRoot.type,
 			props: __RUNTIME_PROFILE___.currentRoot.props,
 			alternate: __RUNTIME_PROFILE___.currentRoot,
 		})
-        __RUNTIME_PROFILE___.nextWorkUnitFiber = __RUNTIME_PROFILE___.workInProgressRootFiber
+		__RUNTIME_PROFILE___.workInProgressRootFiber = startFiber
+		__RUNTIME_PROFILE___.nextWorkUnitFiber = startFiber
 		__RUNTIME_PROFILE___.deletions = []
 	}
 	__RUNTIME_PROFILE___.workInProgressFiber.hooks.push(hook)
