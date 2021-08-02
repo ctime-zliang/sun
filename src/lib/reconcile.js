@@ -8,7 +8,7 @@ export function reconcileChilren(wipFiber, children = null) {
 	let prevSiblingFiber = null
 
 	/* 
-        处理该层 fiber 树的所有子节点
+        处理该层 fiber 节点的所有子节点
      */
 	let i = 0
 	for (; i < children.length || oldFiber != null; i++) {
@@ -16,6 +16,7 @@ export function reconcileChilren(wipFiber, children = null) {
 		const element = children[i]
 		const sameType = oldFiber && element && element.type == oldFiber.type
 		if (sameType) {
+			oldFiber.alternate = null
 			newChildFiber = generateStructFiber({
 				dom: oldFiber.dom,
 				type: element.type,
@@ -45,20 +46,24 @@ export function reconcileChilren(wipFiber, children = null) {
 		if (oldFiber) {
 			oldFiber = oldFiber.sibling
 		}
+		
+		/* 
+			将第一个 child fiber 节点作为本次执行 reconcile 时传入的 fiber 节点的子节点
+			
+					now-fiber
+					/
+				   / 
+			newChildFiber
 
-		if (i === 0) {
-			/* 
-				将第一个 child fiber 节点作为本次执行 reconcile 时所对应的 fiber 节点的子节点
-			 */
+			且后续的 child fiber 节点将作为第一个 child fiber 节点的兄弟节点依次串联			
+		*/
+		if (i === 0) {			
 			wipFiber.child = newChildFiber
 		} else {
-			/* 
-				将 fiber 兄弟节点"串联"
-			 */
 			prevSiblingFiber.sibling = newChildFiber
 		}
 		prevSiblingFiber = newChildFiber
 	}
-	console.log(`当前的 Fiber ===>`, wipFiber)
-	// return wipFiber
+	// console.log(`当前的 Fiber ===>`, wipFiber)
+	return wipFiber
 }

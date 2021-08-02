@@ -34,16 +34,15 @@ export function createTextElement(text) {
 export function render(element, container) {
 	/*
 		创建渲染起始 fiber 对象
-		创建根节点(容器节点)的 fiber 对象并将其作为初始 fiber
+		创建应用所在容器节点的 fiber 对象并将其作为初始 fiber
 	 */
 	const startFiber = generateStructFiber({
 		dom: container,
 		type: container.nodeName.toLowerCase(),
 		props: { children: [element] },
-		// 初始时为 null
-		alternate: __RUNTIME_PROFILE___.currentRoot,
+		alternate: null,
 	})
-	__RUNTIME_PROFILE___.workInProgressRootFiber = startFiber
+	__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot = startFiber
 	__RUNTIME_PROFILE___.nextWorkUnitFiber = startFiber
 	__RUNTIME_PROFILE___.deletions = []
 	console.log(`Root.Fiber 初始化 ===> `, startFiber)

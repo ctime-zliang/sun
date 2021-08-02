@@ -10,9 +10,14 @@ export function updateHostComponent(fiber) {
 }
 
 export function updateFunctionComponent(fiber) {
-	__RUNTIME_PROFILE___.workInProgressFiber = fiber
-	__RUNTIME_PROFILE___.workInProgressFiber.hooks = []
+	// fiber.hooks = []
+	/*
+		将当前处理的 fiber 节点暂存
+		在 type() 时需要读取当前 fiber 以及对应的 hooks
+	 */
+	__RUNTIME_PROFILE___.workInProgressFiberOfNowCompt = fiber
 	__RUNTIME_PROFILE___.hookIndex = 0
 	const children = [fiber.type(fiber.props)]
-	reconcileChilren(fiber, children)
+	fiber.props.children = children
+	reconcileChilren(fiber)
 }

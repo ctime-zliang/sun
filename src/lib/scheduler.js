@@ -52,24 +52,29 @@ export function workLoop(deadline) {
 			即 整个 fiber 树已经构建并遍历完成
 			即可以开始提交并更新 DOM
 	 */
-	if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.workInProgressRootFiber) {
-		commitWork(__RUNTIME_PROFILE___.workInProgressRootFiber.child)
+	if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.workInProgressFiberOfAppRoot) {		
+		__RUNTIME_PROFILE___.deletions.forEach((item) => {
+			commitWork(item)
+		})
+		/*
+			提交时直接传入容器节点的子节点的 fiber 对象, 即当前应用顶层节点的 fiber 对象 
+		 */
+		commitWork(__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot.child)		
 		/* 
 			保留提交、更新完毕后的当前 fiber 对象
 			将顶层标志位重置为 null
 		 */
-		__RUNTIME_PROFILE___.currentRoot = __RUNTIME_PROFILE___.workInProgressRootFiber
-		__RUNTIME_PROFILE___.workInProgressRootFiber = null
-		console.log('commitWork ===> ', __RUNTIME_PROFILE___.currentRoot)
+		__RUNTIME_PROFILE___.currentRootFiber = __RUNTIME_PROFILE___.workInProgressFiberOfAppRoot
+		__RUNTIME_PROFILE___.currentRootFiber.alternate = null
+		__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot = null
+		console.log('commitWork ===> ', __RUNTIME_PROFILE___.currentRootFiber)
 	}
 	window.requestIdleCallback(workLoop)
 }
 
 export function performUnitWork(fiber) {
 	/*
-		处理顶层节点对应的 fiber 时, 一般视作非函数节点执行
-
-		在首次 render 时, fiber 为顶层容器节点对应的 fiber, 也即视作非函数节点并处理
+		在首次 render 时, fiber 为当前应用所在的容器节点对应的 fiber, 视作非函数节点并处理
 	 */
 	if (isFunctionComponent(fiber)) {
 		updateFunctionComponent(fiber)
