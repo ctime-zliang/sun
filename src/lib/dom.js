@@ -18,7 +18,7 @@ export function commitAppendChild(childDom, parentDom) {
  * @return {htmlelement} 元素 HTMLElement 对象
  */
 export function commitDeleteChild(fiber, parentDom) {
-	if (fiber.dom) {
+	if (fiber.stateNode) {
 		parentDom.removeChild(fiber)
 	} else {
 		commitDeletion(fiber.child, parentDom)
@@ -31,7 +31,7 @@ export function commitDeleteChild(fiber, parentDom) {
  * @return {htmlelement} 元素 HTMLElement 对象
  */
 export function createDOM(fiber) {
-	const dom = fiber.type === NODE_TYPE.TEXT_NODE ? document.createTextNode(``) : document.createElement(fiber.type)
+	const dom = fiber.elementType === NODE_TYPE.TEXT_NODE ? document.createTextNode(``) : document.createElement(fiber.elementType)
 	updateDOM(dom, {}, fiber.props)
 	return dom
 }

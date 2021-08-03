@@ -8,21 +8,21 @@ function commitWork(fiber) {
 	if (!fiber) {
 		return
 	}
-	if (fiber.dom != null) {
+	if (fiber.stateNode != null) {
 		/* 
 			向上查找以找到最近的包含 DOM 的 fiber 节点
 		 */
 		let parentFiber = fiber.parent
-		while (!parentFiber.dom) {
+		while (!parentFiber.stateNode) {
 			parentFiber = parentFiber.parent
 		}
-		const referenceDom = parentFiber.dom
+		const referenceDom = parentFiber.stateNode
 		if (fiber.effectTag === RECONCILE_TYPE.PLACEMENT) {
-			commitAppendChild(fiber.dom, referenceDom)
+			commitAppendChild(fiber.stateNode, referenceDom)
 		} else if (fiber.effectTag === RECONCILE_TYPE.DELETION) {
 			commitDeleteChild(fiber, referenceDom)
 		} else if (fiber.effectTag === RECONCILE_TYPE.UPDATE) {
-			updateDOM(fiber.dom, fiber.alternate.props, fiber.props)
+			updateDOM(fiber.stateNode, fiber.alternate.props, fiber.props)
 		}
 	}
 	/*
@@ -53,6 +53,7 @@ export function workLoop(deadline) {
 			即可以开始提交并更新 DOM
 	 */
 	if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.workInProgressFiberOfAppRoot) {
+		console.time(`Commit Work ==>>`)
 		__RUNTIME_PROFILE___.deletions.forEach(item => {
 			commitWork(item)
 		})
@@ -60,6 +61,7 @@ export function workLoop(deadline) {
 			提交时直接传入容器节点的子节点的 fiber 对象, 即当前应用顶层节点的 fiber 对象 
 		 */
 		commitWork(__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot.child)
+		console.timeEnd(`Commit Work ==>>`)
 		/* 
 			保留提交、更新完毕后的当前 fiber 对象
 			将顶层标志位重置为 null

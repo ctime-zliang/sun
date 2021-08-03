@@ -15,30 +15,30 @@ const App = () => {
 	}
 	return (
 		<div className="row-index">
-			<button onClick={setCountAction1}>Button Root</button>
-			<strong>
+			<article onClick={setCountAction1}>
 				{count1} - {status}
-			</strong>
+			</article>
+			<View />
 		</div>
 	)
 }
 
-const Index = (
-	<main>
-		<div class="row1">
-			<button>Button</button>
-			<strong>Strong</strong>
-		</div>
-		<div class="row2">
-			<button>Button</button>
-			<strong>Strong</strong>
-		</div>
-	</main>
-)
+// const Index = (
+// 	<main>
+// 		<div class="row1">
+// 			<button>Button</button>
+// 			<strong>Strong</strong>
+// 		</div>
+// 		<div class="row2">
+// 			<button>Button</button>
+// 			<strong>Strong</strong>
+// 		</div>
+// 	</main>
+// )
 
-console.log(Index)
-console.log(<App />)
-console.log(<View />)
+// console.log(Index)
+// console.log(<App />)
+// console.log(<View />)
 Sun.render(<App />, document.querySelector(`#app`))
 
 // const syncBlock = (delay = 500) => {

@@ -1,16 +1,23 @@
 import Sun, { useState } from '@/'
 
 export function View() {
-	const [count2, setCount2] = useState(0)
-	const setCountAction2 = () => {
-		setCount2(state => {
-			return state + 1
-		})
+	console.log(`Function View`)
+	const [list, setList] = useState([])
+	const modifyList = () => {
+		const array = []
+		for (let i = 0; i < 3000; i++) {
+			array.push(Math.random())
+		}
+		setList(array)
 	}
 	return (
-		<div class="row2">
-			<button onClick={setCountAction2}>Button View</button>
-			<strong>{count2}</strong>
+		<div className="row-view">
+			<div onClick={modifyList}>Modify List {list.length}</div>
+			<ul>
+				{list.map((item, index) => {
+					return <li>{item}</li>
+				})}
+			</ul>
 		</div>
 	)
 }

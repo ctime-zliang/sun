@@ -1,7 +1,7 @@
 import { NODE_TYPE } from './config/config'
 import { __RUNTIME_PROFILE___ } from './runtime/runtime.profile'
 import { workLoop } from './lib/scheduler'
-import { generateStructFiber, generateStructVDOM } from './utils/utils'
+import { generateStructFiber, generateStructVDOM, isApprovedComponent } from './utils/utils'
 
 /**
  * 创建 元素 VDOM
@@ -11,11 +11,17 @@ import { generateStructFiber, generateStructVDOM } from './utils/utils'
  * @return {htmlelement} 元素 VDOM
  */
 export function createElement(type, props, ...children) {
+	const cn = []
+	for (let i = 0; i < children.length; i++) {
+		const child = children[i]
+		if (Object.prototype.toString.call(child).toLowerCase() === '[object array]') {
+			return createElement(type, props, ...child)
+		}
+		cn[i] = typeof child === 'object' ? child : createTextElement(child)
+	}
 	return generateStructVDOM(type, {
 		...props,
-		children: children.map(child => {
-			return typeof child === 'object' ? child : createTextElement(child)
-		}),
+		children: cn,
 	})
 }
 
@@ -37,8 +43,8 @@ export function render(element, container) {
 		创建应用所在容器节点的 fiber 对象并将其作为初始 fiber
 	 */
 	const startFiber = generateStructFiber({
-		dom: container,
-		type: container.nodeName.toLowerCase(),
+		stateNode: container,
+		elementType: container.nodeName.toLowerCase(),
 		props: { children: [element] },
 		alternate: null,
 	})

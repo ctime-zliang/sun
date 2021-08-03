@@ -3,8 +3,8 @@ import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 
 export function updateHostComponent(fiber) {
-	if (!fiber.dom) {
-		fiber.dom = createDOM(fiber)
+	if (!fiber.stateNode) {
+		fiber.stateNode = createDOM(fiber)
 	}
 	reconcileChilren(fiber)
 }
@@ -17,7 +17,7 @@ export function updateFunctionComponent(fiber) {
 	 */
 	__RUNTIME_PROFILE___.workInProgressFiberOfNowCompt = fiber
 	__RUNTIME_PROFILE___.hookIndex = 0
-	const children = [fiber.type(fiber.props)]
+	const children = [fiber.elementType(fiber.props)]
 	fiber.props.children = children
 	reconcileChilren(fiber)
 }

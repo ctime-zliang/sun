@@ -26,8 +26,8 @@ export function useState(initValue) {
 			创建新的起始 fiber 对象
 		 */
 		const startFiber = generateStructFiber({
-			dom: __RUNTIME_PROFILE___.currentRootFiber.dom,
-			type: __RUNTIME_PROFILE___.currentRootFiber.type,
+			stateNode: __RUNTIME_PROFILE___.currentRootFiber.stateNode,
+			elementType: __RUNTIME_PROFILE___.currentRootFiber.elementType,
 			props: __RUNTIME_PROFILE___.currentRootFiber.props,
 			alternate: __RUNTIME_PROFILE___.currentRootFiber,
 		})

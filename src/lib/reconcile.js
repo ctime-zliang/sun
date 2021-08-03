@@ -25,21 +25,27 @@ export function reconcileChilren(wipFiber, children = null) {
 	for (; i < children.length || oldFiberOfChild != null; i++) {
 		let newChildFiber = null
 		const element = children[i]
-		const sameType = oldFiberOfChild && element && element.type == oldFiberOfChild.type
+		const sameType = !!(oldFiberOfChild && element && element.elementType == oldFiberOfChild.elementType)
 		if (sameType) {
+			/*
+				之前存在的节点, 需要更新 
+			 */
 			newChildFiber = generateStructFiber({
-				dom: oldFiberOfChild.dom,
-				type: element.type,
+				stateNode: oldFiberOfChild.stateNode,
+				elementType: element.elementType,
 				props: element.props,
 				parent: wipFiber,
 				alternate: oldFiberOfChild,
 				effectTag: RECONCILE_TYPE.UPDATE,
 			})
 		}
-		if (!sameType && element) {
+		if (!sameType) {
+			/*
+				之前不存在的节点, 需要置入 
+			 */
 			newChildFiber = generateStructFiber({
-				dom: null,
-				type: element.type,
+				stateNode: null,
+				elementType: element.elementType,
 				props: element.props,
 				parent: wipFiber,
 				alternate: null,

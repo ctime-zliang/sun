@@ -1,6 +1,6 @@
-export function generateStructVDOM(type, props) {
+export function generateStructVDOM(elementType, props) {
 	return {
-		type,
+		elementType,
 		props,
 	}
 }
@@ -8,8 +8,8 @@ export function generateStructVDOM(type, props) {
 export function generateStructFiber(args) {
 	const defaults = {
 		/* VDOM 属性 */
-		type: null,
-		dom: null,
+		elementType: null,
+		stateNode: null,
 		props: null,
 		/* fiber 链表属性 */
 		child: null,
@@ -44,11 +44,14 @@ export function isProperty(key) {
 
 export function isSystemEvent(key) {
 	return key[0] === 'o' && key[1] === 'n'
-	// return key.startsWith('on')
+}
+
+export function isApprovedComponent(fiber) {
+	return fiber.elementType != null || typeof fiber.elementType != 'undefined'
 }
 
 export function isFunctionComponent(fiber) {
-	return fiber && fiber.type && fiber.type instanceof Function
+	return fiber && fiber.elementType && fiber.elementType instanceof Function
 }
 
 export function syncBlock(delay = 1000) {
