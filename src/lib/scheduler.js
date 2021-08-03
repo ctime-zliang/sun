@@ -52,20 +52,20 @@ export function workLoop(deadline) {
 			即 整个 fiber 树已经构建并遍历完成
 			即可以开始提交并更新 DOM
 	 */
-	if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.workInProgressFiberOfAppRoot) {		
-		__RUNTIME_PROFILE___.deletions.forEach((item) => {
+	if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.workInProgressFiberOfAppRoot) {
+		__RUNTIME_PROFILE___.deletions.forEach(item => {
 			commitWork(item)
 		})
 		/*
 			提交时直接传入容器节点的子节点的 fiber 对象, 即当前应用顶层节点的 fiber 对象 
 		 */
-		commitWork(__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot.child)		
+		commitWork(__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot.child)
 		/* 
 			保留提交、更新完毕后的当前 fiber 对象
 			将顶层标志位重置为 null
 		 */
 		__RUNTIME_PROFILE___.currentRootFiber = __RUNTIME_PROFILE___.workInProgressFiberOfAppRoot
-		__RUNTIME_PROFILE___.currentRootFiber.alternate = null
+		// __RUNTIME_PROFILE___.currentRootFiber.alternate = null
 		__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot = null
 		console.log('commitWork ===> ', __RUNTIME_PROFILE___.currentRootFiber)
 	}

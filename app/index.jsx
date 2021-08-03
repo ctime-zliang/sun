@@ -3,21 +3,22 @@ import { View } from './component/view'
 
 const App = () => {
 	const [count1, setCount1] = useState(0)
-	// const [status, setStatus] = useState(false)
-	const status = false
+	const [status, setStatus] = useState(false)
 	const setCountAction1 = () => {
 		setCount1(state => {
 			return state + 1
 		})
 		window.setTimeout(() => {
-			setCount1(100)
-		}, 1000)
-		// setStatus(!status)
+			setCount1(Math.random())
+		}, 16.67)
+		setStatus(!status)
 	}
 	return (
-		<div class="row-index">
+		<div className="row-index">
 			<button onClick={setCountAction1}>Button Root</button>
-			<strong>{count1} - {status}</strong>
+			<strong>
+				{count1} - {status}
+			</strong>
 		</div>
 	)
 }

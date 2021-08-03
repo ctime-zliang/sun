@@ -3,12 +3,16 @@ import { generateStructFiber } from '../utils/utils'
 
 export function useState(initValue) {
 	const alternate = __RUNTIME_PROFILE___.workInProgressFiberOfNowCompt.alternate
-	const oldHook = alternate && alternate.hooks && alternate.hooks[__RUNTIME_PROFILE___.hookIndex]
-	const hook = {
-		state: oldHook ? oldHook.state : initValue,
-		queue: [],
+	const oldHookOfCompt = alternate && alternate.hooks && alternate.hooks[__RUNTIME_PROFILE___.hookIndex]
+	/*
+		从上一轮更新完毕后的 fiber 节点中读取 hooks 列表
+		如果没有, 则采用新建的空白 hook 暂存
+	 */
+	let hook = { state: initValue, queue: [] }
+	if (oldHookOfCompt) {
+		hook = oldHookOfCompt
 	}
-	const actions = oldHook ? oldHook.queue : []
+	const actions = oldHookOfCompt ? oldHookOfCompt.queue : []
 	actions.forEach((item, index) => {
 		if (typeof item === 'function') {
 			hook.state = item(hook.state)
