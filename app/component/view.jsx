@@ -1,12 +1,13 @@
 import Sun, { useState } from '@/'
 
+let count = 0
 export function View() {
-	console.log(`Function View`)
 	const [list, setList] = useState([])
 	const modifyList = () => {
+		++count
 		const array = []
-		for (let i = 0; i < 3000; i++) {
-			array.push(Math.random())
+		for (let i = 0; i < 7000; i++) {
+			array.push(count)
 		}
 		setList(array)
 	}
