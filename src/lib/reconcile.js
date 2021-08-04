@@ -14,7 +14,7 @@ export function reconcileChilren(wipFiber, children = null) {
 		需要循环遍历当前 vDom 下的所有子节点
 		作为参照对比, 此处读取上一轮更新完毕后该层 fiber 节点的第一个子节点
 	 */
-	let oldFiberOfChild = wipFiber.alternate && wipFiber.alternate.child
+	let oldFiberOfNowWIPFiber = wipFiber.alternate && wipFiber.alternate.child
 	let prevSiblingFiber = null
 
 	/* 
@@ -22,20 +22,20 @@ export function reconcileChilren(wipFiber, children = null) {
 		逐一生成 fiber 节点并构建成链表
      */
 	let i = 0
-	for (; i < children.length || oldFiberOfChild != null; i++) {
+	for (; i < children.length || oldFiberOfNowWIPFiber != null; i++) {
 		let newChildFiber = null
 		const element = children[i]
-		const sameType = !!(oldFiberOfChild && element && element.elementType == oldFiberOfChild.elementType)
+		const sameType = !!(oldFiberOfNowWIPFiber && element && element.elementType == oldFiberOfNowWIPFiber.elementType)
 		if (sameType) {
 			/*
 				之前存在的节点, 需要更新 
 			 */
 			newChildFiber = generateStructFiber({
-				stateNode: oldFiberOfChild.stateNode,
+				stateNode: oldFiberOfNowWIPFiber.stateNode,
 				elementType: element.elementType,
 				props: element.props,
 				parent: wipFiber,
-				alternate: oldFiberOfChild,
+				alternate: oldFiberOfNowWIPFiber,
 				effectTag: RECONCILE_TYPE.UPDATE,
 			})
 		}
@@ -52,18 +52,16 @@ export function reconcileChilren(wipFiber, children = null) {
 				effectTag: RECONCILE_TYPE.PLACEMENT,
 			})
 		}
-		if (!sameType && oldFiberOfChild) {
-			oldFiberOfChild.effectTag = RECONCILE_TYPE.DELETION
-			/* 
-                记录需要删除的 fiber
-             */
-			__RUNTIME_PROFILE___.deletions.push(oldFiberOfChild)
+		if (!sameType && oldFiberOfNowWIPFiber) {
+			oldFiberOfNowWIPFiber.effectTag = RECONCILE_TYPE.DELETION
+			__RUNTIME_PROFILE___.deletions.push(oldFiberOfNowWIPFiber)
 		}
 		/*
-			读取当前 oldFiberOfChild 节点的下一个兄弟节点
+			oldFiberOfNowWIPFiber 作为当前 wipFiber 的上一轮更新完毕后的镜像存储节点
+			每轮循环中需随着循环进行, 后移到下一个兄弟节点
 		 */
-		if (oldFiberOfChild) {
-			oldFiberOfChild = oldFiberOfChild.sibling
+		if (oldFiberOfNowWIPFiber) {
+			oldFiberOfNowWIPFiber = oldFiberOfNowWIPFiber.sibling
 		}
 
 		/* 
