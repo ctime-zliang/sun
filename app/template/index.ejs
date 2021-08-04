@@ -9,10 +9,34 @@
     user-select: none;
 }
 </style>
+<script>
+function main() {
+    const area = document.querySelector(`#area`)
+
+    let count = 0
+    let fn = () => {
+        count++
+        area.textContent = count >= 100000000 ? 0 : count
+    }
+    // interval(fn)    
+}
+
+function interval(callback) {
+    window.setTimeout(() => {
+        callback()
+        interval(callback)
+    })
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    main()
+})
+</script>
 </head>
 
 <body>	
 <noscript>No Surpport Script</noscript>
+<section id="area"></section>
 <section class="app" id="app"></section>
 </body>
 </html>
