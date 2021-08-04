@@ -1,17 +1,14 @@
 import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
 import { generateStructFiber } from '../utils/utils'
+import { getHook } from '../hooks/hook'
 
 export function useState(initValue) {
-	const alternate = __RUNTIME_PROFILE___.workInProgressFiberOfNowCompt.alternate
-	const oldHookOfCompt = alternate && alternate.hooks && alternate.hooks[__RUNTIME_PROFILE___.hookIndex]
+	const oldHookOfCompt = getHook()
 	/*
 		从上一轮更新完毕后的 fiber 节点中读取 hooks 列表
 		如果没有, 则采用新建的空白 hook 暂存
 	 */
-	let hook = { state: initValue, queue: [] }
-	if (oldHookOfCompt) {
-		hook = oldHookOfCompt
-	}
+	const hook = oldHookOfCompt ? oldHookOfCompt : { state: initValue, queue: [] }
 	const actions = oldHookOfCompt ? oldHookOfCompt.queue : []
 	actions.forEach((item, index) => {
 		if (typeof item === 'function') {

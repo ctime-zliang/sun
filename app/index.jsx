@@ -2,6 +2,7 @@ import Sun, { useState } from '@/'
 import { View } from './component/view'
 
 const App = () => {
+	const [fontSize, setFontSize] = useState(12)
 	const [count1, setCount1] = useState(0)
 	const [status, setStatus] = useState(false)
 	const setCountAction1 = () => {
@@ -12,13 +13,14 @@ const App = () => {
 			setCount1(Math.random())
 		}, 16.67)
 		setStatus(!status)
+		setFontSize(fontSize + 1)
 	}
 	return (
-		<div className="row-index">
-			<article onClick={setCountAction1}>
+		<div className="row-index" style={{ border: '1px solid red', fontSize: `${fontSize}px` }}>
+			<article onClick={setCountAction1} style="border: 1px solid green">
 				{count1} - {status}
 			</article>
-			<View />
+			{status ? <div tag="true">True</div> : <div tag="false">False</div>}
 		</div>
 	)
 }

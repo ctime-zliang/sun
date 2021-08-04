@@ -19,7 +19,7 @@ export function commitAppendChild(childDom, parentDom) {
  */
 export function commitDeleteChild(fiber, parentDom) {
 	if (fiber.stateNode) {
-		parentDom.removeChild(fiber)
+		parentDom.removeChild(fiber.stateNode)
 	} else {
 		commitDeletion(fiber.child, parentDom)
 	}
@@ -44,11 +44,15 @@ export function createDOM(fiber) {
  * @return {htmlelement} 元素 DOM 对象
  */
 export function updateDOM(dom, oldProps, newProps) {
+	const systemEventOfOldProps = Object.keys(oldProps).filter(isSystemEvent)
+	const systemEventOfNewProps = Object.keys(newProps).filter(isSystemEvent)
+	const commPropsOfOldProps = Object.keys(oldProps).filter(isProperty)
+	const commPropsOfNewProps = Object.keys(newProps).filter(isProperty)
+
 	/*
 		系统事件处理 - 移除 
 	 */
-	Object.keys(oldProps)
-		.filter(isSystemEvent)
+	systemEventOfOldProps
 		.filter((item, index) => {
 			return !(item in newProps) || isNewly(oldProps, newProps)(item)
 		})
@@ -59,29 +63,44 @@ export function updateDOM(dom, oldProps, newProps) {
 	/* 
 		删除旧属性
 	 */
-	Object.keys(oldProps)
-		.filter(isProperty)
-		.filter(isOld(oldProps, newProps))
-		.forEach((item, index) => {
-			dom[item] = undefined
-		})
+	commPropsOfOldProps.filter(isOld(oldProps, newProps)).forEach((item, index) => {
+		dom[item] = undefined
+		if (dom.removeAttribute) {
+			dom.removeAttribute(item)
+		}
+	})
 	/*
 		更新 or 写入新属性 
 	 */
-	Object.keys(newProps)
-		.filter(isProperty)
-		.filter(isNewly(oldProps, newProps))
-		.forEach((item, index) => {
-			dom[item] = newProps[item]
-		})
+	commPropsOfNewProps.filter(isNewly(oldProps, newProps)).forEach((item, index) => {
+		switch (item) {
+			case 'style': {
+				if (typeof newProps[item] == 'object') {
+					for (let attr in newProps[item]) {
+						dom.style[attr] = newProps[item][attr]
+					}
+					break
+				}
+				dom[item] = newProps[item]
+				break
+			}
+			case 'className': {
+				dom[item] = newProps[item]
+				break
+			}
+			default: {
+				dom[item] = newProps[item]
+				if (dom.setAttribute && typeof newProps[item] != 'undefined') {
+					dom.setAttribute(item, newProps[item])
+				}
+			}
+		}
+	})
 	/*
 		系统事件处理 - 设置
 	 */
-	Object.keys(newProps)
-		.filter(isSystemEvent)
-		.filter(isNewly(oldProps, newProps))
-		.forEach((item, index) => {
-			const eventType = item.toLowerCase().substring(2)
-			dom.addEventListener(eventType, newProps[item])
-		})
+	systemEventOfNewProps.filter(isNewly(oldProps, newProps)).forEach((item, index) => {
+		const eventType = item.toLowerCase().substring(2)
+		dom.addEventListener(eventType, newProps[item])
+	})
 }

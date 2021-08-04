@@ -27,14 +27,14 @@ export function commitWork(fiber) {
 		深度递归 
 			提交渲染子节点
 	 */
-    if (fiber.child) {
-        commitWork(fiber.child)
-    }	
+	if (fiber.child) {
+		commitWork(fiber.child)
+	}
 	/*
 		广度递归 
 			提交渲染兄弟节点
 	 */
-    if (fiber.sibling) {
-        commitWork(fiber.sibling)
-    }	
+	if (fiber.sibling) {
+		commitWork(fiber.sibling)
+	}
 }

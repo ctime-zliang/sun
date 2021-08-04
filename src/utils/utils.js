@@ -39,7 +39,7 @@ export function isOld(oldObj, newObj) {
 }
 
 export function isProperty(key) {
-	return !['children'].includes(key)
+	return !['children'].includes(key) && !(key[0] === 'o' && key[1] === 'n')
 }
 
 export function isSystemEvent(key) {
