@@ -1,6 +1,6 @@
 import { NODE_TYPE } from './config/config'
 import { __RUNTIME_PROFILE___ } from './runtime/runtime.profile'
-import { workLoop } from './lib/scheduler'
+import { initWorkLoop } from './lib/scheduler'
 import { generateStructFiber, generateStructVDOM, isApprovedComponent } from './utils/utils'
 
 /**
@@ -52,5 +52,5 @@ export function render(element, container) {
 	__RUNTIME_PROFILE___.nextWorkUnitFiber = startFiber
 	__RUNTIME_PROFILE___.deletions = []
 	console.log(`Root.Fiber 初始化 ===> `, startFiber)
-	window.requestIdleCallback(workLoop)
+	window.requestIdleCallback(initWorkLoop())
 }

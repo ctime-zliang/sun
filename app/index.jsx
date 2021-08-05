@@ -17,31 +17,49 @@ const App = () => {
 	}
 	return (
 		<div className="row-index" style={{ border: '1px solid red', fontSize: `${fontSize}px` }}>
-			<article onClick={setCountAction1} style="border: 1px solid green">
+			{/* <article onClick={setCountAction1} style="border: 1px solid green">
 				{count1} - {status}
 			</article>
 			{status ? <div tag="true">True</div> : <div tag="false">False</div>}
+			<View /> */}
+			<ul>
+				<li data-tag="li-1">Li 1  //5</li>
+				<li data-tag="li-2">
+					<div>Li 2  //7</div>
+					<div>Li div</div>
+				</li>
+				<li data-tag="li-3">Li 3  //7</li>
+			</ul>
 		</div>
 	)
 }
 
-// const Index = (
-// 	<main>
-// 		<div class="row1">
-// 			<button>Button</button>
-// 			<strong>Strong</strong>
-// 		</div>
-// 		<div class="row2">
-// 			<button>Button</button>
-// 			<strong>Strong</strong>
-// 		</div>
-// 	</main>
-// )
+let count = 0
+let MAX_COUNT = 3
+function LongChild() {
+	const [list, setList] = useState([])
+	const modifyList = () => {
+		++count
+		const array = []
+		for (let i = 0; i < MAX_COUNT; i++) {
+			array.push(i)
+		}
+		setList(array)
+		console.log(array)
+	}
+	return (
+		<div style={{ border: '1px solid red' }}>
+			<button onClick={modifyList}>Modify List {String(list.length)}</button>
+			<ul style="border: 1px solid green;">
+				{list.map((item, index) => {
+					return <li>{item}</li>
+				})}
+			</ul>
+		</div>
+	)
+}
 
-// console.log(Index)
-// console.log(<App />)
-// console.log(<View />)
-Sun.render(<App />, document.querySelector(`#app`))
+Sun.render(<LongChild />, document.querySelector(`#app`))
 
 // const syncBlock = (delay = 500) => {
 // 	const end = new Date().getTime() + delay

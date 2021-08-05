@@ -6,8 +6,8 @@ export function View() {
 	const modifyList = () => {
 		++count
 		const array = []
-		for (let i = 0; i < 2; i++) {
-			array.push(count)
+		for (let i = 0; i < count; i++) {
+			array.push(i)
 		}
 		setList(array)
 	}
