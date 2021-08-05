@@ -47,6 +47,7 @@ export function render(element, container) {
 		elementType: container.nodeName.toLowerCase(),
 		props: { children: [element] },
 		alternate: null,
+		dirty: false
 	})
 	__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot = startFiber
 	__RUNTIME_PROFILE___.nextWorkUnitFiber = startFiber

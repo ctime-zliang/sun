@@ -35,6 +35,7 @@ export function reconcileChilren(wipFiber, children = null) {
 				elementType: element.elementType,
 				props: element.props,
 				parent: wipFiber,
+				dirty: true,
 				alternate: oldFiberOfNowWIPFiber,
 				effectTag: RECONCILE_TYPE.UPDATE,
 			})
@@ -48,6 +49,7 @@ export function reconcileChilren(wipFiber, children = null) {
 				elementType: element.elementType,
 				props: element.props,
 				parent: wipFiber,
+				dirty: true,
 				alternate: null,
 				effectTag: RECONCILE_TYPE.PLACEMENT,
 			})

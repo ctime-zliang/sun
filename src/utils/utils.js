@@ -11,12 +11,13 @@ export function generateStructFiber(args) {
 		elementType: null,
 		stateNode: null,
 		props: null,
-		/* fiber 链表属性 */
+		/* fiber 链表节点属性 */
 		child: null,
 		parent: null,
 		sibling: null,
 		alternate: null,
 		effectTag: null,
+		dirty: false,
 		/* hooks */
 		hooks: [],
 	}

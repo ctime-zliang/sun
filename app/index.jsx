@@ -15,37 +15,47 @@ const App = () => {
 		setStatus(!status)
 		setFontSize(fontSize + 1)
 	}
+	// return (
+	// 	<div className="row-index" style={{ border: '1px solid red', fontSize: `${fontSize}px` }}>
+	// 		{/* <article onClick={setCountAction1} style="border: 1px solid green">
+	// 			{count1} - {status}
+	// 		</article>
+	// 		{status ? <div tag="true">True</div> : <div tag="false">False</div>}
+	// 		<View /> */}
+	// 		<ul>
+	// 			<li data-tag="li-1">Li 1</li>
+	// 			<li data-tag="li-2">
+	// 				<div>Li 2 div 1</div>
+	// 				<div>Li 2 div 2</div>
+	// 			</li>
+	// 			<li data-tag="li-3">Li 3</li>
+	// 		</ul>
+	// 	</div>
+	// )
 	return (
-		<div className="row-index" style={{ border: '1px solid red', fontSize: `${fontSize}px` }}>
-			{/* <article onClick={setCountAction1} style="border: 1px solid green">
-				{count1} - {status}
-			</article>
-			{status ? <div tag="true">True</div> : <div tag="false">False</div>}
-			<View /> */}
-			<ul>
-				<li data-tag="li-1">Li 1  //5</li>
-				<li data-tag="li-2">
-					<div>Li 2  //7</div>
-					<div>Li div</div>
-				</li>
-				<li data-tag="li-3">Li 3  //7</li>
-			</ul>
-		</div>
+		<ul style={{ border: '1px solid red' }}>
+			<li data-tag="li-1">Li 1 - {status} - {fontSize}</li>
+			{/* <li></li> */}
+			<li data-tag="li-2">
+				<div>Li 2 div 1</div>
+				<div>Li 2 div 2</div>
+			</li>
+			<li data-tag="li-3">Li 3</li>
+		</ul>
 	)
 }
 
 let count = 0
-let MAX_COUNT = 3
+let MAX_COUNT = 6000
 function LongChild() {
 	const [list, setList] = useState([])
 	const modifyList = () => {
 		++count
 		const array = []
 		for (let i = 0; i < MAX_COUNT; i++) {
-			array.push(i)
+			array.push(i + ' - ' + count)
 		}
 		setList(array)
-		console.log(array)
 	}
 	return (
 		<div style={{ border: '1px solid red' }}>

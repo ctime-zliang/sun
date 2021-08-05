@@ -19,5 +19,6 @@ export function updateFunctionComponent(fiber) {
 	__RUNTIME_PROFILE___.hookIndex = 0
 	const children = [fiber.elementType(fiber.props)]
 	fiber.props.children = children
+	fiber.dirty = false
 	reconcileChilren(fiber)
 }
