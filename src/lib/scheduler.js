@@ -13,7 +13,7 @@ export function initWorkLoop() {
 			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber)
 			shouldYield = deadline.timeRemaining() < 1
 		}
-	
+
 		/* 
 			__RUNTIME_PROFILE___.nextWorkUnitFiber 不存在时
 				即 整个 fiber 树已经构建并遍历完成
@@ -39,7 +39,7 @@ export function initWorkLoop() {
 		}
 		window.requestIdleCallback(workLoop)
 	}
-	
+
 	return workLoop
 }
 

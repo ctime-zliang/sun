@@ -25,14 +25,14 @@ export function reconcileChilren(wipFiber, children = null) {
 	for (; i < children.length || oldFiberOfNowWIPFiber != null; i++) {
 		let newChildFiber = null
 		const element = children[i]
-		const sameType = !!(oldFiberOfNowWIPFiber && element && element.elementType == oldFiberOfNowWIPFiber.elementType)
+		const sameType = !!(oldFiberOfNowWIPFiber && element && element.type == oldFiberOfNowWIPFiber.type)
 		if (sameType) {
 			/*
 				之前存在的节点, 需要更新 
 			 */
 			newChildFiber = generateStructFiber({
 				stateNode: oldFiberOfNowWIPFiber.stateNode,
-				elementType: element.elementType,
+				type: element.type,
 				props: element.props,
 				parent: wipFiber,
 				dirty: true,
@@ -46,7 +46,7 @@ export function reconcileChilren(wipFiber, children = null) {
 			 */
 			newChildFiber = generateStructFiber({
 				stateNode: null,
-				elementType: element.elementType,
+				type: element.type,
 				props: element.props,
 				parent: wipFiber,
 				dirty: true,

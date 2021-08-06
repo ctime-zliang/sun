@@ -1,8 +1,7 @@
 import Sun, { useState } from '@/'
-import { View } from './component/view'
+import { ClickAddLi } from './component/click-add-li'
 
 const App = () => {
-	const [fontSize, setFontSize] = useState(12)
 	const [count1, setCount1] = useState(0)
 	const [status, setStatus] = useState(false)
 	const setCountAction1 = () => {
@@ -13,63 +12,18 @@ const App = () => {
 			setCount1(Math.random())
 		}, 16.67)
 		setStatus(!status)
-		setFontSize(fontSize + 1)
-	}
-	// return (
-	// 	<div className="row-index" style={{ border: '1px solid red', fontSize: `${fontSize}px` }}>
-	// 		{/* <article onClick={setCountAction1} style="border: 1px solid green">
-	// 			{count1} - {status}
-	// 		</article>
-	// 		{status ? <div tag="true">True</div> : <div tag="false">False</div>}
-	// 		<View /> */}
-	// 		<ul>
-	// 			<li data-tag="li-1">Li 1</li>
-	// 			<li data-tag="li-2">
-	// 				<div>Li 2 div 1</div>
-	// 				<div>Li 2 div 2</div>
-	// 			</li>
-	// 			<li data-tag="li-3">Li 3</li>
-	// 		</ul>
-	// 	</div>
-	// )
-	return (
-		<ul style={{ border: '1px solid red' }}>
-			<li data-tag="li-1">Li 1 - {status} - {fontSize}</li>
-			{/* <li></li> */}
-			<li data-tag="li-2">
-				<div>Li 2 div 1</div>
-				<div>Li 2 div 2</div>
-			</li>
-			<li data-tag="li-3">Li 3</li>
-		</ul>
-	)
-}
-
-let count = 0
-let MAX_COUNT = 6000
-function LongChild() {
-	const [list, setList] = useState([])
-	const modifyList = () => {
-		++count
-		const array = []
-		for (let i = 0; i < MAX_COUNT; i++) {
-			array.push(i + ' - ' + count)
-		}
-		setList(array)
 	}
 	return (
-		<div style={{ border: '1px solid red' }}>
-			<button onClick={modifyList}>Modify List {String(list.length)}</button>
-			<ul style="border: 1px solid green;">
-				{list.map((item, index) => {
-					return <li>{item}</li>
-				})}
-			</ul>
+		<div className="row-index" style={{ border: '1px solid red' }}>
+			<article onClick={setCountAction1} style="border: 1px solid green">
+				{count1} - {status}
+			</article>
+			{status ? <div tag="true">True</div> : <div tag="false">False</div>}
 		</div>
 	)
 }
 
-Sun.render(<LongChild />, document.querySelector(`#app`))
+Sun.render(<App />, document.querySelector(`#app`))
 
 // const syncBlock = (delay = 500) => {
 // 	const end = new Date().getTime() + delay

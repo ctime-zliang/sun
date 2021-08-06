@@ -31,7 +31,7 @@ export function commitDeleteChild(fiber, parentDom) {
  * @return {htmlelement} 元素 HTMLElement 对象
  */
 export function createDOM(fiber) {
-	const dom = fiber.elementType === NODE_TYPE.TEXT_NODE ? document.createTextNode(``) : document.createElement(fiber.elementType)
+	const dom = fiber.type === NODE_TYPE.TEXT_NODE ? document.createTextNode(``) : document.createElement(fiber.type)
 	updateDOM(dom, {}, fiber.props)
 	return dom
 }

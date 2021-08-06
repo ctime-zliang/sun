@@ -44,10 +44,10 @@ export function render(element, container) {
 	 */
 	const startFiber = generateStructFiber({
 		stateNode: container,
-		elementType: container.nodeName.toLowerCase(),
+		type: container.nodeName.toLowerCase(),
 		props: { children: [element] },
 		alternate: null,
-		dirty: false
+		dirty: false,
 	})
 	__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot = startFiber
 	__RUNTIME_PROFILE___.nextWorkUnitFiber = startFiber

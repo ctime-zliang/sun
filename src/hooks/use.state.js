@@ -3,7 +3,9 @@ import { generateStructFiber } from '../utils/utils'
 import { getHook } from '../hooks/hook'
 
 export function useState(initValue) {
+	const componentFiber = __RUNTIME_PROFILE___.workInProgressFiberOfNowCompt
 	const oldHookOfCompt = getHook()
+	console.log(oldHookOfCompt)
 	/*
 		从上一轮更新完毕后的 fiber 节点中读取 hooks 列表
 		如果没有, 则采用新建的空白 hook 暂存
@@ -24,7 +26,7 @@ export function useState(initValue) {
 		 */
 		const startFiber = generateStructFiber({
 			stateNode: __RUNTIME_PROFILE___.currentRootFiber.stateNode,
-			elementType: __RUNTIME_PROFILE___.currentRootFiber.elementType,
+			type: __RUNTIME_PROFILE___.currentRootFiber.type,
 			props: __RUNTIME_PROFILE___.currentRootFiber.props,
 			alternate: __RUNTIME_PROFILE___.currentRootFiber,
 		})
@@ -32,7 +34,7 @@ export function useState(initValue) {
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = startFiber
 		__RUNTIME_PROFILE___.deletions = []
 	}
-	__RUNTIME_PROFILE___.workInProgressFiberOfNowCompt.hooks.push(hook)
+	componentFiber.hooks.push(hook)
 	__RUNTIME_PROFILE___.hookIndex++
 	return [hook.state, setState]
 }
