@@ -5,12 +5,7 @@ import { getHook } from '../hooks/hook'
 export function useState(initValue) {
 	const componentFiber = __RUNTIME_PROFILE___.workInProgressFiberOfNowCompt
 	const oldHookOfCompt = getHook()
-	console.log(oldHookOfCompt)
-	/*
-		从上一轮更新完毕后的 fiber 节点中读取 hooks 列表
-		如果没有, 则采用新建的空白 hook 暂存
-	 */
-	const hook = oldHookOfCompt ? oldHookOfCompt : { state: initValue, queue: [] }
+	const hook = { state: oldHookOfCompt ? oldHookOfCompt.state : initValue, queue: [] }
 	const actions = oldHookOfCompt ? oldHookOfCompt.queue : []
 	actions.forEach((item, index) => {
 		if (typeof item === 'function') {
@@ -32,7 +27,6 @@ export function useState(initValue) {
 		})
 		__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot = startFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = startFiber
-		__RUNTIME_PROFILE___.deletions = []
 	}
 	componentFiber.hooks.push(hook)
 	__RUNTIME_PROFILE___.hookIndex++

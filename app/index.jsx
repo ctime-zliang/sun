@@ -1,5 +1,7 @@
 import Sun, { useState } from '@/'
-import { ClickAddLi } from './component/click-add-li'
+import { ClickAddLi, ClickAddLongChild } from './component/click-add-li'
+import { TraverseFiberTree } from './component/traverse-fiber-tree'
+import { UsestateHookIndex } from './component/usestate-test'
 
 const App = () => {
 	const [count1, setCount1] = useState(0)
@@ -8,9 +10,12 @@ const App = () => {
 		setCount1(state => {
 			return state + 1
 		})
-		window.setTimeout(() => {
-			setCount1(Math.random())
-		}, 16.67)
+		setCount1(state => {
+			return state + 1
+		})
+		// window.setTimeout(() => {
+		// 	setCount1(Math.random())
+		// }, 16.67)
 		setStatus(!status)
 	}
 	return (

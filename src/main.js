@@ -50,8 +50,6 @@ export function render(element, container) {
 		dirty: false,
 	})
 	__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot = startFiber
-	__RUNTIME_PROFILE___.nextWorkUnitFiber = startFiber
-	__RUNTIME_PROFILE___.deletions = []
 	console.log(`Root.Fiber 初始化 ===> `, startFiber)
-	window.requestIdleCallback(initWorkLoop())
+	window.requestIdleCallback(initWorkLoop(startFiber))
 }

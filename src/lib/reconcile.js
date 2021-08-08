@@ -2,8 +2,8 @@ import { RECONCILE_TYPE } from '../config/config'
 import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
 import { generateStructFiber } from '../utils/utils'
 
-export function reconcileChilren(wipFiber, children = null) {
-	children = children || wipFiber.props.children
+export function reconcileChilren(wipFiber, deletions) {
+	const children = wipFiber.props.children
 	/*
 		需要清除上一轮更新完毕时保存的上上一轮的当前层 fiber 节点的副本 
 	 */
@@ -56,7 +56,7 @@ export function reconcileChilren(wipFiber, children = null) {
 		}
 		if (!sameType && oldFiberOfNowWIPFiber) {
 			oldFiberOfNowWIPFiber.effectTag = RECONCILE_TYPE.DELETION
-			__RUNTIME_PROFILE___.deletions.push(oldFiberOfNowWIPFiber)
+			deletions.push(oldFiberOfNowWIPFiber)
 		}
 		/*
 			oldFiberOfNowWIPFiber 作为当前 wipFiber 的上一轮更新完毕后的镜像存储节点

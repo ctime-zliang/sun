@@ -1,16 +1,22 @@
 import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
 import { commitWork } from './commit'
-import { updateFunctionComponent, updateHostComponent } from './component'
+import { reconcileChilren } from './reconcile'
+import { createDOM } from './dom'
 import { isFunctionComponent } from '../utils/utils'
 
-export function initWorkLoop() {
+export function initWorkLoop(nextWorkUnitFiber) {
+	const deletions = []
+	__RUNTIME_PROFILE___.nextWorkUnitFiber = nextWorkUnitFiber
 	function workLoop(deadline) {
 		let shouldYield = false
 		while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
 			/*
 				 处理"一层" fiber 节点
 			 */
-			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber)
+			nextWorkUnitFiber = __RUNTIME_PROFILE___.nextWorkUnitFiber
+			__RUNTIME_PROFILE___.nextWorkUnitFiber 
+				= nextWorkUnitFiber 
+				= performUnitWork(nextWorkUnitFiber, deletions)
 			shouldYield = deadline.timeRemaining() < 1
 		}
 
@@ -19,22 +25,23 @@ export function initWorkLoop() {
 				即 整个 fiber 树已经构建并遍历完成
 				即可以开始提交并更新 DOM
 		 */
-		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.workInProgressFiberOfAppRoot) {
-			console.time(`Commit Work ==>>`)
-			__RUNTIME_PROFILE___.deletions.forEach(item => {
+		if (!nextWorkUnitFiber && __RUNTIME_PROFILE___.workInProgressFiberOfAppRoot) {
+			// console.time(`Commit Work ==>>`)
+			deletions.forEach(item => {
 				commitWork(item)
 			})
 			/*
 				提交时直接传入容器节点的子节点的 fiber 对象, 即当前应用顶层节点的 fiber 对象 
 			 */
 			commitWork(__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot.child)
-			console.timeEnd(`Commit Work ==>>`)
+			// console.timeEnd(`Commit Work ==>>`)
 			/* 
 				保留提交、更新完毕后的当前 fiber 对象
 				将顶层标志位重置为 null
 			 */
 			__RUNTIME_PROFILE___.currentRootFiber = __RUNTIME_PROFILE___.workInProgressFiberOfAppRoot
 			__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot = null
+			deletions.length = 0
 			console.log('commitWork ===> ', __RUNTIME_PROFILE___.currentRootFiber)
 		}
 		window.requestIdleCallback(workLoop)
@@ -43,51 +50,27 @@ export function initWorkLoop() {
 	return workLoop
 }
 
-export function workLoop(deadline) {
-	let shouldYield = false
-	while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
-		/*
-			 处理"一层" fiber 节点
-		 */
-		__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber)
-		shouldYield = deadline.timeRemaining() < 1
-	}
-
-	/* 
-		__RUNTIME_PROFILE___.nextWorkUnitFiber 不存在时
-			即 整个 fiber 树已经构建并遍历完成
-			即可以开始提交并更新 DOM
-	 */
-	if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.workInProgressFiberOfAppRoot) {
-		console.time(`Commit Work ==>>`)
-		__RUNTIME_PROFILE___.deletions.forEach(item => {
-			commitWork(item)
-		})
-		/*
-			提交时直接传入容器节点的子节点的 fiber 对象, 即当前应用顶层节点的 fiber 对象 
-		 */
-		commitWork(__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot.child)
-		console.timeEnd(`Commit Work ==>>`)
-		/* 
-			保留提交、更新完毕后的当前 fiber 对象
-			将顶层标志位重置为 null
-		 */
-		__RUNTIME_PROFILE___.currentRootFiber = __RUNTIME_PROFILE___.workInProgressFiberOfAppRoot
-		// __RUNTIME_PROFILE___.currentRootFiber.alternate = null
-		__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot = null
-		console.log('commitWork ===> ', __RUNTIME_PROFILE___.currentRootFiber)
-	}
-	window.requestIdleCallback(workLoop)
-}
-
-export function performUnitWork(fiber) {
+export function performUnitWork(fiber, deletions) {
 	/*
 		在首次 render 时, fiber 为当前应用所在的容器节点对应的 fiber, 视作非函数节点并处理
 	 */
 	if (isFunctionComponent(fiber)) {
-		updateFunctionComponent(fiber)
+		// fiber.hooks = []
+		/*
+			将当前处理的 fiber 节点暂存
+			在 type() 时需要读取当前 fiber 以及对应的 hooks
+		*/
+		__RUNTIME_PROFILE___.workInProgressFiberOfNowCompt = fiber
+		__RUNTIME_PROFILE___.hookIndex = 0
+		const children = [fiber.type.call(undefined, fiber.props)]
+		fiber.props.children = children
+		fiber.dirty = false
+		reconcileChilren(fiber, deletions)
 	} else {
-		updateHostComponent(fiber)
+		if (!fiber.stateNode) {
+			fiber.stateNode = createDOM(fiber)
+		}
+		reconcileChilren(fiber, deletions)
 	}
 
 	/*

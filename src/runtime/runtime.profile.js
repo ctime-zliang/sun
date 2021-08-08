@@ -18,7 +18,5 @@ export const __RUNTIME_PROFILE___ = {
 	 */
 	currentRootFiber: null,
 	/* ... */
-	deletions: [],
-	/* ... */
 	hookIndex: 0,
 }
