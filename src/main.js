@@ -1,7 +1,7 @@
 import { NODE_TYPE } from './config/config'
 import { __RUNTIME_PROFILE___ } from './runtime/runtime.profile'
 import { initWorkLoop } from './lib/scheduler'
-import { generateStructFiber, generateStructVDOM, isApprovedComponent } from './utils/utils'
+import { generateStructFiber, generateStructVDOM, generateStructFiberRoot } from './utils/utils'
 
 /**
  * 创建 元素 VDOM
@@ -39,17 +39,25 @@ export function createTextElement(text) {
 
 export function render(element, container) {
 	/*
-		创建渲染起始 fiber 对象
-		创建应用所在容器节点的 fiber 对象并将其作为初始 fiber
+		创建当前应用的根 fiber 节点
 	 */
-	const startFiber = generateStructFiber({
+	const rootFiber = generateStructFiber({
 		stateNode: container,
 		type: container.nodeName.toLowerCase(),
 		props: { children: [element] },
 		alternate: null,
 		dirty: false,
+		index: ++__RUNTIME_PROFILE___.rootFiberIndex
 	})
-	__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot = startFiber
-	console.log(`Root.Fiber 初始化 ===> `, startFiber)
-	window.requestIdleCallback(initWorkLoop(startFiber))
+	if (!__RUNTIME_PROFILE___.fiberRoot) {
+		__RUNTIME_PROFILE___.fiberRoot = generateStructFiberRoot({
+			current: null
+		})
+	}
+	if (__RUNTIME_PROFILE___.fiberRoot && !__RUNTIME_PROFILE___.fiberRoot.current) {
+		__RUNTIME_PROFILE___.fiberRoot.current = rootFiber
+	}	
+	__RUNTIME_PROFILE___.rootFiber = rootFiber
+	console.log(`Root.Fiber 初始化 ===> `, rootFiber)
+	window.requestIdleCallback(initWorkLoop(rootFiber))
 }

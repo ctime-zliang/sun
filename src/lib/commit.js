@@ -1,5 +1,5 @@
 import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
-import { RECONCILE_TYPE } from '../config/config'
+import { RECONCILE_EFFECT_TYPE } from '../config/config'
 import { updateDOM, commitAppendChild, commitDeleteChild } from './dom'
 
 function commitDom(fiber) {
@@ -14,11 +14,11 @@ function commitDom(fiber) {
 		parentFiber = parentFiber.parent
 	}
 	const referenceDom = parentFiber.stateNode
-	if (fiber.effectTag === RECONCILE_TYPE.PLACEMENT) {
+	if (fiber.effectTag === RECONCILE_EFFECT_TYPE.PLACEMENT) {
 		commitAppendChild(fiber.stateNode, referenceDom)
-	} else if (fiber.effectTag === RECONCILE_TYPE.DELETION) {
+	} else if (fiber.effectTag === RECONCILE_EFFECT_TYPE.DELETION) {
 		commitDeleteChild(fiber, referenceDom)
-	} else if (fiber.effectTag === RECONCILE_TYPE.UPDATE) {
+	} else if (fiber.effectTag === RECONCILE_EFFECT_TYPE.UPDATE) {
 		updateDOM(fiber.stateNode, fiber.alternate.props, fiber.props)
 	}
 }

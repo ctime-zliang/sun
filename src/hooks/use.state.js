@@ -19,14 +19,14 @@ export function useState(initValue) {
 		/*
 			创建新的起始 fiber 对象
 		 */
-		const startFiber = generateStructFiber({
+		const rootFiber = generateStructFiber({
 			stateNode: __RUNTIME_PROFILE___.currentRootFiber.stateNode,
 			type: __RUNTIME_PROFILE___.currentRootFiber.type,
 			props: __RUNTIME_PROFILE___.currentRootFiber.props,
 			alternate: __RUNTIME_PROFILE___.currentRootFiber,
 		})
-		__RUNTIME_PROFILE___.workInProgressFiberOfAppRoot = startFiber
-		__RUNTIME_PROFILE___.nextWorkUnitFiber = startFiber
+		__RUNTIME_PROFILE___.rootFiber = rootFiber
+		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber
 	}
 	componentFiber.hooks.push(hook)
 	__RUNTIME_PROFILE___.hookIndex++

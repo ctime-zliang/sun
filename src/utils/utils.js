@@ -1,3 +1,5 @@
+import { RECONCILE_EFFECT_TYPE } from '../config/config'
+
 export function generateStructVDOM(type, props) {
 	return {
 		type,
@@ -7,7 +9,14 @@ export function generateStructVDOM(type, props) {
 
 export function generateStructFiber(args) {
 	const defaults = {
-		/* VDOM 属性/fiber 链表节点属性 */
+		/* 
+			VDOM 属性/fiber 链表节点属性 
+		*/
+		/* 
+			FunctionComponent = 函数本身
+			ClassComponent = class
+			HostComponent = DOM节点 tagName 
+		*/
 		type: null,
 		elementType: null,
 		stateNode: null,
@@ -16,10 +25,25 @@ export function generateStructFiber(args) {
 		parent: null,
 		sibling: null,
 		alternate: null,
-		effectTag: null,
+		index: null,
+		effectTag: RECONCILE_EFFECT_TYPE.NO_EFFECT,
+		key: null,
 		dirty: false,
-		/* hooks */
+		globalRoot: false,
+		/* 
+			hooks 
+		*/
 		hooks: [],
+	}
+	return {
+		...defaults,
+		...args,
+	}
+}
+
+export function generateStructFiberRoot(args) {
+	const defaults = {
+		current: null
 	}
 	return {
 		...defaults,

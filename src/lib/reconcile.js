@@ -1,4 +1,4 @@
-import { RECONCILE_TYPE } from '../config/config'
+import { RECONCILE_EFFECT_TYPE } from '../config/config'
 import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
 import { generateStructFiber } from '../utils/utils'
 
@@ -37,7 +37,7 @@ export function reconcileChilren(wipFiber, deletions) {
 				parent: wipFiber,
 				dirty: true,
 				alternate: oldFiberOfNowWIPFiber,
-				effectTag: RECONCILE_TYPE.UPDATE,
+				effectTag: RECONCILE_EFFECT_TYPE.UPDATE,
 			})
 		}
 		if (!sameType) {
@@ -51,11 +51,11 @@ export function reconcileChilren(wipFiber, deletions) {
 				parent: wipFiber,
 				dirty: true,
 				alternate: null,
-				effectTag: RECONCILE_TYPE.PLACEMENT,
+				effectTag: RECONCILE_EFFECT_TYPE.PLACEMENT,
 			})
 		}
 		if (!sameType && oldFiberOfNowWIPFiber) {
-			oldFiberOfNowWIPFiber.effectTag = RECONCILE_TYPE.DELETION
+			oldFiberOfNowWIPFiber.effectTag = RECONCILE_EFFECT_TYPE.DELETION
 			deletions.push(oldFiberOfNowWIPFiber)
 		}
 		/*
