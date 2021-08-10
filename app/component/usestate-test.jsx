@@ -6,11 +6,11 @@ export function UsestateHookTest() {
 		setNumber(number + 1)
 	}
 	return (
-		<div>
-			<span onClick={clickAction} style="display: block;">
+		<main>
+			<div onClick={clickAction} style="display: block;">
 				{number}
-			</span>
-		</div>
+			</div>
+		</main>
 	)
 }
 export function UsestateHookIndex() {
@@ -18,8 +18,13 @@ export function UsestateHookIndex() {
 	return (
 		<main className="row-index" style={{ border: '1px solid red' }}>
 			<UsestateHookTest />
-			<UsestateHookTest />
-			<div onClick={setCount}>count: {count}</div>
+			<div
+				onClick={() => {
+					setCount(count + 1)
+				}}
+			>
+				count: {count}
+			</div>
 		</main>
 	)
 }

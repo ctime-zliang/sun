@@ -1,9 +1,10 @@
-import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
+import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../runtime/runtime.profile'
 import { generateStructFiber, getRootFiber } from '../utils/utils'
 import { getHook } from '../hooks/hook'
 
 export function useState(initValue) {
-	const componentFiber = __RUNTIME_PROFILE___.workInProgressFiberOfNowCompt
+	// debugger
+	const componentFiber = __RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt
 	const rootFiber = getRootFiber(componentFiber)
 	const oldHookOfCompt = getHook()
 	const hook = { state: oldHookOfCompt ? oldHookOfCompt.state : initValue, queue: [] }
@@ -16,6 +17,7 @@ export function useState(initValue) {
 		hook.state = item
 	})
 	const setState = action => {
+		// debugger
 		hook.queue.push(action)
 		/*
 			创建新的起始 fiber 对象
@@ -26,6 +28,7 @@ export function useState(initValue) {
 				type: rootFiber.type,
 				props: rootFiber.props,
 				alternate: rootFiber,
+				dirty: true,
 			},
 			{
 				index: rootFiber.index,
@@ -33,9 +36,10 @@ export function useState(initValue) {
 			}
 		)
 		__RUNTIME_PROFILE___.rootFiberList.splice(rootFiber.index, 1, newRootFiber)
+		__RUNTIME_PROFILE___.fiberRoot.current = newRootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = newRootFiber
 	}
 	componentFiber.hooks.push(hook)
-	__RUNTIME_PROFILE___.hookIndex++
+	__RUNTIME_COMPT_PROFILE___.hookIndexOfNowCompt++
 	return [hook.state, setState]
 }

@@ -52,7 +52,7 @@ export function render(element, container) {
 			type: container.nodeName.toLowerCase(),
 			props: { children: [element] },
 			alternate: null,
-			dirty: false,
+			dirty: true,
 		},
 		{
 			index: ++renderIndex,

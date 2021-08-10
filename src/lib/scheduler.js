@@ -1,4 +1,4 @@
-import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
+import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../runtime/runtime.profile'
 import { commitWork } from './commit'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
@@ -6,6 +6,7 @@ import { isFunctionComponent } from '../utils/utils'
 
 export function initWorkLoop() {
 	let deletions = []
+	let currentRootFiber = null
 	function workLoop(deadline) {
 		let shouldYield = false
 		while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
@@ -22,18 +23,24 @@ export function initWorkLoop() {
 				即可以开始提交并更新 DOM
 		 */
 		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.fiberRoot.current) {
-			console.time(`CommitWork Time Consuming`)
+			console.time(`Commit Work ===>>>`)
 			deletions.forEach(item => {
 				commitWork(item)
 			})
 			commitWork(__RUNTIME_PROFILE___.fiberRoot.current.child)
-			console.timeEnd(`CommitWork Time Consuming`)
-			__RUNTIME_PROFILE___.currentRootFiber = __RUNTIME_PROFILE___.fiberRoot.current
+			__RUNTIME_PROFILE___.fiberRoot.current.dirty = false
+			currentRootFiber = __RUNTIME_PROFILE___.fiberRoot.current
 			__RUNTIME_PROFILE___.fiberRoot.current = null
 			deletions.length = 0
-			console.log('commit Work ===>>> ', __RUNTIME_PROFILE___.currentRootFiber)
-			const nextRootFiber = __RUNTIME_PROFILE___.rootFiberList[__RUNTIME_PROFILE___.currentRootFiber.index + 1] || null
-			if (nextRootFiber) {
+			console.timeEnd(`Commit Work ===>>>`)
+			console.log('Commit Work ~~~>>> ', currentRootFiber)
+
+			/* 
+				__RUNTIME_PROFILE___.rootFiberList 中存储每次 render 时新建的 rootFiber
+				此处即在处理完本次 render 时, 尝试处理下一个 render 实例
+			 */
+			const nextRootFiber = __RUNTIME_PROFILE___.rootFiberList[currentRootFiber.index + 1] || null
+			if (nextRootFiber && nextRootFiber.dirty) {
 				__RUNTIME_PROFILE___.nextWorkUnitFiber = nextRootFiber
 				__RUNTIME_PROFILE___.fiberRoot.current = nextRootFiber
 			}
@@ -49,16 +56,16 @@ export function performUnitWork(fiber, deletions) {
 		在首次 render 时, fiber 为当前应用所在的容器节点对应的 fiber, 视作非函数节点并处理
 	 */
 	if (isFunctionComponent(fiber)) {
-		// fiber.hooks = []
+		fiber.hooks = []
 		/*
 			将当前处理的 fiber 节点暂存
 			在 type() 时需要读取当前 fiber 以及对应的 hooks
 		*/
-		__RUNTIME_PROFILE___.workInProgressFiberOfNowCompt = fiber
-		__RUNTIME_PROFILE___.hookIndex = 0
+		__RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt = fiber
+		__RUNTIME_COMPT_PROFILE___.hookIndexOfNowCompt = 0
 		const children = [fiber.type.call(undefined, fiber.props)]
 		fiber.props.children = children
-		fiber.dirty = false
+		// fiber.dirty = false
 		reconcileChilren(fiber, deletions)
 	} else {
 		if (!fiber.stateNode) {

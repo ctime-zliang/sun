@@ -2,9 +2,10 @@ export const __RUNTIME_PROFILE___ = {
 	fiberRoot: null,
 	rootFiber: null,
 	rootFiberList: [],
-	workInProgressFiberOfNowCompt: null,
 	nextWorkUnitFiber: null,
-	currentRootFiber: null,
-	/* ... */
-	hookIndex: 0,
+}
+
+export const __RUNTIME_COMPT_PROFILE___ = {
+	workInProgressFiberOfNowCompt: null,
+	hookIndexOfNowCompt: 0,
 }

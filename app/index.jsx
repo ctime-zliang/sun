@@ -10,12 +10,6 @@ const App = () => {
 		setCount1(state => {
 			return state + 1
 		})
-		setCount1(state => {
-			return state + 1
-		})
-		// window.setTimeout(() => {
-		// 	setCount1(Math.random())
-		// }, 16.67)
 		setStatus(!status)
 	}
 	return (
@@ -29,7 +23,7 @@ const App = () => {
 }
 
 Sun.render(<UsestateHookIndex />, document.querySelector(`#app`))
-// Sun.render(<UsestateHookTest />, document.querySelector(`#app2`))
+Sun.render(<ClickAddLongChild />, document.querySelector(`#app2`))
 
 // const syncBlock = (delay = 500) => {
 // 	const end = new Date().getTime() + delay
