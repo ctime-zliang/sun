@@ -7,7 +7,12 @@ export function generateStructVDOM(type, props) {
 	}
 }
 
-export function generateStructFiber(args) {
+/*
+	root = {
+		root: boolean
+	}
+ */
+export function generateStructFiber(args, root = {}) {
 	const defaults = {
 		/* 
 			VDOM 属性/fiber 链表节点属性 
@@ -25,11 +30,9 @@ export function generateStructFiber(args) {
 		parent: null,
 		sibling: null,
 		alternate: null,
-		index: null,
 		effectTag: RECONCILE_EFFECT_TYPE.NO_EFFECT,
 		key: null,
 		dirty: false,
-		globalRoot: false,
 		/* 
 			hooks 
 		*/
@@ -38,17 +41,26 @@ export function generateStructFiber(args) {
 	return {
 		...defaults,
 		...args,
+		...root,
 	}
 }
 
 export function generateStructFiberRoot(args) {
 	const defaults = {
-		current: null
+		current: null,
 	}
 	return {
 		...defaults,
 		...args,
 	}
+}
+
+export function getRootFiber(fiber) {
+	let rootFiber = fiber
+	while (!rootFiber.root) {
+		rootFiber = rootFiber.parent
+	}
+	return rootFiber
 }
 
 export function isNewly(oldObj, newObj) {

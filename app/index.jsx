@@ -1,7 +1,7 @@
 import Sun, { useState } from '@/'
 import { ClickAddLi, ClickAddLongChild } from './component/click-add-li'
 import { TraverseFiberTree } from './component/traverse-fiber-tree'
-import { UsestateHookIndex } from './component/usestate-test'
+import { UsestateHookIndex, UsestateHookTest } from './component/usestate-test'
 
 const App = () => {
 	const [count1, setCount1] = useState(0)
@@ -28,7 +28,8 @@ const App = () => {
 	)
 }
 
-Sun.render(<App />, document.querySelector(`#app`))
+Sun.render(<UsestateHookIndex />, document.querySelector(`#app`))
+// Sun.render(<UsestateHookTest />, document.querySelector(`#app2`))
 
 // const syncBlock = (delay = 500) => {
 // 	const end = new Date().getTime() + delay

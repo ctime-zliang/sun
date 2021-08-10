@@ -4,19 +4,15 @@ import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 import { isFunctionComponent } from '../utils/utils'
 
-export function initWorkLoop(nextWorkUnitFiber) {
-	const deletions = []
-	__RUNTIME_PROFILE___.nextWorkUnitFiber = nextWorkUnitFiber
+export function initWorkLoop() {
+	let deletions = []
 	function workLoop(deadline) {
 		let shouldYield = false
-		while (nextWorkUnitFiber && !shouldYield) {
+		while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
 			/*
 				 处理"一层" fiber 节点
 			 */
-			nextWorkUnitFiber = __RUNTIME_PROFILE___.nextWorkUnitFiber
-			__RUNTIME_PROFILE___.nextWorkUnitFiber 
-				= nextWorkUnitFiber 
-				= performUnitWork(nextWorkUnitFiber, deletions)
+			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber, deletions)
 			shouldYield = deadline.timeRemaining() < 1
 		}
 
@@ -25,24 +21,22 @@ export function initWorkLoop(nextWorkUnitFiber) {
 				即 整个 fiber 树已经构建并遍历完成
 				即可以开始提交并更新 DOM
 		 */
-		if (!nextWorkUnitFiber && __RUNTIME_PROFILE___.fiberRoot.current) {
-			// console.time(`Commit Work ==>>`)
+		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.fiberRoot.current) {
+			console.time(`CommitWork Time Consuming`)
 			deletions.forEach(item => {
 				commitWork(item)
 			})
-			/*
-				提交时直接传入容器节点的子节点的 fiber 对象, 即当前应用顶层节点的 fiber 对象 
-			 */
 			commitWork(__RUNTIME_PROFILE___.fiberRoot.current.child)
-			// console.timeEnd(`Commit Work ==>>`)
-			/* 
-				保留提交、更新完毕后的当前 fiber 对象
-				将顶层标志位重置为 null
-			 */
+			console.timeEnd(`CommitWork Time Consuming`)
 			__RUNTIME_PROFILE___.currentRootFiber = __RUNTIME_PROFILE___.fiberRoot.current
 			__RUNTIME_PROFILE___.fiberRoot.current = null
 			deletions.length = 0
-			console.log('commitWork ===> ', __RUNTIME_PROFILE___.currentRootFiber)
+			console.log('commit Work ===>>> ', __RUNTIME_PROFILE___.currentRootFiber)
+			const nextRootFiber = __RUNTIME_PROFILE___.rootFiberList[__RUNTIME_PROFILE___.currentRootFiber.index + 1] || null
+			if (nextRootFiber) {
+				__RUNTIME_PROFILE___.nextWorkUnitFiber = nextRootFiber
+				__RUNTIME_PROFILE___.fiberRoot.current = nextRootFiber
+			}
 		}
 		window.requestIdleCallback(workLoop)
 	}
