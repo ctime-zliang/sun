@@ -24,7 +24,7 @@ const App = () => {
 	)
 }
 
-Sun.render(<Outer />, document.querySelector(`#app`))
+Sun.render(<ClickAddLi />, document.querySelector(`#app`))
 // Sun.render(<App />, document.querySelector(`#app2`))
 
 // function fffffff() {
