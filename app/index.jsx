@@ -2,6 +2,7 @@ import Sun, { useState } from '@/'
 import { ClickAddLi, ClickAddLongChild } from './component/click-add-li'
 import { TraverseFiberTree } from './component/traverse-fiber-tree'
 import { UsestateHookIndex, UsestateHookTest } from './component/usestate-test'
+import { Outer, Child1 } from './component/props-test'
 
 const App = () => {
 	console.log(`Component: App`)
@@ -23,13 +24,8 @@ const App = () => {
 	)
 }
 
-Sun.render(<UsestateHookIndex />, document.querySelector(`#app`))
-Sun.render(<App />, document.querySelector(`#app2`))
-
-// const syncBlock = (delay = 500) => {
-// 	const end = new Date().getTime() + delay
-// 	while (new Date().getTime() < end) {}
-// }
+Sun.render(<Outer />, document.querySelector(`#app`))
+// Sun.render(<App />, document.querySelector(`#app2`))
 
 // function fffffff() {
 // 	console.log(`Task Start`)

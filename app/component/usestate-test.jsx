@@ -14,6 +14,7 @@ export function UsestateHookTest() {
 		</main>
 	)
 }
+
 export function UsestateHookIndex() {
 	console.log(`Component: UsestateHookIndex`)
 	const [count, setCount] = useState(100)

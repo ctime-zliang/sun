@@ -72,6 +72,6 @@ export function render(element, container) {
 		__RUNTIME_PROFILE___.fiberRoot.current = rootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber
 	}
-	console.log(`Root.Fiber 初始化 ~~~> `, rootFiber)
+	console.log(`Root.Fiber ~~~> `, rootFiber)
 	window.requestIdleCallback(initWorkLoop())
 }

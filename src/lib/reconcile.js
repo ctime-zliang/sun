@@ -24,8 +24,11 @@ export function reconcileChilren(wipFiber, deletions) {
 	let i = 0
 	for (; i < children.length || oldFiberOfNowWIPFiber != null; i++) {
 		let newChildFiber = null
+		if (!children[i]) {
+			continue
+		}
 		const element = children[i]
-		const sameType = !!(oldFiberOfNowWIPFiber && element && element.type == oldFiberOfNowWIPFiber.type)
+		const sameType = !!(oldFiberOfNowWIPFiber && element.type == oldFiberOfNowWIPFiber.type)
 		if (sameType) {
 			/*
 				之前存在的节点, 需要更新 
