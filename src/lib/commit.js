@@ -29,6 +29,7 @@ export function commitWork(fiber) {
 	}
 	let root = fiber
 	let current = fiber
+
 	while (current) {
 		if (current.dirty) {
 			commitDom(current)
@@ -38,8 +39,7 @@ export function commitWork(fiber) {
             深度遍历子节点
             如果该节点没有子节点, 则跳过
          */
-		if (current.child) {
-			current = current.child
+		if (current.child && ((current = current.child), current)) {
 			if (current.dirty) {
 				commitDom(current)
 				current.dirty = false

@@ -5,7 +5,7 @@ import { generateStructFiber } from '../utils/utils'
 export function reconcileChilren(wipFiber, deletions) {
 	const children = wipFiber.props.children
 	/*
-		需要清除上一轮更新完毕时保存的上上一轮的当前层 fiber 节点的副本 
+		需要清除上一轮更新完毕时保存的上上一轮的当前层 fiber 节点的引用
 	 */
 	if (wipFiber.alternate && wipFiber.alternate.alternate) {
 		wipFiber.alternate.alternate = null

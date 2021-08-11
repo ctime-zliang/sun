@@ -3,7 +3,6 @@ import { generateStructFiber, getRootFiber } from '../utils/utils'
 import { getHook } from '../hooks/hook'
 
 export function useState(initValue) {
-	// debugger
 	const componentFiber = __RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt
 	const rootFiber = getRootFiber(componentFiber)
 	const oldHookOfCompt = getHook()
@@ -17,11 +16,10 @@ export function useState(initValue) {
 		hook.state = item
 	})
 	const setState = action => {
-		// debugger
 		hook.queue.push(action)
 		/*
-			创建新的起始 fiber 对象
-		 */
+			重新创建当前应用的根 fiber 节点
+	 	 */
 		const newRootFiber = generateStructFiber(
 			{
 				stateNode: rootFiber.stateNode,

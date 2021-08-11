@@ -4,36 +4,64 @@ import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 import { isFunctionComponent } from '../utils/utils'
 
+/*
+	性能监测
+ */
+let d = {
+	rIC_Count: 0,
+	rIC_Consuming: [],
+	commitConsuming: 0,
+	fiberConsuming: 0,
+}
+let performCollector = JSON.parse(JSON.stringify(d))
+
 export function initWorkLoop() {
 	let deletions = []
 	let currentRootFiber = null
 	function workLoop(deadline) {
 		let shouldYield = false
 		while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
+			++performCollector.rIC_Count
+			const pf__start = new Date().getTime()
 			/*
-				 处理"一层" fiber 节点
+				fiber 树由具有父子关系和兄弟关系的节点构成
+				performUnitWork 每次只处理"一层" fiber 节点
 			 */
 			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber, deletions)
 			shouldYield = deadline.timeRemaining() < 1
+			performCollector.rIC_Consuming.push(new Date().getTime() - pf__start)
 		}
 
 		/* 
-			__RUNTIME_PROFILE___.nextWorkUnitFiber 不存在时
-				即 整个 fiber 树已经构建并遍历完成
-				即可以开始提交并更新 DOM
+			__RUNTIME_PROFILE___.nextWorkUnitFiber 不存在时, 即整个 fiber 树已经构建并遍历完成
+			即可以开始提交 DOM 操作
 		 */
 		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.fiberRoot.current) {
-			console.time(`Commit Work ===>>>`)
+			/*
+				暂存当前活动的应用的顶层 fiber(rootFiber) 
+				清除全局 fiberRoot 对该活动应用的 rootFiber 的引用
+			 */
+			currentRootFiber = __RUNTIME_PROFILE___.fiberRoot.current
+			__RUNTIME_PROFILE___.fiberRoot.current = null
+
+			/*
+				提交 DOM 操作 
+			 */
+			const pf__start = new Date().getTime()
 			deletions.forEach(item => {
 				commitWork(item)
 			})
-			commitWork(__RUNTIME_PROFILE___.fiberRoot.current.child)
-			__RUNTIME_PROFILE___.fiberRoot.current.dirty = false
-			currentRootFiber = __RUNTIME_PROFILE___.fiberRoot.current
-			__RUNTIME_PROFILE___.fiberRoot.current = null
+			commitWork(currentRootFiber.child)
+			/* 
+				重置标记符
+			 */
+			currentRootFiber.dirty = false
 			deletions.length = 0
-			console.timeEnd(`Commit Work ===>>>`)
-			console.log('Commit Work ~~~>>> ', currentRootFiber)
+
+			performCollector.commitConsuming = new Date().getTime() - pf__start
+			performCollector.fiberConsuming = performCollector.rIC_Consuming.reduce((accumulator, currentValue, currentIndex, array) => {
+				return accumulator + currentValue
+			})
 
 			/* 
 				__RUNTIME_PROFILE___.rootFiberList 中存储每次 render 时新建的 rootFiber
@@ -44,6 +72,9 @@ export function initWorkLoop() {
 				__RUNTIME_PROFILE___.nextWorkUnitFiber = nextRootFiber
 				__RUNTIME_PROFILE___.fiberRoot.current = nextRootFiber
 			}
+
+			console.log(JSON.parse(JSON.stringify(performCollector)))
+			performCollector = JSON.parse(JSON.stringify(d))
 		}
 		window.requestIdleCallback(workLoop)
 	}
@@ -56,7 +87,6 @@ export function performUnitWork(fiber, deletions) {
 		在首次 render 时, fiber 为当前应用所在的容器节点对应的 fiber, 视作非函数节点并处理
 	 */
 	if (isFunctionComponent(fiber)) {
-		fiber.hooks = []
 		/*
 			将当前处理的 fiber 节点暂存
 			在 type() 时需要读取当前 fiber 以及对应的 hooks
@@ -65,7 +95,6 @@ export function performUnitWork(fiber, deletions) {
 		__RUNTIME_COMPT_PROFILE___.hookIndexOfNowCompt = 0
 		const children = [fiber.type.call(undefined, fiber.props)]
 		fiber.props.children = children
-		// fiber.dirty = false
 		reconcileChilren(fiber, deletions)
 	} else {
 		if (!fiber.stateNode) {

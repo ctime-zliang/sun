@@ -1,6 +1,7 @@
 import Sun, { useState } from '@/'
 
 export function TraverseFiberTree() {
+	console.log(`Component: TraverseFiberTree`)
 	const [fontSize, setFontSize] = useState(12)
 	const [status, setStatus] = useState(false)
 	return (

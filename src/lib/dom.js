@@ -52,55 +52,63 @@ export function updateDOM(dom, oldProps, newProps) {
 	/*
 		系统事件处理 - 移除 
 	 */
-	systemEventOfOldProps
-		.filter((item, index) => {
-			return !(item in newProps) || isNewly(oldProps, newProps)(item)
-		})
-		.forEach((item, index) => {
+	for (let i = 0; i < systemEventOfOldProps.length; i++) {
+		const item = systemEventOfOldProps[i]
+		if (!(item in newProps) || isNewly(oldProps, newProps)(item)) {
 			const eventType = item.toLowerCase().substring(2)
 			dom.removeEventListener(eventType, oldProps[item])
-		})
+		}
+	}
 	/* 
 		删除旧属性
 	 */
-	commPropsOfOldProps.filter(isOld(oldProps, newProps)).forEach((item, index) => {
-		dom[item] = undefined
-		if (dom.removeAttribute) {
-			dom.removeAttribute(item)
+	for (let i = 0; i < commPropsOfOldProps.length; i++) {
+		const item = commPropsOfOldProps[i]
+		if (isOld(oldProps, newProps)(item)) {
+			dom[item] = undefined
+			if (dom.removeAttribute) {
+				dom.removeAttribute(item)
+			}
 		}
-	})
+	}
 	/*
-		更新 or 写入新属性 
+		更新或写入新属性 
 	 */
-	commPropsOfNewProps.filter(isNewly(oldProps, newProps)).forEach((item, index) => {
-		switch (item) {
-			case 'style': {
-				if (typeof newProps[item] == 'object') {
-					for (let attr in newProps[item]) {
-						dom.style[attr] = newProps[item][attr]
+	for (let i = 0; i < commPropsOfNewProps.length; i++) {
+		const item = commPropsOfNewProps[i]
+		if (isNewly(oldProps, newProps)(item)) {
+			switch (item) {
+				case 'style': {
+					if (Object.prototype.toString.call(newProps[item]).toLowerCase() === '[object object]') {
+						for (let attr in newProps[item]) {
+							dom.style[attr] = newProps[item][attr]
+						}
+						break
 					}
+					dom[item] = newProps[item]
 					break
 				}
-				dom[item] = newProps[item]
-				break
-			}
-			case 'className': {
-				dom[item] = newProps[item]
-				break
-			}
-			default: {
-				dom[item] = newProps[item]
-				if (dom.setAttribute && typeof newProps[item] != 'undefined') {
-					dom.setAttribute(item, newProps[item])
+				case 'className': {
+					dom[item] = newProps[item]
+					break
+				}
+				default: {
+					dom[item] = newProps[item]
+					if (dom.setAttribute && typeof newProps[item] != 'undefined') {
+						dom.setAttribute(item, newProps[item])
+					}
 				}
 			}
 		}
-	})
+	}
 	/*
 		系统事件处理 - 设置
 	 */
-	systemEventOfNewProps.filter(isNewly(oldProps, newProps)).forEach((item, index) => {
-		const eventType = item.toLowerCase().substring(2)
-		dom.addEventListener(eventType, newProps[item])
-	})
+	for (let i = 0; i < systemEventOfNewProps.length; i++) {
+		const item = systemEventOfNewProps[i]
+		if (isNewly(oldProps, newProps)(item)) {
+			const eventType = item.toLowerCase().substring(2)
+			dom.addEventListener(eventType, newProps[item])
+		}
+	}
 }

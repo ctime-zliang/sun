@@ -3,6 +3,10 @@ import { __RUNTIME_PROFILE___ } from './runtime/runtime.profile'
 import { initWorkLoop } from './lib/scheduler'
 import { generateStructFiber, generateStructVDOM, generateStructFiberRoot } from './utils/utils'
 
+/* 
+	创建一个全局的 fiberRoot
+	并设置其 current 指针指向当前活动(即 处于 mount 或 update 时)的应用的顶层 fiber
+ */
 __RUNTIME_PROFILE___.fiberRoot = generateStructFiberRoot({
 	current: null,
 })
@@ -55,6 +59,10 @@ export function render(element, container) {
 			dirty: true,
 		},
 		{
+			/* 
+				该 fiber 会被推入数组, 因此建立一个索引用以标注此 fiber
+				该索引值与该 fiber 在数组中的位置索引保持一致, 因此可以通过该 rootFiber 找到下一个应用的 rootFiber
+			 */
 			index: ++renderIndex,
 			root: true,
 		}
@@ -64,6 +72,6 @@ export function render(element, container) {
 		__RUNTIME_PROFILE___.fiberRoot.current = rootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber
 	}
-	console.log(`Root.Fiber 初始化 ===> `, rootFiber)
+	console.log(`Root.Fiber 初始化 ~~~> `, rootFiber)
 	window.requestIdleCallback(initWorkLoop())
 }

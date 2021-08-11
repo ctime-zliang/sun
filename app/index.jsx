@@ -4,6 +4,7 @@ import { TraverseFiberTree } from './component/traverse-fiber-tree'
 import { UsestateHookIndex, UsestateHookTest } from './component/usestate-test'
 
 const App = () => {
+	console.log(`Component: App`)
 	const [count1, setCount1] = useState(0)
 	const [status, setStatus] = useState(false)
 	const setCountAction1 = () => {
@@ -23,7 +24,7 @@ const App = () => {
 }
 
 Sun.render(<UsestateHookIndex />, document.querySelector(`#app`))
-Sun.render(<ClickAddLongChild />, document.querySelector(`#app2`))
+Sun.render(<App />, document.querySelector(`#app2`))
 
 // const syncBlock = (delay = 500) => {
 // 	const end = new Date().getTime() + delay

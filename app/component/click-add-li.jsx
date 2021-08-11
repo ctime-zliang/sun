@@ -1,6 +1,7 @@
 import Sun, { useState } from '@/'
 
 export function ClickAddLi() {
+	console.log(`Component: ClickAddLi`)
 	const [number, setNumber] = useState(0)
 	const [list, setList] = useState([])
 	const modifyList = () => {
@@ -28,6 +29,7 @@ export function ClickAddLi() {
 let count = 0
 let MAX_COUNT = 5000
 export function ClickAddLongChild() {
+	console.log(`Component: ClickAddLongChild`)
 	const [list, setList] = useState([])
 	const modifyList = () => {
 		++count
