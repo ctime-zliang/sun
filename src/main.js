@@ -69,7 +69,7 @@ export function render(element, container) {
 	if (!__RUNTIME_PROFILE___.fiberRoot.current) {
 		__RUNTIME_PROFILE___.fiberRoot.current = rootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber
+		console.log(`Root.Fiber ===>>>`, rootFiber)
+		window.requestIdleCallback(initWorkLoop())
 	}
-	console.log(`Root.Fiber ===>>>`, rootFiber)
-	window.requestIdleCallback(initWorkLoop())
 }
