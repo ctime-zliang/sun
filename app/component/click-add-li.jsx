@@ -1,27 +1,31 @@
 import Sun, { useState } from '@/'
 
+let len = 0
 export function ClickAddLi() {
 	console.log(`Component: ClickAddLi`)
-	const [number, setNumber] = useState(0)
-	const [list, setList] = useState([])
+	const [list, setList] = useState([1])
 	const modifyList = () => {
-		setNumber(number + 1)
 		const array = []
-		for (let i = 0; i < number; i++) {
+		for (let i = 0; i < len; i++) {
 			array.push(i)
 		}
 		setList(array)
+		len++
 	}
 	return (
 		<div className="row-view">
-			<div onClick={modifyList}>
-				Modify List {list.length} - {number}
-			</div>
-			<ul>
+			<article onClick={modifyList}>Modify List {list.length}</article>
+			<main>
+				<p>Initial Li</p>
 				{list.map((item, index) => {
-					return <li>{item}</li>
+					return (
+						<p>
+							<div>{item}</div>
+							<div>{item}</div>
+						</p>
+					)
 				})}
-			</ul>
+			</main>
 		</div>
 	)
 }

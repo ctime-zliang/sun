@@ -25,6 +25,15 @@ export function reconcileChilren(wipFiber, deletions) {
 	for (; i < children.length || oldFiberOfNowWIPFiber != null; i++) {
 		let newChildFiber = null
 		if (!children[i]) {
+			/*
+				当 oldFiber 无法找到对应的新 fiber 时, 即代表需要删除该节点 
+			 */
+			if (oldFiberOfNowWIPFiber) {
+				oldFiberOfNowWIPFiber.effectTag = RECONCILE_EFFECT_TYPE.DELETION
+				oldFiberOfNowWIPFiber.dirty = true
+				deletions.push(oldFiberOfNowWIPFiber)
+				oldFiberOfNowWIPFiber = oldFiberOfNowWIPFiber.sibling
+			}
 			continue
 		}
 		const element = children[i]
@@ -59,6 +68,7 @@ export function reconcileChilren(wipFiber, deletions) {
 		}
 		if (!sameType && oldFiberOfNowWIPFiber) {
 			oldFiberOfNowWIPFiber.effectTag = RECONCILE_EFFECT_TYPE.DELETION
+			oldFiberOfNowWIPFiber.dirty = true
 			deletions.push(oldFiberOfNowWIPFiber)
 		}
 		/*

@@ -42,7 +42,7 @@ export function initWorkLoop() {
 			 */
 			currentRootFiber.dirty = false
 			deletions.length = 0
-			console.log(`Commit.Fiber ~~~> `, currentRootFiber)
+			console.log(`Commit.Fiber ===>>>`, currentRootFiber)
 
 			/* 
 				__RUNTIME_PROFILE___.rootFiberList 中存储每次 render 时新建的 rootFiber
@@ -61,6 +61,9 @@ export function initWorkLoop() {
 }
 
 export function performUnitWork(fiber, deletions) {
+	if (!fiber.type) {
+		return
+	}
 	/*
 		在首次 render 时, fiber 为当前应用所在的容器节点对应的 fiber, 视作非函数节点并处理
 	 */

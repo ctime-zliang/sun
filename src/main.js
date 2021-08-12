@@ -22,19 +22,12 @@ __RUNTIME_PROFILE___.fiberRoot = generateStructFiberRoot({
 	此函数目前存在问题: 无法正确处理 子节点列表
  */
 export function createElement(type, props, ...children) {
-	const cn = []
-	for (let i = 0; i < children.length; i++) {
-		const child = children[i]
-		if (Object.prototype.toString.call(child).toLowerCase() === '[object array]') {
-			// cn[i] = createElement(type, props, ...child)
-			return createElement(type, props, ...child)
-			continue
-		}
-		cn[i] = typeof child === 'object' ? child : createTextElement(child)
-	}
+	const flatChildren = children.flat(Infinity) // or children.flat(1)
 	return generateStructVDOM(type, {
 		...props,
-		children: cn,
+		children: flatChildren.map(child => {
+			return typeof child === 'object' ? child : createTextElement(child)
+		}),
 	})
 }
 
@@ -77,6 +70,6 @@ export function render(element, container) {
 		__RUNTIME_PROFILE___.fiberRoot.current = rootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber
 	}
-	console.log(`Root.Fiber ~~~> `, rootFiber)
+	console.log(`Root.Fiber ===>>>`, rootFiber)
 	window.requestIdleCallback(initWorkLoop())
 }

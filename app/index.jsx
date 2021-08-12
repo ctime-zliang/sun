@@ -19,13 +19,14 @@ const App = () => {
 			<article onClick={setCountAction1} style="border: 1px solid green">
 				{count1} - {status}
 			</article>
-			{status ? <div tag="true">True</div> : <div tag="false">False</div>}
+			{status ? <div tag="true">True 1</div> : <div tag="false">False 1</div>}
+			{status ? <div tag="true">True 2</div> : null}
 		</div>
 	)
 }
 
-Sun.render(<ClickAddLi />, document.querySelector(`#app`))
-// Sun.render(<App />, document.querySelector(`#app2`))
+Sun.render(<TraverseFiberTree />, document.querySelector(`#app`))
+Sun.render(<App />, document.querySelector(`#app2`))
 
 // function fffffff() {
 // 	console.log(`Task Start`)
