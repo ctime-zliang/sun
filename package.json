@@ -6,6 +6,7 @@
 	"scripts": {
 		"prettier-all": "prettier --write .",
 		"dev": "cross-env NODE_ENV=development webpack server --config ./config/webpack-test.dev.config.js",
+		"prod": "cross-env NODE_ENV=production webpack --config ./config/webpack-test.prod.config.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {

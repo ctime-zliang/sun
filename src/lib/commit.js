@@ -7,8 +7,8 @@ function commitDom(fiber) {
 		return
 	}
 	/* 
-        向上查找以找到最近的包含 DOM 的 fiber 节点
-    */
+		查找当前 fiber 对应的 DOM 或距离最近且存在 DOM 的 fiber 并返回该 fiber 的 DOM
+	 */
 	let parentFiber = fiber.parent
 	while (!parentFiber.stateNode) {
 		parentFiber = parentFiber.parent
@@ -70,17 +70,9 @@ export function commitWork(fiber) {
 		current = current.sibling
 	}
 	// commitDom(fiber)
-	// /*
-	// 	深度递归
-	// 		提交渲染子节点
-	//  */
 	// if (fiber.child) {
 	// 	commitWork(fiber.child)
 	// }
-	// /*
-	// 	广度递归
-	// 		提交渲染兄弟节点
-	//  */
 	// if (fiber.sibling) {
 	// 	commitWork(fiber.sibling)
 	// }

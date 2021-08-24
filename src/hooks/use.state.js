@@ -17,9 +17,6 @@ export function useState(initValue) {
 	})
 	const setState = action => {
 		hook.queue.push(action)
-		/*
-			重新创建当前应用的根 fiber 节点
-	 	 */
 		const newRootFiber = generateStructFiber(
 			{
 				stateNode: rootFiber.stateNode,
@@ -29,6 +26,9 @@ export function useState(initValue) {
 				dirty: true,
 			},
 			{
+				/*
+					保留索引值 
+				 */
 				index: rootFiber.index,
 				root: true,
 			}

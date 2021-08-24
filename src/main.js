@@ -18,9 +18,6 @@ __RUNTIME_PROFILE___.fiberRoot = generateStructFiberRoot({
  * @param {any} children 子节点列表
  * @return {htmlelement} 元素 VDOM
  */
-/*
-	此函数目前存在问题: 无法正确处理 子节点列表
- */
 export function createElement(type, props, ...children) {
 	const flatChildren = children.flat(Infinity) // or children.flat(1)
 	return generateStructVDOM(type, {
@@ -45,9 +42,6 @@ export function createTextElement(text) {
 
 let renderIndex = -1
 export function render(element, container) {
-	/*
-		创建当前应用的根 fiber 节点
-	 */
 	const rootFiber = generateStructFiber(
 		{
 			stateNode: container,
@@ -57,9 +51,8 @@ export function render(element, container) {
 			dirty: true,
 		},
 		{
-			/* 
-				该 fiber 会被推入数组, 因此建立一个索引用以标注此 fiber
-				该索引值与该 fiber 在数组中的位置索引保持一致, 因此可以通过该 rootFiber 找到下一个应用的 rootFiber
+			/*
+				当前 fiber 的索引编号, 保证值与该 fiber 在 fiber-list 中的位置索引一致 
 			 */
 			index: ++renderIndex,
 			root: true,

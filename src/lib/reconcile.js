@@ -17,10 +17,6 @@ export function reconcileChilren(wipFiber, deletions) {
 	let oldFiberOfNowWIPFiber = wipFiber.alternate && wipFiber.alternate.child
 	let prevSiblingFiber = null
 
-	/* 
-        遍历当前 vDom 下的所有子 vDoms
-		逐一生成 fiber 节点并构建成链表
-     */
 	let i = 0
 	for (; i < children.length || oldFiberOfNowWIPFiber != null; i++) {
 		let newChildFiber = null
@@ -96,6 +92,5 @@ export function reconcileChilren(wipFiber, deletions) {
 		}
 		prevSiblingFiber = newChildFiber
 	}
-	// console.log(`当前的 Fiber ===>`, wipFiber)
 	return wipFiber
 }

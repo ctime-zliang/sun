@@ -2,21 +2,18 @@ const path = require('path')
 const { merge } = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpackTestBaseConfig = require('./webpack-test.base.config')
-const webpackTestDevServerConfig = require('./webpack-test.dev-server.config')
 const utils = require('./utils')
 
 const webpackConfig = {
 	// target: 'web',
-	mode: 'development',
+	mode: 'production',
 	entry: {
 		main: utils.resolveDirectory(`./app/index.jsx`),
 	},
 	output: {
-		path: utils.resolveDirectory(`./build-test-dev`),
+		path: utils.resolveDirectory(`./build-test-prod`),
 		filename: `[name].js`,
 	},
-	devtool: 'source-map',
-	devServer: webpackTestDevServerConfig,
 	plugins: [
 		new HtmlWebpackPlugin({
 			filename: `./index.html`,
