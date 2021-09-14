@@ -1,4 +1,4 @@
-import Sun, { useState } from '@/'
+import Sun, { useState } from '@/../dist/sun'
 import { ClickAddLi, ClickAddLongChild } from './component/click-add-li'
 import { TraverseFiberTree } from './component/traverse-fiber-tree'
 import { UsestateHookIndex, UsestateHookTest } from './component/usestate-test'
@@ -25,7 +25,7 @@ const App = () => {
 	)
 }
 
-Sun.render(<TraverseFiberTree />, document.querySelector(`#app`))
+// Sun.render(<TraverseFiberTree />, document.querySelector(`#app`))
 Sun.render(<App />, document.querySelector(`#app2`))
 
 // function fffffff() {

@@ -1,6 +1,6 @@
 const webpack = require('webpack')
 const { ESBuildPlugin } = require('esbuild-loader')
-const rules = require('./webpack-test.rules')
+const rules = require('./webpack-lib.rules')
 const utils = require('./utils')
 
 const webpackConfigBase = {
