@@ -2,20 +2,21 @@ import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../runtime/run
 import { generateStructFiber, getRootFiber } from '../utils/utils'
 import { getHook } from '../hooks/hook'
 
-export function useState(initValue) {
+export function useState(initValue: any) {
 	const componentFiber = __RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt
 	const rootFiber = getRootFiber(componentFiber)
 	const oldHookOfCompt = getHook()
 	const hook = { state: oldHookOfCompt ? oldHookOfCompt.state : initValue, queue: [] }
 	const actions = oldHookOfCompt ? oldHookOfCompt.queue : []
-	actions.forEach((item, index) => {
+	actions.forEach((item: any, index: number) => {
 		if (typeof item === 'function') {
 			hook.state = item(hook.state)
 			return
 		}
 		hook.state = item
 	})
-	const setState = action => {
+	const setState = (action: any) => {
+		//@ts-ignore
 		hook.queue.push(action)
 		const newRootFiber = generateStructFiber(
 			{

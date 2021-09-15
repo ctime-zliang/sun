@@ -1,4 +1,4 @@
-import Sun, { useState } from '@/../dist/sun'
+import Sun, { useState } from '../../dist/sun'
 import { ClickAddLi, ClickAddLongChild } from './component/click-add-li'
 import { TraverseFiberTree } from './component/traverse-fiber-tree'
 import { UsestateHookIndex, UsestateHookTest } from './component/usestate-test'

@@ -1,8 +1,9 @@
+import { TFiber } from 'types/fiber.type'
 import { RECONCILE_EFFECT_TYPE } from '../config/config'
 import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
 import { generateStructFiber } from '../utils/utils'
 
-export function reconcileChilren(wipFiber, deletions) {
+export function reconcileChilren(wipFiber: TFiber, deletions: any[]) {
 	const children = wipFiber.props.children
 	/*
 		需要清除上一轮更新完毕时保存的上上一轮的当前层 fiber 节点的引用
@@ -15,7 +16,7 @@ export function reconcileChilren(wipFiber, deletions) {
 		作为参照对比, 此处读取上一轮更新完毕后该层 fiber 节点的第一个子节点
 	 */
 	let oldFiberOfNowWIPFiber = wipFiber.alternate && wipFiber.alternate.child
-	let prevSiblingFiber = null
+	let prevSiblingFiber: TFiber | null = null
 
 	let i = 0
 	for (; i < children.length || oldFiberOfNowWIPFiber != null; i++) {
@@ -88,8 +89,10 @@ export function reconcileChilren(wipFiber, deletions) {
 		if (i === 0) {
 			wipFiber.child = newChildFiber
 		} else {
+			//@ts-ignore
 			prevSiblingFiber.sibling = newChildFiber
 		}
+		//@ts-ignore
 		prevSiblingFiber = newChildFiber
 	}
 	return wipFiber

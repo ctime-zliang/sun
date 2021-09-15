@@ -1,8 +1,9 @@
 import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
 import { RECONCILE_EFFECT_TYPE } from '../config/config'
 import { updateDOM, commitAppendChild, commitDeleteChild } from './dom'
+import { TFiber } from 'types/fiber.type'
 
-function commitDom(fiber) {
+function commitDom(fiber: TFiber) {
 	if (!fiber.stateNode) {
 		return
 	}
@@ -23,7 +24,7 @@ function commitDom(fiber) {
 	}
 }
 
-export function commitWork(fiber) {
+export function commitWork(fiber: TFiber) {
 	if (!fiber) {
 		return
 	}
@@ -69,11 +70,4 @@ export function commitWork(fiber) {
          */
 		current = current.sibling
 	}
-	// commitDom(fiber)
-	// if (fiber.child) {
-	// 	commitWork(fiber.child)
-	// }
-	// if (fiber.sibling) {
-	// 	commitWork(fiber.sibling)
-	// }
 }

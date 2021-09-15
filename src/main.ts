@@ -18,11 +18,12 @@ __RUNTIME_PROFILE___.fiberRoot = generateStructFiberRoot({
  * @param {any} children 子节点列表
  * @return {htmlelement} 元素 VDOM
  */
-export function createElement(type, props, ...children) {
+export function createElement(type: any, props: { [key: string]: any }, ...children: any[]) {
+	//@ts-ignore
 	const flatChildren = children.flat(Infinity) // or children.flat(1)
 	return generateStructVDOM(type, {
 		...props,
-		children: flatChildren.map(child => {
+		children: flatChildren.map((child: any) => {
 			return typeof child === 'object' ? child : createTextElement(child)
 		}),
 	})
@@ -33,7 +34,7 @@ export function createElement(type, props, ...children) {
  * @param {string} text 文本内容
  * @return {htmlelement} 文本 VDOM
  */
-export function createTextElement(text) {
+export function createTextElement(text: string) {
 	return generateStructVDOM(NODE_TYPE.TEXT_NODE, {
 		nodeValue: text,
 		children: [],
@@ -41,7 +42,7 @@ export function createTextElement(text) {
 }
 
 let renderIndex = -1
-export function render(element, container) {
+export function render(element: any, container: HTMLElement) {
 	const rootFiber = generateStructFiber(
 		{
 			stateNode: container,

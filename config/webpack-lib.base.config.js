@@ -1,20 +1,20 @@
 const webpack = require('webpack')
 const { ESBuildPlugin } = require('esbuild-loader')
-const rules = require('./webpack-lib.rules')
 const utils = require('./utils')
 
 const webpackConfigBase = {
+	target: 'web',
 	resolve: {
 		extensions: ['.js', '.ts', '.tsx', '.jsx'],
 		alias: {
 			'@': utils.resolveDirectory('./src/'),
 		},
 	},
-	module: {
-		rules: rules(),
-	},
+	module: {},
 	plugins: [new ESBuildPlugin(), new webpack.ProgressPlugin()],
-	optimization: {},
+	optimization: {
+		minimize: false,
+	}	
 }
 
 module.exports = webpackConfigBase

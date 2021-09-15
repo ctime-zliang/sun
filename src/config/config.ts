@@ -1,4 +1,4 @@
-export const NODE_TYPE = {
+export const NODE_TYPE: { [key: string]: any } = {
 	TEXT_NODE: 'TEXT_NODE',
 }
 

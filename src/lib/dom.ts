@@ -1,3 +1,4 @@
+import { TFiber } from 'types/fiber.type'
 import { NODE_TYPE } from '../config/config'
 import { isProperty, isOld, isNewly, isSystemEvent } from '../utils/utils'
 
@@ -7,7 +8,7 @@ import { isProperty, isOld, isNewly, isSystemEvent } from '../utils/utils'
  * @param {object} parentDom 目标父节点
  * @return {htmlelement} 元素 HTMLElement 对象
  */
-export function commitAppendChild(childDom, parentDom) {
+export function commitAppendChild(childDom: HTMLElement, parentDom: HTMLElement) {
 	parentDom.appendChild(childDom)
 }
 
@@ -17,11 +18,11 @@ export function commitAppendChild(childDom, parentDom) {
  * @param {object} parentDom 目标父节点
  * @return {htmlelement} 元素 HTMLElement 对象
  */
-export function commitDeleteChild(fiber, parentDom) {
+export function commitDeleteChild(fiber: TFiber, parentDom: HTMLElement) {
 	if (fiber.stateNode) {
 		parentDom.removeChild(fiber.stateNode)
 	} else {
-		commitDeletion(fiber.child, parentDom)
+		// commitDeletion(fiber.child, parentDom)
 	}
 }
 
@@ -30,7 +31,7 @@ export function commitDeleteChild(fiber, parentDom) {
  * @param {object} fiber fiber 节点对象
  * @return {htmlelement} 元素 HTMLElement 对象
  */
-export function createDOM(fiber) {
+export function createDOM(fiber: TFiber) {
 	const dom = fiber.type === NODE_TYPE.TEXT_NODE ? document.createTextNode(``) : document.createElement(fiber.type)
 	updateDOM(dom, {}, fiber.props)
 	return dom
@@ -43,7 +44,7 @@ export function createDOM(fiber) {
  * @param {object} newProps Props 属性对象
  * @return {htmlelement} 元素 DOM 对象
  */
-export function updateDOM(dom, oldProps, newProps) {
+export function updateDOM(dom: HTMLElement, oldProps: { [key: string]: any }, newProps: { [key: string]: any }) {
 	const systemEventOfOldProps = Object.keys(oldProps).filter(isSystemEvent)
 	const systemEventOfNewProps = Object.keys(newProps).filter(isSystemEvent)
 	const commPropsOfOldProps = Object.keys(oldProps).filter(isProperty)
@@ -65,6 +66,7 @@ export function updateDOM(dom, oldProps, newProps) {
 	for (let i = 0; i < commPropsOfOldProps.length; i++) {
 		const item = commPropsOfOldProps[i]
 		if (isOld(oldProps, newProps)(item)) {
+			//@ts-ignore
 			dom[item] = undefined
 			if (dom.removeAttribute) {
 				dom.removeAttribute(item)
@@ -81,10 +83,12 @@ export function updateDOM(dom, oldProps, newProps) {
 				case 'style': {
 					if (Object.prototype.toString.call(newProps[item]).toLowerCase() === '[object object]') {
 						for (let attr in newProps[item]) {
+							//@ts-ignore
 							dom.style[attr] = newProps[item][attr]
 						}
 						break
 					}
+					//@ts-ignore
 					dom[item] = newProps[item]
 					break
 				}
@@ -93,6 +97,7 @@ export function updateDOM(dom, oldProps, newProps) {
 					break
 				}
 				default: {
+					//@ts-ignore
 					dom[item] = newProps[item]
 					if (dom.setAttribute && typeof newProps[item] != 'undefined') {
 						dom.setAttribute(item, newProps[item])
