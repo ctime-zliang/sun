@@ -10,7 +10,7 @@
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"strictPropertyInitialization": false,
-		"strict": true,
+		"strict": false,
 		"module": "commonjs",
 		"isolatedModules": true,
 		"resolveJsonModule": true,

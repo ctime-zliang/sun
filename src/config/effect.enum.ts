@@ -4,3 +4,7 @@ export enum ENUM_EFFECT_TAG {
 	PLACEMENT = 'PLACEMENT',
 	DELETION = 'DELETION',
 }
+
+export enum ENUM_NODE_TYPE {
+	TEXT_NODE = 'TEXT_NODE',
+}

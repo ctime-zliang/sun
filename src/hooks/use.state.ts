@@ -7,7 +7,7 @@ export function useState(initValue: any) {
 	const rootFiber = getRootFiber(componentFiber)
 	const oldHookOfCompt = getHook()
 	const hook = { state: oldHookOfCompt ? oldHookOfCompt.state : initValue, queue: [] }
-	const actions = oldHookOfCompt ? oldHookOfCompt.queue : []
+	const actions: (() => void)[] = oldHookOfCompt ? oldHookOfCompt.queue : []
 	actions.forEach((item: any, index: number) => {
 		if (typeof item === 'function') {
 			hook.state = item(hook.state)
@@ -15,8 +15,7 @@ export function useState(initValue: any) {
 		}
 		hook.state = item
 	})
-	const setState = (action: any) => {
-		//@ts-ignore
+	const setState = (action: any): void => {
 		hook.queue.push(action)
 		const newRootFiber = generateStructFiber(
 			{

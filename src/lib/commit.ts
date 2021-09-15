@@ -1,9 +1,8 @@
 import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
-import { RECONCILE_EFFECT_TYPE } from '../config/config'
 import { updateDOM, commitAppendChild, commitDeleteChild } from './dom'
-import { TFiber } from 'types/fiber.type'
+import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 
-function commitDom(fiber: TFiber) {
+function commitDom(fiber): void {
 	if (!fiber.stateNode) {
 		return
 	}
@@ -14,17 +13,17 @@ function commitDom(fiber: TFiber) {
 	while (!parentFiber.stateNode) {
 		parentFiber = parentFiber.parent
 	}
-	const referenceDom = parentFiber.stateNode
-	if (fiber.effectTag === RECONCILE_EFFECT_TYPE.PLACEMENT) {
+	const referenceDom: HTMLElement | Text = parentFiber.stateNode
+	if (fiber.effectTag === ENUM_EFFECT_TAG.PLACEMENT) {
 		commitAppendChild(fiber.stateNode, referenceDom)
-	} else if (fiber.effectTag === RECONCILE_EFFECT_TYPE.DELETION) {
+	} else if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
 		commitDeleteChild(fiber, referenceDom)
-	} else if (fiber.effectTag === RECONCILE_EFFECT_TYPE.UPDATE) {
-		updateDOM(fiber.stateNode, fiber.alternate.props, fiber.props)
+	} else if (fiber.effectTag === ENUM_EFFECT_TAG.UPDATE) {
+		updateDOM(fiber.stateNode, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
 	}
 }
 
-export function commitWork(fiber: TFiber) {
+export function commitWork(fiber): void {
 	if (!fiber) {
 		return
 	}

@@ -1,7 +1,8 @@
-import { NODE_TYPE } from './config/config'
 import { __RUNTIME_PROFILE___ } from './runtime/runtime.profile'
 import { initWorkLoop } from './lib/scheduler'
-import { generateStructFiber, generateStructVDOM, generateStructFiberRoot } from './utils/utils'
+import { generateStructFiber, generateStructVDOM, generateStructFiberRoot, generateStructDefInitial } from './utils/utils'
+import { TVdom } from './types/vdom.types'
+import { ENUM_NODE_TYPE } from './config/effect.enum'
 
 /* 
 	创建一个全局的 fiberRoot
@@ -9,6 +10,9 @@ import { generateStructFiber, generateStructVDOM, generateStructFiberRoot } from
  */
 __RUNTIME_PROFILE___.fiberRoot = generateStructFiberRoot({
 	current: null,
+	root: true,
+	index: -1,
+	...generateStructDefInitial(),
 })
 
 /**
@@ -18,9 +22,9 @@ __RUNTIME_PROFILE___.fiberRoot = generateStructFiberRoot({
  * @param {any} children 子节点列表
  * @return {htmlelement} 元素 VDOM
  */
-export function createElement(type: any, props: { [key: string]: any }, ...children: any[]) {
+export function createElement(type: string, props: { [key: string]: any }, ...children: any[]): TVdom {
 	//@ts-ignore
-	const flatChildren = children.flat(Infinity) // or children.flat(1)
+	const flatChildren: any[] = children.flat(Infinity) // or children.flat(1)
 	return generateStructVDOM(type, {
 		...props,
 		children: flatChildren.map((child: any) => {
@@ -34,15 +38,15 @@ export function createElement(type: any, props: { [key: string]: any }, ...child
  * @param {string} text 文本内容
  * @return {htmlelement} 文本 VDOM
  */
-export function createTextElement(text: string) {
-	return generateStructVDOM(NODE_TYPE.TEXT_NODE, {
+export function createTextElement(text: string): TVdom {
+	return generateStructVDOM(ENUM_NODE_TYPE.TEXT_NODE, {
 		nodeValue: text,
 		children: [],
 	})
 }
 
-let renderIndex = -1
-export function render(element: any, container: HTMLElement) {
+let renderIndex: number = -1
+export function render(element: any, container: HTMLElement): void {
 	const rootFiber = generateStructFiber(
 		{
 			stateNode: container,

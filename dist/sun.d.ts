@@ -12,26 +12,24 @@ export default Sun;
     * @param {any} children 子节点列表
     * @return {htmlelement} 元素 VDOM
     */
-export function createElement(type: any, props: {
+export function createElement(type: string, props: {
         [key: string]: any;
-}, ...children: any[]): {
-        type: string;
-        props: {
-                [key: string]: any;
-        };
-};
+}, ...children: any[]): TVdom;
 /**
     * 创建 文本 VDOM
     * @param {string} text 文本内容
     * @return {htmlelement} 文本 VDOM
     */
-export function createTextElement(text: string): {
-        type: string;
-        props: {
-                [key: string]: any;
-        };
-};
+export function createTextElement(text: string): TVdom;
 export function render(element: any, container: HTMLElement): void;
 
 export function useState(initValue: any): any[];
+
+export type TVdom = {
+    type: string;
+    props: {
+        [key: string]: any;
+    };
+    children?: any[];
+};
 

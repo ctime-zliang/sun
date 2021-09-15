@@ -1,20 +1,15 @@
-import { TFiber } from 'types/fiber.type'
-import { RECONCILE_EFFECT_TYPE } from '../config/config'
+import { TVdom } from '../types/vdom.types'
+import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 
-export function generateStructVDOM(type: string, props: { [key: string]: any }) {
+export function generateStructVDOM(type: string, props: { [key: string]: any }): TVdom {
 	return {
 		type,
 		props,
 	}
 }
 
-/*
-	root = {
-		root: boolean
-	}
- */
-export function generateStructFiber(args: { [key: string]: any } = {}, root: { [key: string]: any } = {}) {
-	const defaults = {
+export function generateStructDefInitial() {
+	return {
 		/* 
 			VDOM 属性/fiber 链表节点属性 
 		*/
@@ -31,7 +26,7 @@ export function generateStructFiber(args: { [key: string]: any } = {}, root: { [
 		parent: null,
 		sibling: null,
 		alternate: null,
-		effectTag: RECONCILE_EFFECT_TYPE.NO_EFFECT,
+		effectTag: ENUM_EFFECT_TAG.NO_EFFECT,
 		key: null,
 		dirty: false,
 		/* 
@@ -39,6 +34,10 @@ export function generateStructFiber(args: { [key: string]: any } = {}, root: { [
 		*/
 		hooks: [],
 	}
+}
+
+export function generateStructFiber(args, root = {}) {
+	const defaults = generateStructDefInitial()
 	return {
 		...defaults,
 		...args,
@@ -46,9 +45,10 @@ export function generateStructFiber(args: { [key: string]: any } = {}, root: { [
 	}
 }
 
-export function generateStructFiberRoot(args: { [key: string]: any } = {}) {
+export function generateStructFiberRoot(args) {
 	const defaults = {
 		current: null,
+		index: -1,
 	}
 	return {
 		...defaults,
@@ -56,7 +56,7 @@ export function generateStructFiberRoot(args: { [key: string]: any } = {}) {
 	}
 }
 
-export function getRootFiber(fiber: TFiber) {
+export function getRootFiber(fiber) {
 	let rootFiber = fiber
 	while (!rootFiber.root) {
 		rootFiber = rootFiber.parent
@@ -84,11 +84,11 @@ export function isSystemEvent(key: string) {
 	return key[0] === 'o' && key[1] === 'n'
 }
 
-export function isApprovedComponent(fiber: TFiber) {
+export function isApprovedComponent(fiber) {
 	return fiber.type != null || typeof fiber.type != 'undefined'
 }
 
-export function isFunctionComponent(fiber: TFiber) {
+export function isFunctionComponent(fiber) {
 	return fiber && fiber.type && fiber.type instanceof Function
 }
 

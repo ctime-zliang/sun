@@ -3,13 +3,12 @@ import { commitWork } from './commit'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 import { isFunctionComponent } from '../utils/utils'
-import { TFiber } from 'types/fiber.type'
 
 export function initWorkLoop() {
 	let deletions: any[] = []
 	let currentRootFiber = null
 	function workLoop(deadline: any) {
-		let shouldYield = false
+		let shouldYield: boolean = false
 		while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
 			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber, deletions)
 			shouldYield = deadline.timeRemaining() < 1
@@ -48,7 +47,7 @@ export function initWorkLoop() {
 	return workLoop
 }
 
-export function performUnitWork(fiber: TFiber, deletions: any[]) {
+export function performUnitWork(fiber, deletions: any[]) {
 	if (!fiber.type) {
 		return
 	}

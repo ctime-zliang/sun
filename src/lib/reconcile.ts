@@ -1,10 +1,9 @@
-import { TFiber } from 'types/fiber.type'
-import { RECONCILE_EFFECT_TYPE } from '../config/config'
 import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
 import { generateStructFiber } from '../utils/utils'
+import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 
-export function reconcileChilren(wipFiber: TFiber, deletions: any[]) {
-	const children = wipFiber.props.children
+export function reconcileChilren(wipFiber, deletions: any[]) {
+	const children: { [key: string]: any } = wipFiber.props.children
 	/*
 		需要清除上一轮更新完毕时保存的上上一轮的当前层 fiber 节点的引用
 	 */
@@ -16,9 +15,9 @@ export function reconcileChilren(wipFiber: TFiber, deletions: any[]) {
 		作为参照对比, 此处读取上一轮更新完毕后该层 fiber 节点的第一个子节点
 	 */
 	let oldFiberOfNowWIPFiber = wipFiber.alternate && wipFiber.alternate.child
-	let prevSiblingFiber: TFiber | null = null
+	let prevSiblingFiber = null
 
-	let i = 0
+	let i: number = 0
 	for (; i < children.length || oldFiberOfNowWIPFiber != null; i++) {
 		let newChildFiber = null
 		if (!children[i]) {
@@ -26,7 +25,7 @@ export function reconcileChilren(wipFiber: TFiber, deletions: any[]) {
 				当 oldFiber 无法找到对应的新 fiber 时, 即代表需要删除该节点 
 			 */
 			if (oldFiberOfNowWIPFiber) {
-				oldFiberOfNowWIPFiber.effectTag = RECONCILE_EFFECT_TYPE.DELETION
+				oldFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
 				oldFiberOfNowWIPFiber.dirty = true
 				deletions.push(oldFiberOfNowWIPFiber)
 				oldFiberOfNowWIPFiber = oldFiberOfNowWIPFiber.sibling
@@ -34,7 +33,7 @@ export function reconcileChilren(wipFiber: TFiber, deletions: any[]) {
 			continue
 		}
 		const element = children[i]
-		const sameType = !!(oldFiberOfNowWIPFiber && element.type == oldFiberOfNowWIPFiber.type)
+		const sameType: boolean = !!(oldFiberOfNowWIPFiber && element.type == oldFiberOfNowWIPFiber.type)
 		if (sameType) {
 			/*
 				之前存在的节点, 需要更新 
@@ -46,7 +45,7 @@ export function reconcileChilren(wipFiber: TFiber, deletions: any[]) {
 				parent: wipFiber,
 				dirty: true,
 				alternate: oldFiberOfNowWIPFiber,
-				effectTag: RECONCILE_EFFECT_TYPE.UPDATE,
+				effectTag: ENUM_EFFECT_TAG.UPDATE,
 			})
 		}
 		if (!sameType) {
@@ -60,11 +59,11 @@ export function reconcileChilren(wipFiber: TFiber, deletions: any[]) {
 				parent: wipFiber,
 				dirty: true,
 				alternate: null,
-				effectTag: RECONCILE_EFFECT_TYPE.PLACEMENT,
+				effectTag: ENUM_EFFECT_TAG.PLACEMENT,
 			})
 		}
 		if (!sameType && oldFiberOfNowWIPFiber) {
-			oldFiberOfNowWIPFiber.effectTag = RECONCILE_EFFECT_TYPE.DELETION
+			oldFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
 			oldFiberOfNowWIPFiber.dirty = true
 			deletions.push(oldFiberOfNowWIPFiber)
 		}
@@ -89,10 +88,8 @@ export function reconcileChilren(wipFiber: TFiber, deletions: any[]) {
 		if (i === 0) {
 			wipFiber.child = newChildFiber
 		} else {
-			//@ts-ignore
 			prevSiblingFiber.sibling = newChildFiber
 		}
-		//@ts-ignore
 		prevSiblingFiber = newChildFiber
 	}
 	return wipFiber
