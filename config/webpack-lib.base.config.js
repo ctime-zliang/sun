@@ -12,9 +12,6 @@ const webpackConfigBase = {
 	},
 	module: {},
 	plugins: [new ESBuildPlugin(), new webpack.ProgressPlugin()],
-	optimization: {
-		minimize: false,
-	}	
 }
 
 module.exports = webpackConfigBase

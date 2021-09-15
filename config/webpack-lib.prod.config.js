@@ -28,9 +28,12 @@ const webpackConfig = {
 		new DtsBundlePlugin({
 			rootPath: path.join(process.cwd(), './dist/@types'),
 			entry: './index.d.ts',
-			output: '../sun.d.ts'
-		})
+			output: '../sun.d.ts',
+		}),
 	],
+	optimization: {
+		minimize: true,
+	},
 }
 
 module.exports = merge(webpackConfig, webpackLibBaseConfig)

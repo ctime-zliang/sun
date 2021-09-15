@@ -1,6 +1,6 @@
 {
 	"name": "sun",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "",
 	"main": "dist/sun.js",
 	"types": "dist/sun.d.ts",
@@ -14,7 +14,7 @@
 		"url": "git+https://github.com/ctime-zliang/sun.git"
 	},
 	"keywords": [],
-	"author": "",
+	"author": "ctime.zliang",
 	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/ctime-zliang/sun/issues"
@@ -24,6 +24,7 @@
 		"@types/node": "^15.6.1",
 		"@types/webpack": "^5.28.0",
 		"cross-env": "^7.0.3",
+		"dts-bundle": "^0.7.3",
 		"esbuild-loader": "^2.13.1",
 		"html-webpack-plugin": "^5.3.2",
 		"mini-css-extract-plugin": "^1.6.0",

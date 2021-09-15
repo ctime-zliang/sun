@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const logger = require('./logger')
 
 const ApplicationDirectory = fs.realpathSync(process.cwd())
 
@@ -15,5 +16,23 @@ module.exports = {
 				return item > 9 ? String(item) : '0' + String(item)
 			})
 			.join('')
+	},
+	deleteFolderRecursive(directory) {
+		const self = this
+		let files = []
+		if (fs.existsSync(directory)) {
+			files = fs.readdirSync(directory)
+			files.forEach((file, index) => {
+				const curPath = path.join(directory, file)
+				if (fs.statSync(curPath).isDirectory()) {
+					self.deleteFolderRecursive(curPath)
+				} else {
+					fs.unlinkSync(curPath)
+				}
+			})
+			fs.rmdirSync(directory)
+		} else {
+			logger.error(`exec deleteFolderRecursive error: path error.`)
+		}
 	},
 }
