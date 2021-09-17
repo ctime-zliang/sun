@@ -1,0 +1,9 @@
+.gitattributes export-ignore
+.gitignore export-ignore
+.prettierignore export-ignore
+.prettierrc.json export-ignore
+tsconfig.json export-ignore
+config export-ignore
+doc export-ignore
+test export-ignore
+test-app export-ignore
