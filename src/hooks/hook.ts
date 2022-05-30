@@ -1,4 +1,4 @@
-import { __RUNTIME_COMPT_PROFILE___ } from '../runtime/runtime.profile'
+import { __RUNTIME_COMPT_PROFILE___ } from '../core/runtimeProfile'
 
 export function getHook() {
 	const alternate = __RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt.alternate

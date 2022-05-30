@@ -1,36 +1,27 @@
-const path = require('path')
 const { merge } = require('webpack-merge')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const webpackLibBaseConfig = require('./webpack-lib.base.config')
+const webpackLibInitConfig = require('./webpack-lib.init.config')
 const rules = require('./webpack-lib.rules')
-const webpackLibDevServerConfig = require('./webpack-lib.dev-server.config')
 const utils = require('./utils')
 
-const webpackModule = webpackLibBaseConfig.module
-delete webpackLibBaseConfig.module
+const webpackInitModule = webpackLibInitConfig.module
+delete webpackLibInitConfig.module
 const webpackConfig = {
-	target: 'web',
 	mode: 'development',
 	entry: {
-		main: utils.resolveDirectory(`./test-app/src/index.jsx`),
+		main: utils.resolveDirectory(`./src/index.ts`),
 	},
 	output: {
-		path: utils.resolveDirectory(`./test-app/build-dev`),
-		filename: `[name].js`,
+		path: utils.resolveDirectory(`./build`),
+		filename: `sun.js`,
+		libraryExport: 'default',
+		libraryTarget: 'umd',
+		globalObject: 'this',
 	},
 	module: {
-		...webpackModule,
-		rules: [rules('testDevBuild')],
+		...webpackInitModule,
+		rules: [rules('libDevBuild')],
 	},
-	devServer: webpackLibDevServerConfig,
 	devtool: 'source-map',
-	plugins: [
-		new HtmlWebpackPlugin({
-			filename: `./index.html`,
-			template: utils.resolveDirectory(`./test-app/src/template/index.ejs`),
-			inject: true,
-		}),
-	],
 }
 
-module.exports = merge(webpackConfig, webpackLibBaseConfig)
+module.exports = merge(webpackConfig, webpackLibInitConfig)

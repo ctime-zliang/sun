@@ -1,39 +1,27 @@
-const path = require('path')
 const { merge } = require('webpack-merge')
-const webpackLibBaseConfig = require('./webpack-lib.base.config')
+const webpackLibInitConfig = require('./webpack-lib.init.config')
 const rules = require('./webpack-lib.rules')
-const { DtsBundlePlugin } = require('./webpack-lib.plugins.utils')
-const utils = require('./utils')
+const utils = require('../../../config/utils')
 
-const webpackModule = webpackLibBaseConfig.module
-delete webpackLibBaseConfig.module
+const webpackInitModule = webpackLibInitConfig.module
+delete webpackLibInitConfig.module
 const webpackConfig = {
-	target: 'web',
 	mode: 'production',
 	entry: {
 		main: utils.resolveDirectory(`./src/index.ts`),
 	},
 	output: {
-		path: utils.resolveDirectory(`./dist`),
+		path: utils.resolveDirectory(`./build`),
 		filename: `sun.js`,
 		libraryExport: 'default',
 		libraryTarget: 'umd',
 		globalObject: 'this',
 	},
 	module: {
-		...webpackModule,
+		...webpackInitModule,
 		rules: [rules('libProdBuild')],
 	},
-	plugins: [
-		new DtsBundlePlugin({
-			rootPath: path.join(process.cwd(), './dist/@types'),
-			entry: './index.d.ts',
-			output: '../sun.d.ts',
-		}),
-	],
-	optimization: {
-		minimize: true,
-	},
+	devtool: 'source-map',
 }
 
-module.exports = merge(webpackConfig, webpackLibBaseConfig)
+module.exports = merge(webpackConfig, webpackLibInitConfig)

@@ -1,4 +1,4 @@
-import { __RUNTIME_PROFILE___ } from './runtime/runtime.profile'
+import { __RUNTIME_PROFILE___ } from './core/runtimeProfile'
 import { initWorkLoop } from './lib/scheduler'
 import { generateStructFiber, generateStructVDOM, generateStructFiberRoot, generateStructDefInitial } from './utils/utils'
 import { TVdom } from './types/vdom.types'

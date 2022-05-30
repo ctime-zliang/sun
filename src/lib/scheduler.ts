@@ -1,4 +1,4 @@
-import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../runtime/runtime.profile'
+import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtimeProfile'
 import { commitWork } from './commit'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'

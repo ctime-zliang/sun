@@ -1,4 +1,4 @@
-import { __RUNTIME_PROFILE___ } from '../runtime/runtime.profile'
+import { __RUNTIME_PROFILE___ } from '../core/runtimeProfile'
 import { updateDOM, commitAppendChild, commitDeleteChild } from './dom'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 

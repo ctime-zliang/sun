@@ -1,6 +1,6 @@
-import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../runtime/runtime.profile'
+import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtimeProfile'
 import { generateStructFiber, getRootFiber } from '../utils/utils'
-import { getHook } from '../hooks/hook'
+import { getHook } from './hook'
 
 export function useState(initValue: any) {
 	const componentFiber = __RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt

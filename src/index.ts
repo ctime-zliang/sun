@@ -1,5 +1,5 @@
 import { createElement, createTextElement, render as _render } from './main'
-import { useState as useStateHook } from './hooks/use.state'
+import { useState as useStateHook } from './hooks/useState'
 
 const Sun = Object.create(null)
 

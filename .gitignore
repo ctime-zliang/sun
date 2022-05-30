@@ -1,2 +1,7 @@
+.cache
+cache
+.puppeteer
+build
+coverage
+dist
 node_modules
-test-app/build-dev
