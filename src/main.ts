@@ -1,31 +1,28 @@
-import { __RUNTIME_PROFILE___ } from './core/runtimeProfile'
+import { __RUNTIME_PROFILE___ } from './runtime/runtime.profile'
 import { initWorkLoop } from './lib/scheduler'
-import { generateStructFiber, generateStructVDOM, generateStructFiberRoot, generateStructDefInitial } from './utils/utils'
+import { generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData, generateInitialFiberStructData } from './utils/utils'
 import { TVdom } from './types/vdom.types'
 import { ENUM_NODE_TYPE } from './config/effect.enum'
+import { TFiberNode } from 'types/fiber.types'
 
 /* 
 	创建一个全局的 fiberRoot
 	并设置其 current 指针指向当前活动(即 处于 mount 或 update 时)的应用的顶层 fiber
  */
-__RUNTIME_PROFILE___.fiberRoot = generateStructFiberRoot({
-	current: null,
-	root: true,
-	index: -1,
-	...generateStructDefInitial(),
-})
+__RUNTIME_PROFILE___.fiberRoot = generateRootFiberStructData() as TFiberNode
 
 /**
- * 创建 元素 VDOM
+ * @description 创建元素 VDOM
+ * @function createElement
  * @param {string} type 元素标签名
  * @param {object} props 属性对象
  * @param {any} children 子节点列表
- * @return {htmlelement} 元素 VDOM
+ * @return {TVdom}
  */
 export function createElement(type: string, props: { [key: string]: any }, ...children: any[]): TVdom {
 	//@ts-ignore
-	const flatChildren: any[] = children.flat(Infinity) // or children.flat(1)
-	return generateStructVDOM(type, {
+	const flatChildren: Array<any> = children.flat(Infinity) // or children.flat(1)
+	return generateInitialVDOMStructData(type, {
 		...props,
 		children: flatChildren.map((child: any) => {
 			return typeof child === 'object' ? child : createTextElement(child)
@@ -34,20 +31,28 @@ export function createElement(type: string, props: { [key: string]: any }, ...ch
 }
 
 /**
- * 创建 文本 VDOM
+ * @description 创建文本 VDOM
+ * @function createTextElement
  * @param {string} text 文本内容
- * @return {htmlelement} 文本 VDOM
+ * @return {TVdom}
  */
 export function createTextElement(text: string): TVdom {
-	return generateStructVDOM(ENUM_NODE_TYPE.TEXT_NODE, {
+	return generateInitialVDOMStructData(ENUM_NODE_TYPE.TEXT_NODE, {
 		nodeValue: text,
 		children: [],
 	})
 }
 
+/**
+ * @description 渲染 JSX 节点
+ * @function render
+ * @param {JSXElement} element JSX 节点
+ * @param {HTMLElement} container 容器 HTML DOM 节点
+ * @return {void}
+ */
 let renderIndex: number = -1
 export function render(element: any, container: HTMLElement): void {
-	const rootFiber = generateStructFiber(
+	const rootFiber: TFiberNode = generateFiberStructData(
 		{
 			stateNode: container,
 			type: container.nodeName.toLowerCase(),

@@ -1,15 +1,16 @@
-import { __RUNTIME_PROFILE___ } from '../core/runtimeProfile'
+import { __RUNTIME_PROFILE___ } from '../core/runtime'
 import { updateDOM, commitAppendChild, commitDeleteChild } from './dom'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
+import { TFiberNode } from '../types/fiber.types'
 
-function commitDom(fiber): void {
+function commitDom(fiber: TFiberNode): void {
 	if (!fiber.stateNode) {
 		return
 	}
 	/* 
 		查找当前 fiber 对应的 DOM 或距离最近且存在 DOM 的 fiber 并返回该 fiber 的 DOM
 	 */
-	let parentFiber = fiber.parent
+	let parentFiber: TFiberNode = fiber.parent
 	while (!parentFiber.stateNode) {
 		parentFiber = parentFiber.parent
 	}
@@ -23,12 +24,12 @@ function commitDom(fiber): void {
 	}
 }
 
-export function commitWork(fiber): void {
+export function commitWork(fiber: TFiberNode): void {
 	if (!fiber) {
 		return
 	}
-	let root = fiber
-	let current = fiber
+	let root: TFiberNode | null = fiber
+	let current: TFiberNode | null = fiber
 
 	while (current) {
 		if (current.dirty) {

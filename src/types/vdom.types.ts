@@ -1,5 +1,5 @@
 export type TVdom = {
 	type: string
 	props: { [key: string]: any }
-	children?: any[]
+	children?: Array<TVdom> | Array<any>
 }

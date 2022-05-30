@@ -8,7 +8,7 @@ Sun.createTextElement = createTextElement
 Sun.render = _render
 Sun.useState = useStateHook
 
-export const render = _render
+export const render: (element: any, containe: HTMLElement) => void = _render
 export const useState = useStateHook
 
 export default Sun

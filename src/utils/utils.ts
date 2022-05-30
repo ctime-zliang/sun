@@ -1,18 +1,29 @@
 import { TVdom } from '../types/vdom.types'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
+import { TFiberNode } from 'types/fiber.types'
 
-export function generateStructVDOM(type: string, props: { [key: string]: any }): TVdom {
+/**
+ * @description 创建初始 VDOM 结构体数据
+ * @function generateInitialVDOMStructData
+ * @param {string} type HTML DOM tagName
+ * @param {object} props HTML DOM VDOM 定义属性
+ * @return {TVdom}
+ */
+export function generateInitialVDOMStructData(type: string, props: { [key: string]: any }): TVdom {
 	return {
 		type,
 		props,
+		children: [],
 	}
 }
 
-export function generateStructDefInitial() {
+/**
+ * @description 创建初始 Fiber 结构体数据
+ * @function generateInitialFiberStructData
+ * @return {TFiberNode}
+ */
+export function generateInitialFiberStructData(): TFiberNode {
 	return {
-		/* 
-			VDOM 属性/fiber 链表节点属性 
-		*/
 		/* 
 			FunctionComponent = 函数本身
 			ClassComponent = class
@@ -24,20 +35,24 @@ export function generateStructDefInitial() {
 		props: null,
 		child: null,
 		parent: null,
+		current: null,
 		sibling: null,
 		alternate: null,
 		effectTag: ENUM_EFFECT_TAG.NO_EFFECT,
 		key: null,
 		dirty: false,
-		/* 
-			hooks 
-		*/
+		/* ... */
 		hooks: [],
 	}
 }
 
-export function generateStructFiber(args, root = {}) {
-	const defaults = generateStructDefInitial()
+/**
+ * @description 创建适用于非根节点的 Fiber 结构体数据
+ * @function generateInitialFiberStructData
+ * @return {TFiberNode}
+ */
+export function generateFiberStructData(args: any = {}, root: any = {}): TFiberNode {
+	const defaults: TFiberNode = generateInitialFiberStructData()
 	return {
 		...defaults,
 		...args,
@@ -45,54 +60,97 @@ export function generateStructFiber(args, root = {}) {
 	}
 }
 
-export function generateStructFiberRoot(args) {
-	const defaults = {
-		current: null,
-		index: -1,
-	}
+/**
+ * @description 创建适用非根节点的 Fiber 结构体数据
+ * @function generateRootFiberStructData
+ * @return {TFiberNode}
+ */
+export function generateRootFiberStructData(): TFiberNode {
 	return {
-		...defaults,
-		...args,
+		...generateInitialFiberStructData(),
+		current: null,
+		root: true,
+		index: -1,
 	}
 }
 
-export function getRootFiber(fiber) {
-	let rootFiber = fiber
+/**
+ * @description 获取根 Fiber 节点
+ * @function generateRootFiberStructData
+ * @return {TFiberNode}
+ */
+export function getRootFiber(fiber: TFiberNode): TFiberNode {
+	let rootFiber: TFiberNode = fiber
 	while (!rootFiber.root) {
 		rootFiber = rootFiber.parent
 	}
 	return rootFiber
 }
 
-export function isNewly(oldObj: { [key: string]: any }, newObj: { [key: string]: any }) {
+/**
+ * @description 判断是否是需要新建的节点
+ * @function isNewly
+ * @return {function}
+ */
+export function isNewly(oldObj: { [key: string]: any }, newObj: { [key: string]: any }): (key: string) => boolean {
 	return (key: string) => {
 		return oldObj[key] !== newObj[key]
 	}
 }
 
-export function isOld(oldObj: { [key: string]: any }, newObj: { [key: string]: any }) {
+/**
+ * @description 判断是否是已存在可复用的节点
+ * @function isNewly
+ * @return {function}
+ */
+export function isOld(oldObj: { [key: string]: any }, newObj: { [key: string]: any }): (key: string) => boolean {
 	return (key: string) => {
 		return !(key in newObj)
 	}
 }
 
-export function isProperty(key: string) {
+/**
+ * @description 判断是否是 HTML 属性
+ * @function isProperty
+ * @return {boolean}
+ */
+export function isProperty(key: string): boolean {
 	return !['children'].includes(key) && !(key[0] === 'o' && key[1] === 'n')
 }
 
-export function isSystemEvent(key: string) {
+/**
+ * @description 判断是否是 HTML 系统事件
+ * @function isSystemEvent
+ * @return {boolean}
+ */
+export function isSystemEvent(key: string): boolean {
 	return key[0] === 'o' && key[1] === 'n'
 }
 
-export function isApprovedComponent(fiber) {
+/**
+ * @description 判断是否是正常的 Fiber 节点
+ * @function isSystemEvent
+ * @return {boolean}
+ */
+export function isApprovedComponent(fiber: TFiberNode): boolean {
 	return fiber.type != null || typeof fiber.type != 'undefined'
 }
 
-export function isFunctionComponent(fiber) {
+/**
+ * @description 判断是否是函数组件
+ * @function isSystemEvent
+ * @return {boolean}
+ */
+export function isFunctionComponent(fiber: TFiberNode): boolean {
 	return fiber && fiber.type && fiber.type instanceof Function
 }
 
-export function syncBlock(delay = 1000) {
+/**
+ * @description 同步阻塞
+ * @function syncBlock
+ * @return {void}
+ */
+export function syncBlock(delay: number = 1000): void {
 	const end = new Date().getTime() + delay
 	while (new Date().getTime() < end) {}
 }

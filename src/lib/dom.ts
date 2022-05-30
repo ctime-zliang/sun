@@ -21,9 +21,9 @@ export function commitAppendChild(childDom: HTMLElement | Text, parentDom: HTMLE
 export function commitDeleteChild(fiber, parentDom: HTMLElement | Text): void {
 	if (fiber.stateNode) {
 		parentDom.removeChild(fiber.stateNode)
-	} else {
-		// commitDeletion(fiber.child, parentDom)
+		return
 	}
+	// commitDeletion(fiber.child, parentDom)
 }
 
 /**
@@ -51,12 +51,12 @@ export function updateDOM(dom: IHHTMLElement | ITHTMLElement, oldProps: { [key: 
 	const commPropsOfNewProps = Object.keys(newProps).filter(isProperty)
 
 	/*
-		系统事件处理 - 移除 
+		移除系统事件
 	 */
 	for (let i: number = 0; i < systemEventOfOldProps.length; i++) {
 		const item: string = systemEventOfOldProps[i]
 		if (!(item in newProps) || isNewly(oldProps, newProps)(item)) {
-			const eventType = item.toLowerCase().substring(2)
+			const eventType: string = item.toLowerCase().substring(2)
 			dom.removeEventListener(eventType, oldProps[item])
 		}
 	}
@@ -106,7 +106,7 @@ export function updateDOM(dom: IHHTMLElement | ITHTMLElement, oldProps: { [key: 
 		}
 	}
 	/*
-		系统事件处理 - 设置
+		绑定系统事件
 	 */
 	for (let i: number = 0; i < systemEventOfNewProps.length; i++) {
 		const item: string = systemEventOfNewProps[i]

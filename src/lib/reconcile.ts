@@ -1,8 +1,9 @@
-import { __RUNTIME_PROFILE___ } from '../core/runtimeProfile'
-import { generateStructFiber } from '../utils/utils'
+import { __RUNTIME_PROFILE___ } from '../core/runtime'
+import { generateFiberStructData } from '../utils/utils'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
+import { TFiberNode } from '../types/fiber.types'
 
-export function reconcileChilren(wipFiber, deletions: any[]) {
+export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode {
 	const children: { [key: string]: any } = wipFiber.props.children
 	/*
 		需要清除上一轮更新完毕时保存的上上一轮的当前层 fiber 节点的引用
@@ -14,8 +15,8 @@ export function reconcileChilren(wipFiber, deletions: any[]) {
 		需要循环遍历当前 vDom 下的所有子节点
 		作为参照对比, 此处读取上一轮更新完毕后该层 fiber 节点的第一个子节点
 	 */
-	let oldFiberOfNowWIPFiber = wipFiber.alternate && wipFiber.alternate.child
-	let prevSiblingFiber = null
+	let oldFiberOfNowWIPFiber: TFiberNode | null = wipFiber.alternate && wipFiber.alternate.child
+	let prevSiblingFiber: TFiberNode | null = null
 
 	let i: number = 0
 	for (; i < children.length || oldFiberOfNowWIPFiber != null; i++) {
@@ -32,13 +33,13 @@ export function reconcileChilren(wipFiber, deletions: any[]) {
 			}
 			continue
 		}
-		const element = children[i]
+		const element: TFiberNode = children[i]
 		const sameType: boolean = !!(oldFiberOfNowWIPFiber && element.type == oldFiberOfNowWIPFiber.type)
 		if (sameType) {
 			/*
 				之前存在的节点, 需要更新 
 			 */
-			newChildFiber = generateStructFiber({
+			newChildFiber = generateFiberStructData({
 				stateNode: oldFiberOfNowWIPFiber.stateNode,
 				type: element.type,
 				props: element.props,
@@ -52,7 +53,7 @@ export function reconcileChilren(wipFiber, deletions: any[]) {
 			/*
 				之前不存在的节点, 需要置入 
 			 */
-			newChildFiber = generateStructFiber({
+			newChildFiber = generateFiberStructData({
 				stateNode: null,
 				type: element.type,
 				props: element.props,

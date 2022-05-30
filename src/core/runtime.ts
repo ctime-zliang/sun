@@ -1,7 +1,9 @@
+import { TFiberNode } from '../types/fiber.types'
+
 export const __RUNTIME_PROFILE___ = {
 	fiberRoot: null,
 	rootFiber: null,
-	rootFiberList: [],
+	rootFiberList: [] as Array<TFiberNode>,
 	nextWorkUnitFiber: null,
 }
 

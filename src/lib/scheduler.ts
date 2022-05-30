@@ -1,13 +1,15 @@
-import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtimeProfile'
+import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtime'
 import { commitWork } from './commit'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 import { isFunctionComponent } from '../utils/utils'
+import { TFiberNode } from '../types/fiber.types'
+import { TRequestIdleCallbackParams } from '../types/common.types'
 
 export function initWorkLoop() {
-	let deletions: any[] = []
-	let currentRootFiber = null
-	function workLoop(deadline: any) {
+	let deletions: Array<any> = []
+	let currentRootFiber: TFiberNode | null = null
+	function workLoop(deadline: TRequestIdleCallbackParams): void {
 		let shouldYield: boolean = false
 		while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
 			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber, deletions)
@@ -47,7 +49,7 @@ export function initWorkLoop() {
 	return workLoop
 }
 
-export function performUnitWork(fiber, deletions: any[]) {
+export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFiberNode {
 	if (!fiber.type) {
 		return
 	}
@@ -57,7 +59,7 @@ export function performUnitWork(fiber, deletions: any[]) {
 	if (isFunctionComponent(fiber)) {
 		__RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt = fiber
 		__RUNTIME_COMPT_PROFILE___.hookIndexOfNowCompt = 0
-		const children = [fiber.type.call(undefined, fiber.props)]
+		const children: Array<TFiberNode> = [fiber.type.call(undefined, fiber.props)]
 		fiber.props.children = children
 		reconcileChilren(fiber, deletions)
 	} else {

@@ -1,23 +1,27 @@
-import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtimeProfile'
-import { generateStructFiber, getRootFiber } from '../utils/utils'
+import { TFiberNode } from '../types/fiber.types'
+import { TUseStateHookStructData, TUseStateHook, TUseStateHookAction } from '../types/hooks.types'
+import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtime'
+import { generateFiberStructData, getRootFiber } from '../utils/utils'
 import { getHook } from './hook'
 
-export function useState(initValue: any) {
-	const componentFiber = __RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt
-	const rootFiber = getRootFiber(componentFiber)
-	const oldHookOfCompt = getHook()
-	const hook = { state: oldHookOfCompt ? oldHookOfCompt.state : initValue, queue: [] }
-	const actions: (() => void)[] = oldHookOfCompt ? oldHookOfCompt.queue : []
-	actions.forEach((item: any, index: number) => {
-		if (typeof item === 'function') {
+export function useState(initValue: any): TUseStateHook {
+	const componentFiber: TFiberNode = __RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt
+	const rootFiber: TFiberNode = getRootFiber(componentFiber)
+	const oldHookOfCompt: TUseStateHookStructData = getHook()
+	const hook: TUseStateHookStructData = { state: oldHookOfCompt ? oldHookOfCompt.state : initValue, queue: [] }
+	const actions: TUseStateHookAction = oldHookOfCompt ? oldHookOfCompt.queue : []
+
+	actions.forEach((item: Function): void => {
+		if (item instanceof Function) {
 			hook.state = item(hook.state)
 			return
 		}
 		hook.state = item
 	})
-	const setState = (action: any): void => {
+
+	const setState: (action: any) => void = (action: any): void => {
 		hook.queue.push(action)
-		const newRootFiber = generateStructFiber(
+		const newRootFiber: TFiberNode = generateFiberStructData(
 			{
 				stateNode: rootFiber.stateNode,
 				type: rootFiber.type,
