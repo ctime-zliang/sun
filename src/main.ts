@@ -1,9 +1,9 @@
-import { __RUNTIME_PROFILE___ } from './runtime/runtime.profile'
+import { __RUNTIME_PROFILE___ } from './core/runtime'
 import { initWorkLoop } from './lib/scheduler'
-import { generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData, generateInitialFiberStructData } from './utils/utils'
+import { generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData } from './utils/utils'
 import { TVdom } from './types/vdom.types'
 import { ENUM_NODE_TYPE } from './config/effect.enum'
-import { TFiberNode } from 'types/fiber.types'
+import { TFiberNode } from './types/fiber.types'
 
 /* 
 	创建一个全局的 fiberRoot
@@ -69,7 +69,7 @@ export function render(element: any, container: HTMLElement): void {
 		}
 	)
 	__RUNTIME_PROFILE___.rootFiberList.push(rootFiber)
-	if (!__RUNTIME_PROFILE___.fiberRoot.current) {
+	if (__RUNTIME_PROFILE___.fiberRoot?.current === null) {
 		__RUNTIME_PROFILE___.fiberRoot.current = rootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber
 		console.log(`Root.Fiber ===>>>`, rootFiber)

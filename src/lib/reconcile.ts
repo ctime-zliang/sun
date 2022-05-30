@@ -40,7 +40,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 				之前存在的节点, 需要更新 
 			 */
 			newChildFiber = generateFiberStructData({
-				stateNode: oldFiberOfNowWIPFiber.stateNode,
+				stateNode: (oldFiberOfNowWIPFiber as TFiberNode).stateNode,
 				type: element.type,
 				props: element.props,
 				parent: wipFiber,
@@ -89,7 +89,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 		if (i === 0) {
 			wipFiber.child = newChildFiber
 		} else {
-			prevSiblingFiber.sibling = newChildFiber
+			;(prevSiblingFiber as TFiberNode).sibling = newChildFiber
 		}
 		prevSiblingFiber = newChildFiber
 	}

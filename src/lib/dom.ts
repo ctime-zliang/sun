@@ -1,6 +1,7 @@
 import { isProperty, isOld, isNewly, isSystemEvent } from '../utils/utils'
 import { ENUM_NODE_TYPE } from '../config/effect.enum'
 import { IHHTMLElement, ITHTMLElement } from '../types/dom.types'
+import { TFiberNode } from 'src/types/fiber.types'
 
 /**
  * 追加 DOM
@@ -8,7 +9,10 @@ import { IHHTMLElement, ITHTMLElement } from '../types/dom.types'
  * @param {object} parentDom 目标父节点
  * @return {htmlelement} 元素 HTMLElement 对象
  */
-export function commitAppendChild(childDom: HTMLElement | Text, parentDom: HTMLElement | Text): void {
+export function commitAppendChild(childDom: HTMLElement | Text, parentDom: HTMLElement | Text | null): void {
+	if (!parentDom) {
+		return
+	}
 	parentDom.appendChild(childDom)
 }
 
@@ -18,7 +22,10 @@ export function commitAppendChild(childDom: HTMLElement | Text, parentDom: HTMLE
  * @param {object} parentDom 目标父节点
  * @return {htmlelement} 元素 HTMLElement 对象
  */
-export function commitDeleteChild(fiber, parentDom: HTMLElement | Text): void {
+export function commitDeleteChild(fiber: TFiberNode, parentDom: HTMLElement | Text | null): void {
+	if (!parentDom) {
+		return
+	}
 	if (fiber.stateNode) {
 		parentDom.removeChild(fiber.stateNode)
 		return
@@ -31,9 +38,10 @@ export function commitDeleteChild(fiber, parentDom: HTMLElement | Text): void {
  * @param {object} fiber fiber 节点对象
  * @return {htmlelement} 元素 HTMLElement 对象
  */
-export function createDOM(fiber): HTMLElement | Text {
-	const dom: HTMLElement | Text = fiber.type === ENUM_NODE_TYPE.TEXT_NODE ? document.createTextNode(``) : document.createElement(fiber.type)
-	updateDOM(dom, {}, fiber.props)
+export function createDOM(fiber: TFiberNode): HTMLElement | Text {
+	const dom: HTMLElement | Text =
+		fiber.type === ENUM_NODE_TYPE.TEXT_NODE ? document.createTextNode(``) : document.createElement(fiber.type as string)
+	updateDOM(dom, {}, fiber.props as { [key: string]: any })
 	return dom
 }
 
@@ -44,7 +52,7 @@ export function createDOM(fiber): HTMLElement | Text {
  * @param {object} newProps Props 属性对象
  * @return {htmlelement} 元素 DOM 对象
  */
-export function updateDOM(dom: IHHTMLElement | ITHTMLElement, oldProps: { [key: string]: any } = {}, newProps: { [key: string]: any } = {}): void {
+export function updateDOM(dom: HTMLElement | Text, oldProps: { [key: string]: any } = {}, newProps: { [key: string]: any } = {}): void {
 	const systemEventOfOldProps = Object.keys(oldProps).filter(isSystemEvent)
 	const systemEventOfNewProps = Object.keys(newProps).filter(isSystemEvent)
 	const commPropsOfOldProps = Object.keys(oldProps).filter(isProperty)
@@ -66,9 +74,9 @@ export function updateDOM(dom: IHHTMLElement | ITHTMLElement, oldProps: { [key: 
 	for (let i: number = 0; i < commPropsOfOldProps.length; i++) {
 		const item: string = commPropsOfOldProps[i]
 		if (isOld(oldProps, newProps)(item)) {
-			dom[item] = undefined
-			if (dom.removeAttribute) {
-				dom.removeAttribute(item)
+			;(dom as any)[item] = undefined
+			if ((dom as any).removeAttribute) {
+				;(dom as any).removeAttribute(item)
 			}
 		}
 	}
@@ -82,7 +90,7 @@ export function updateDOM(dom: IHHTMLElement | ITHTMLElement, oldProps: { [key: 
 				case 'style': {
 					if (Object.prototype.toString.call(newProps[item]).toLowerCase() === '[object object]') {
 						for (let attr in newProps[item]) {
-							dom.style[attr] = newProps[item][attr]
+							;(dom as any).style[attr] = newProps[item][attr]
 						}
 						break
 					}
@@ -90,7 +98,7 @@ export function updateDOM(dom: IHHTMLElement | ITHTMLElement, oldProps: { [key: 
 					break
 				}
 				case 'className': {
-					dom[item] = newProps[item]
+					;(dom as any)[item] = newProps[item]
 					break
 				}
 				default: {

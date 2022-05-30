@@ -10,21 +10,23 @@ function commitDom(fiber: TFiberNode): void {
 	/* 
 		查找当前 fiber 对应的 DOM 或距离最近且存在 DOM 的 fiber 并返回该 fiber 的 DOM
 	 */
-	let parentFiber: TFiberNode = fiber.parent
-	while (!parentFiber.stateNode) {
+	let parentFiber: TFiberNode | null = fiber.parent
+	while (parentFiber && !parentFiber.stateNode) {
 		parentFiber = parentFiber.parent
 	}
-	const referenceDom: HTMLElement | Text = parentFiber.stateNode
-	if (fiber.effectTag === ENUM_EFFECT_TAG.PLACEMENT) {
-		commitAppendChild(fiber.stateNode, referenceDom)
-	} else if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
-		commitDeleteChild(fiber, referenceDom)
-	} else if (fiber.effectTag === ENUM_EFFECT_TAG.UPDATE) {
-		updateDOM(fiber.stateNode, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
+	if (parentFiber) {
+		const referenceDom: HTMLElement | Text | null = parentFiber.stateNode
+		if (fiber.effectTag === ENUM_EFFECT_TAG.PLACEMENT) {
+			commitAppendChild(fiber.stateNode, referenceDom)
+		} else if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
+			commitDeleteChild(fiber, referenceDom)
+		} else if (fiber.effectTag === ENUM_EFFECT_TAG.UPDATE) {
+			updateDOM(fiber.stateNode, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
+		}
 	}
 }
 
-export function commitWork(fiber: TFiberNode): void {
+export function commitWork(fiber: TFiberNode | null): void {
 	if (!fiber) {
 		return
 	}

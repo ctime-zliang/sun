@@ -1,6 +1,6 @@
 import { TVdom } from '../types/vdom.types'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
-import { TFiberNode } from 'types/fiber.types'
+import { TFiberNode } from '../types/fiber.types'
 
 /**
  * @description 创建初始 VDOM 结构体数据
@@ -30,16 +30,16 @@ export function generateInitialFiberStructData(): TFiberNode {
 			HostComponent = DOM节点 tagName 
 		*/
 		type: null,
-		elementType: null,
+		elementType: undefined,
 		stateNode: null,
-		props: null,
+		props: {},
 		child: null,
 		parent: null,
 		current: null,
 		sibling: null,
 		alternate: null,
 		effectTag: ENUM_EFFECT_TAG.NO_EFFECT,
-		key: null,
+		key: undefined,
 		dirty: false,
 		/* ... */
 		hooks: [],
@@ -82,7 +82,7 @@ export function generateRootFiberStructData(): TFiberNode {
 export function getRootFiber(fiber: TFiberNode): TFiberNode {
 	let rootFiber: TFiberNode = fiber
 	while (!rootFiber.root) {
-		rootFiber = rootFiber.parent
+		rootFiber = rootFiber.parent as TFiberNode
 	}
 	return rootFiber
 }
@@ -142,7 +142,7 @@ export function isApprovedComponent(fiber: TFiberNode): boolean {
  * @return {boolean}
  */
 export function isFunctionComponent(fiber: TFiberNode): boolean {
-	return fiber && fiber.type && fiber.type instanceof Function
+	return !!(fiber && fiber.type && fiber.type instanceof Function)
 }
 
 /**
@@ -151,6 +151,9 @@ export function isFunctionComponent(fiber: TFiberNode): boolean {
  * @return {void}
  */
 export function syncBlock(delay: number = 1000): void {
-	const end = new Date().getTime() + delay
-	while (new Date().getTime() < end) {}
+	const end: number = new Date().getTime() + delay
+	let i: number = 0
+	while (new Date().getTime() < end) {
+		++i
+	}
 }
