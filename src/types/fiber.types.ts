@@ -1,3 +1,4 @@
+import { TExtendHTMLDOMElment } from './dom.types'
 import { TUseStateHookStructData } from './hooks.types'
 
 export type TFiberNode = {
@@ -7,7 +8,7 @@ export type TFiberNode = {
 	/* ... */
 	type: Function | string | null
 	elementType: string | undefined
-	stateNode: HTMLElement | Text | null
+	stateNode: TExtendHTMLDOMElment | null
 	props: { [key: string]: any }
 	child: TFiberNode | null
 	parent: TFiberNode | null

@@ -1,7 +1,7 @@
 const { merge } = require('webpack-merge')
 const webpackLibInitConfig = require('./webpack-lib.init.config')
 const rules = require('./webpack-lib.rules')
-const utils = require('../../../config/utils')
+const utils = require('../utils')
 
 const webpackInitModule = webpackLibInitConfig.module
 delete webpackLibInitConfig.module

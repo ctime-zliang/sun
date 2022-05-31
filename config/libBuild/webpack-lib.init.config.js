@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const { ESBuildPlugin } = require('esbuild-loader')
-const { DtsBundlePlugin } = require('./webpack-lib.plugins.utils')
+const { DtsBundlePlugin } = require('../webpackPlugin/DtsBundlePlugin')
 
 const webpackLibInitConfig = {
 	target: 'web',
@@ -17,7 +17,7 @@ const webpackLibInitConfig = {
 			/* ... */
 			rootPath: path.join(process.cwd(), './build/@types'),
 			entry: './index.d.ts',
-			output: '../index.d.ts',
+			output: '../sun.d.ts',
 		}),
 	],
 }

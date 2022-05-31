@@ -88,8 +88,8 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 		*/
 		if (i === 0) {
 			wipFiber.child = newChildFiber
-		} else {
-			;(prevSiblingFiber as TFiberNode).sibling = newChildFiber
+		} else if (prevSiblingFiber) {
+			prevSiblingFiber.sibling = newChildFiber
 		}
 		prevSiblingFiber = newChildFiber
 	}

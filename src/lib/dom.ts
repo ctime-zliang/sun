@@ -1,7 +1,7 @@
 import { isProperty, isOld, isNewly, isSystemEvent } from '../utils/utils'
 import { ENUM_NODE_TYPE } from '../config/effect.enum'
-import { IHHTMLElement, ITHTMLElement } from '../types/dom.types'
 import { TFiberNode } from 'src/types/fiber.types'
+import { TExtendHTMLDOMElment } from 'src/types/dom.types'
 
 /**
  * 追加 DOM
@@ -38,9 +38,11 @@ export function commitDeleteChild(fiber: TFiberNode, parentDom: HTMLElement | Te
  * @param {object} fiber fiber 节点对象
  * @return {htmlelement} 元素 HTMLElement 对象
  */
-export function createDOM(fiber: TFiberNode): HTMLElement | Text {
-	const dom: HTMLElement | Text =
-		fiber.type === ENUM_NODE_TYPE.TEXT_NODE ? document.createTextNode(``) : document.createElement(fiber.type as string)
+export function createDOM(fiber: TFiberNode): TExtendHTMLDOMElment {
+	const dom: TExtendHTMLDOMElment =
+		fiber.type === ENUM_NODE_TYPE.TEXT_NODE
+			? (document.createTextNode(``) as TExtendHTMLDOMElment)
+			: (document.createElement(fiber.type as string) as TExtendHTMLDOMElment)
 	updateDOM(dom, {}, fiber.props as { [key: string]: any })
 	return dom
 }
@@ -52,7 +54,7 @@ export function createDOM(fiber: TFiberNode): HTMLElement | Text {
  * @param {object} newProps Props 属性对象
  * @return {htmlelement} 元素 DOM 对象
  */
-export function updateDOM(dom: HTMLElement | Text, oldProps: { [key: string]: any } = {}, newProps: { [key: string]: any } = {}): void {
+export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: any } = {}, newProps: { [key: string]: any } = {}): void {
 	const systemEventOfOldProps = Object.keys(oldProps).filter(isSystemEvent)
 	const systemEventOfNewProps = Object.keys(newProps).filter(isSystemEvent)
 	const commPropsOfOldProps = Object.keys(oldProps).filter(isProperty)
@@ -74,9 +76,9 @@ export function updateDOM(dom: HTMLElement | Text, oldProps: { [key: string]: an
 	for (let i: number = 0; i < commPropsOfOldProps.length; i++) {
 		const item: string = commPropsOfOldProps[i]
 		if (isOld(oldProps, newProps)(item)) {
-			;(dom as any)[item] = undefined
-			if ((dom as any).removeAttribute) {
-				;(dom as any).removeAttribute(item)
+			dom[item] = undefined
+			if (dom.removeAttribute) {
+				dom.removeAttribute(item)
 			}
 		}
 	}
@@ -90,7 +92,7 @@ export function updateDOM(dom: HTMLElement | Text, oldProps: { [key: string]: an
 				case 'style': {
 					if (Object.prototype.toString.call(newProps[item]).toLowerCase() === '[object object]') {
 						for (let attr in newProps[item]) {
-							;(dom as any).style[attr] = newProps[item][attr]
+							dom.style[attr] = newProps[item][attr]
 						}
 						break
 					}
@@ -98,15 +100,12 @@ export function updateDOM(dom: HTMLElement | Text, oldProps: { [key: string]: an
 					break
 				}
 				case 'className': {
-					;(dom as any)[item] = newProps[item]
+					dom[item] = newProps[item]
 					break
 				}
 				default: {
-					//@ts-ignore
 					dom[item] = newProps[item]
-					//@ts-ignore
 					if (dom.setAttribute && typeof newProps[item] != 'undefined') {
-						//@ts-ignore
 						dom.setAttribute(item, newProps[item])
 					}
 				}

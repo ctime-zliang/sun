@@ -1,13 +1,23 @@
 import { TFiberNode } from '../types/fiber.types'
 
-export const __RUNTIME_PROFILE___ = {
-	fiberRoot: null as TFiberNode | null,
-	rootFiber: null as TFiberNode | null,
-	rootFiberList: [] as Array<TFiberNode>,
-	nextWorkUnitFiber: null as TFiberNode | null,
+type T__RUNTIME_PROFILE___ = {
+	fiberRoot: TFiberNode | undefined
+	rootFiber: TFiberNode | undefined
+	rootFiberList: Array<TFiberNode>
+	nextWorkUnitFiber: TFiberNode | undefined
+}
+export const __RUNTIME_PROFILE___: T__RUNTIME_PROFILE___ = {
+	fiberRoot: undefined,
+	rootFiber: undefined,
+	rootFiberList: [],
+	nextWorkUnitFiber: undefined,
 }
 
-export const __RUNTIME_COMPT_PROFILE___ = {
-	workInProgressFiberOfNowCompt: null as TFiberNode | null,
+type T__RUNTIME_COMPT_PROFILE___ = {
+	hookIndexOfNowCompt: number
+	workInProgressFiberOfNowCompt?: TFiberNode
+}
+export const __RUNTIME_COMPT_PROFILE___: T__RUNTIME_COMPT_PROFILE___ = {
 	hookIndexOfNowCompt: 0,
+	workInProgressFiberOfNowCompt: undefined,
 }

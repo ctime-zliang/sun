@@ -12,7 +12,7 @@ export function initWorkLoop() {
 	function workLoop(deadline: TRequestIdleCallbackParams): void {
 		let shouldYield: boolean = false
 		while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
-			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber, deletions) as TFiberNode | null
+			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber, deletions)
 			shouldYield = deadline.timeRemaining() < 1
 		}
 		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.fiberRoot?.current) {
@@ -49,9 +49,9 @@ export function initWorkLoop() {
 	return workLoop
 }
 
-export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFiberNode | null {
+export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFiberNode | undefined {
 	if (!fiber.type) {
-		return null
+		return undefined
 	}
 	/*
 		在首次 render 时, fiber 为当前应用所在的容器节点对应的 fiber, 视作非函数节点并处理
@@ -78,5 +78,5 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFibe
 		}
 		fiber = fiber.parent as TFiberNode
 	}
-	return null
+	return undefined
 }

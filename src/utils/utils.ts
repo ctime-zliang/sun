@@ -1,6 +1,6 @@
 import { TVdom } from '../types/vdom.types'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
-import { TFiberNode } from '../types/fiber.types'
+import { TFiberNode, TRootFiberNode } from '../types/fiber.types'
 
 /**
  * @description 创建初始 VDOM 结构体数据
@@ -79,12 +79,12 @@ export function generateRootFiberStructData(): TFiberNode {
  * @function generateRootFiberStructData
  * @return {TFiberNode}
  */
-export function getRootFiber(fiber: TFiberNode): TFiberNode {
+export function getRootFiber(fiber: TFiberNode): TRootFiberNode {
 	let rootFiber: TFiberNode = fiber
 	while (!rootFiber.root) {
 		rootFiber = rootFiber.parent as TFiberNode
 	}
-	return rootFiber
+	return rootFiber as TRootFiberNode
 }
 
 /**

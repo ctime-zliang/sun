@@ -24,7 +24,7 @@ export function createElement(type: string, props: { [key: string]: any }, ...ch
 	const flatChildren: Array<any> = children.flat(Infinity) // or children.flat(1)
 	return generateInitialVDOMStructData(type, {
 		...props,
-		children: flatChildren.map((child: any) => {
+		children: flatChildren.map((child: any): void => {
 			return typeof child === 'object' ? child : createTextElement(child)
 		}),
 	})
@@ -69,7 +69,7 @@ export function render(element: any, container: HTMLElement): void {
 		}
 	)
 	__RUNTIME_PROFILE___.rootFiberList.push(rootFiber)
-	if (__RUNTIME_PROFILE___.fiberRoot?.current === null) {
+	if (__RUNTIME_PROFILE___.fiberRoot && !__RUNTIME_PROFILE___.fiberRoot.current) {
 		__RUNTIME_PROFILE___.fiberRoot.current = rootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber
 		console.log(`Root.Fiber ===>>>`, rootFiber)

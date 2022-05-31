@@ -1,7 +1,9 @@
-export interface IHHTMLElement extends HTMLElement {}
+interface IHTMLElement extends HTMLElement {}
+export type TExtendHTMLElment = IHTMLElement & {}
 
-export interface ITHTMLElement extends Text {
+interface IHTMLDOMElment extends Text {
 	removeAttribute?: (...args: any) => void
 	style?: any
 	[key: string]: any
 }
+export type TExtendHTMLDOMElment = TExtendHTMLElment & IHTMLDOMElment

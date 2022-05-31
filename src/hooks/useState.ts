@@ -5,9 +5,9 @@ import { generateFiberStructData, getRootFiber } from '../utils/utils'
 import { getHook } from './hook'
 
 export function useState(initValue: any): TUseStateHook {
-	const componentFiber: TFiberNode | null = __RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt
-	const rootFiber: TFiberNode = getRootFiber(componentFiber as TFiberNode)
-	const oldHookOfCompt: TUseStateHookStructData | null = getHook()
+	const componentFiber: TFiberNode | undefined = __RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt
+	const rootFiber: TRootFiberNode = getRootFiber(componentFiber as TFiberNode)
+	const oldHookOfCompt: TUseStateHookStructData | undefined = getHook()
 	const hook: TUseStateHookStructData = { state: oldHookOfCompt ? oldHookOfCompt.state : initValue, queue: [] }
 	const actions: TUseStateHookAction = oldHookOfCompt ? oldHookOfCompt.queue : []
 
@@ -37,10 +37,8 @@ export function useState(initValue: any): TUseStateHook {
 				root: true,
 			}
 		)
-		__RUNTIME_PROFILE___.rootFiberList.splice((rootFiber as TRootFiberNode).index, 1, newRootFiber)
-		if (__RUNTIME_PROFILE___.fiberRoot) {
-			__RUNTIME_PROFILE___.fiberRoot.current = newRootFiber
-		}
+		__RUNTIME_PROFILE___.rootFiberList.splice(rootFiber.index, 1, newRootFiber)
+		;(__RUNTIME_PROFILE___.fiberRoot as TFiberNode).current = newRootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = newRootFiber
 	}
 	;(componentFiber as TFiberNode).hooks.push(hook)

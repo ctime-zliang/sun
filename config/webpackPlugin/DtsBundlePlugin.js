@@ -1,5 +1,6 @@
 const path = require('path')
-const utils = require('./utils')
+const utils = require('../utils')
+const logger = require('../logger')
 
 function DtsBundlePlugin(opt) {
 	this.options = { ...opt }
@@ -7,10 +8,10 @@ function DtsBundlePlugin(opt) {
 DtsBundlePlugin.prototype.apply = function (compiler) {
 	compiler.hooks.done.tap('done', async () => {
 		console.log(`\n`)
-		console.log('Building typescript type declaration file...')
+		logger.trace('Building typescript type declaration file...')
 		const dts = require('dts-bundle')
 		dts.bundle({
-			name: this.options.name,
+			name: `sun`,
 			baseDir: this.options.rootPath,
 			main: path.join(this.options.rootPath, this.options.entry),
 			out: path.join(this.options.rootPath, this.options.output),
@@ -21,9 +22,9 @@ DtsBundlePlugin.prototype.apply = function (compiler) {
 	})
 	compiler.hooks.done.tap('finish', () => {
 		console.log(`\n`)
-		console.log('Cleaning up temporary directory...')
+		logger.trace('Cleaning up temporary directory...')
 		utils.deleteFolderRecursive(this.options.rootPath)
-		console.log('Build successful!')
+		logger.trace('Build successful!')
 	})
 }
 

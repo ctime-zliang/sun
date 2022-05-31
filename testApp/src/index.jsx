@@ -1,4 +1,4 @@
-import Sun, { useState } from '../../dist/sun'
+import Sun, { useState } from '../../build/sun'
 import { ClickAddLi, ClickAddLongChild } from './component/click-add-li'
 import { TraverseFiberTree } from './component/traverse-fiber-tree'
 import { UsestateHookIndex, UsestateHookTest } from './component/usestate-test'
@@ -27,35 +27,3 @@ const App = () => {
 
 // Sun.render(<TraverseFiberTree />, document.querySelector(`#app`))
 Sun.render(<App />, document.querySelector(`#app2`))
-
-// function fffffff() {
-// 	console.log(`Task Start`)
-// 	syncBlock(5)
-// 	console.log(`Task End`)
-// }
-// const taskQueue = []
-// const createTask = () => {
-// 	for (let i = 0; i < 100; i++) {
-// 		taskQueue.push(fffffff)
-// 	}
-// }
-
-// createTask()
-
-// const execTask = () => {
-// 	const task = taskQueue.shift()
-// 	task()
-// }
-
-// const workLoop = (deadline) => {
-// 	console.log(`执行 rIC, 检测当前帧的剩余时间: ${deadline.timeRemaining()}ms`)
-// 	while (deadline.timeRemaining() > 0 && taskQueue.length > 0) {
-// 		execTask()
-// 		console.log(`当前帧的剩余时间: ${deadline.timeRemaining()}ms`)
-// 	}
-// 	if (taskQueue.length) {
-// 		window.requestIdleCallback(workLoop)
-// 	}
-// }
-
-// window.requestIdleCallback(workLoop)

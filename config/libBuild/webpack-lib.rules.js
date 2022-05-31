@@ -9,7 +9,7 @@ const jsEsbuildLoader = {
 		target: 'es2015',
 		jsxFactory: 'Sun.createElement',
 		jsxFragment: 'Sun.Fragment',
-		tsconfigRaw: require('../tsconfig.json'),
+		tsconfigRaw: require('../../tsconfig.json'),
 	},
 }
 
