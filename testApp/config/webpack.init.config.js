@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const { ESBuildPlugin } = require('esbuild-loader')
-const utils = require('../utils')
+const utils = require('../../config/utils')
 
 const webpackConfigBase = {
 	target: 'web',

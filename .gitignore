@@ -4,6 +4,5 @@ cache
 build
 coverage
 dist
-testApp/devBuild
-testApp/prodBuild
+testApp/build
 node_modules

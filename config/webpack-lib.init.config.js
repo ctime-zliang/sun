@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const { ESBuildPlugin } = require('esbuild-loader')
-const { DtsBundlePlugin } = require('../webpackPlugin/DtsBundlePlugin')
+const { DtsBundlePlugin } = require('./webpack-plugins/DtsBundlePlugin')
 
 const webpackLibInitConfig = {
 	target: 'web',

@@ -12,9 +12,9 @@
 		"eslint:check-src": "eslint --ext .js,.ts,.jsx,.tsx src",
 		"eslint:fix-src": "eslint --fix --ext .js,.ts,.jsx,.tsx src",
 		"tsc:check": "tsc --noEmit",
-		"lib:dev": "cross-env NODE_ENV=development webpack --watch --progress --config ./config/libBuild/webpack-lib.dev.config.js",
-		"lib:prod": "cross-env NODE_ENV=development webpack --watch --progress --config ./config/libBuild/webpack-lib.prod.config.js",
-		"testApp:dev": "cross-env NODE_ENV=development webpack server --config ./config/testAppBuild/webpack.dev.config.js"
+		"lib:dev": "cross-env NODE_ENV=development webpack --watch --progress --config ./config/webpack-lib.dev.config.js",
+		"lib:prod": "cross-env NODE_ENV=development webpack --watch --progress --config ./config/webpack-lib.prod.config.js",
+		"testApp:dev": "cross-env NODE_ENV=development webpack server --config ./testApp/config/webpack.dev.config.js"
 	},
 	"repository": {
 		"type": "git",

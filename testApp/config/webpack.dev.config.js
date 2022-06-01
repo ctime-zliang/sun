@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpackLibInitConfig = require('./webpack.init.config')
 const rules = require('./webpack.rules')
 const webpackLibDevServerConfig = require('./webpack.dev-server.config')
-const utils = require('../utils')
+const utils = require('../../config/utils')
 
 const webpackModule = webpackLibInitConfig.module
 delete webpackLibInitConfig.module
@@ -15,7 +15,7 @@ const webpackConfig = {
 		main: utils.resolveDirectory(`./testApp/src/index.jsx`),
 	},
 	output: {
-		path: utils.resolveDirectory(`./testApp/devBuild`),
+		path: utils.resolveDirectory(`./testApp/build`),
 		filename: `[name].js`,
 	},
 	module: {
