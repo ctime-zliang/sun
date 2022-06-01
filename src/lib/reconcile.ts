@@ -20,7 +20,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 
 	let i: number = 0
 	for (; i < children.length || oldFiberOfNowWIPFiber != null; i++) {
-		let newChildFiber = null
+		let newChildFiber: TFiberNode | null = null
 		if (!children[i]) {
 			/*
 				当 oldFiber 无法找到对应的新 fiber 时, 即代表需要删除该节点 
@@ -62,11 +62,11 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 				alternate: null,
 				effectTag: ENUM_EFFECT_TAG.PLACEMENT,
 			})
-		}
-		if (!sameType && oldFiberOfNowWIPFiber) {
-			oldFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
-			oldFiberOfNowWIPFiber.dirty = true
-			deletions.push(oldFiberOfNowWIPFiber)
+			if (oldFiberOfNowWIPFiber) {
+				oldFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
+				oldFiberOfNowWIPFiber.dirty = true
+				deletions.push(oldFiberOfNowWIPFiber)
+			}
 		}
 		/*
 			oldFiberOfNowWIPFiber 作为当前 wipFiber 的上一轮更新完毕后的镜像存储节点

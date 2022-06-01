@@ -28,17 +28,15 @@ export function useState(initValue: any): TUseStateHook {
 				props: rootFiber.props,
 				alternate: rootFiber,
 				dirty: true,
-			},
-			{
 				/*
 					保留索引值 
 				 */
-				index: rootFiber?.index,
+				index: rootFiber.index,
 				root: true,
 			}
 		)
 		__RUNTIME_PROFILE___.rootFiberList.splice(rootFiber.index, 1, newRootFiber)
-		;(__RUNTIME_PROFILE___.fiberRoot as TFiberNode).current = newRootFiber
+		;(__RUNTIME_PROFILE___.globalFiberRoot as TFiberNode).current = newRootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = newRootFiber
 	}
 	;(componentFiber as TFiberNode).hooks.push(hook)

@@ -1,25 +1,25 @@
 import { __RUNTIME_PROFILE___ } from './core/runtime'
 import { initWorkLoop } from './lib/scheduler'
 import { generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData } from './utils/utils'
-import { TVdom } from './types/vdom.types'
+import { TVDom } from './types/vdom.types'
 import { ENUM_NODE_TYPE } from './config/effect.enum'
 import { TFiberNode } from './types/fiber.types'
 
 /* 
-	创建一个全局的 fiberRoot
+	创建一个全局的 globalFiberRoot
 	并设置其 current 指针指向当前活动(即 处于 mount 或 update 时)的应用的顶层 fiber
  */
-__RUNTIME_PROFILE___.fiberRoot = generateRootFiberStructData() as TFiberNode
+__RUNTIME_PROFILE___.globalFiberRoot = generateRootFiberStructData() as TFiberNode
 
 /**
- * @description 创建元素 VDOM
+ * @description 创建元素 vDom
  * @function createElement
  * @param {string} type 元素标签名
  * @param {object} props 属性对象
  * @param {any} children 子节点列表
- * @return {TVdom}
+ * @return {TVDom}
  */
-export function createElement(type: string, props: { [key: string]: any }, ...children: any[]): TVdom {
+export function createElement(type: string, props: { [key: string]: any }, ...children: any[]): TVDom {
 	//@ts-ignore
 	const flatChildren: Array<any> = children.flat(Infinity) // or children.flat(1)
 	return generateInitialVDOMStructData(type, {
@@ -31,12 +31,12 @@ export function createElement(type: string, props: { [key: string]: any }, ...ch
 }
 
 /**
- * @description 创建文本 VDOM
+ * @description 创建文本 vDom
  * @function createTextElement
  * @param {string} text 文本内容
- * @return {TVdom}
+ * @return {TVDom}
  */
-export function createTextElement(text: string): TVdom {
+export function createTextElement(text: string): TVDom {
 	return generateInitialVDOMStructData(ENUM_NODE_TYPE.TEXT_NODE, {
 		nodeValue: text,
 		children: [],
@@ -51,7 +51,10 @@ export function createTextElement(text: string): TVdom {
  * @return {void}
  */
 let renderIndex: number = -1
-export function render(element: any, container: HTMLElement): void {
+export function render(element: any, container: HTMLElement): void {debugger
+	/*
+		创建渲染应用的容器对应的 fiber 节点
+	 */
 	const rootFiber: TFiberNode = generateFiberStructData(
 		{
 			stateNode: container,
@@ -59,8 +62,6 @@ export function render(element: any, container: HTMLElement): void {
 			props: { children: [element] },
 			alternate: null,
 			dirty: true,
-		},
-		{
 			/*
 				当前 fiber 的索引编号, 保证值与该 fiber 在 fiber-list 中的位置索引一致 
 			 */
@@ -69,8 +70,12 @@ export function render(element: any, container: HTMLElement): void {
 		}
 	)
 	__RUNTIME_PROFILE___.rootFiberList.push(rootFiber)
-	if (__RUNTIME_PROFILE___.fiberRoot && !__RUNTIME_PROFILE___.fiberRoot.current) {
-		__RUNTIME_PROFILE___.fiberRoot.current = rootFiber
+	/*
+		__RUNTIME_PROFILE___.globalFiberRoot 是一定存在的
+		原则上是无需判断该属性是否存在, 只需要判断 .current 是否指向合法的 fiber 即可
+	 */
+	if (__RUNTIME_PROFILE___.globalFiberRoot && !__RUNTIME_PROFILE___.globalFiberRoot.current) {
+		__RUNTIME_PROFILE___.globalFiberRoot.current = rootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber
 		console.log(`Root.Fiber ===>>>`, rootFiber)
 		window.requestIdleCallback(initWorkLoop())

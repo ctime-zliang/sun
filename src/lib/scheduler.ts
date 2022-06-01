@@ -8,20 +8,20 @@ import { TRequestIdleCallbackParams } from '../types/common.types'
 
 export function initWorkLoop() {
 	let deletions: Array<any> = []
-	let currentRootFiber: TFiberNode | null = null
+	let currentRootFiber: TFiberNode
 	function workLoop(deadline: TRequestIdleCallbackParams): void {
 		let shouldYield: boolean = false
 		while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
-			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber, deletions)
+			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber, deletions) as TFiberNode | undefined
 			shouldYield = deadline.timeRemaining() < 1
 		}
-		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.fiberRoot?.current) {
+		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.globalFiberRoot?.current) {
 			/*
 				暂存当前活动的应用的顶层 fiber(rootFiber) 
-				清除全局 fiberRoot 对该活动应用的 rootFiber 的引用
+				清除全局 globalFiberRoot 对该活动应用的 rootFiber 的引用
 			 */
-			currentRootFiber = __RUNTIME_PROFILE___.fiberRoot.current
-			__RUNTIME_PROFILE___.fiberRoot.current = null
+			currentRootFiber = __RUNTIME_PROFILE___.globalFiberRoot.current
+			__RUNTIME_PROFILE___.globalFiberRoot.current = null
 
 			/*
 				提交 DOM 操作 
@@ -40,7 +40,7 @@ export function initWorkLoop() {
 			const nextRootFiber = __RUNTIME_PROFILE___.rootFiberList[(currentRootFiber as TRootFiberNode).index + 1] || null
 			if (nextRootFiber && nextRootFiber.dirty) {
 				__RUNTIME_PROFILE___.nextWorkUnitFiber = nextRootFiber
-				__RUNTIME_PROFILE___.fiberRoot.current = nextRootFiber
+				__RUNTIME_PROFILE___.globalFiberRoot.current = nextRootFiber
 			}
 		}
 		window.requestIdleCallback(workLoop)
@@ -51,7 +51,7 @@ export function initWorkLoop() {
 
 export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFiberNode | undefined {
 	if (!fiber.type) {
-		return undefined
+		return
 	}
 	/*
 		在首次 render 时, fiber 为当前应用所在的容器节点对应的 fiber, 视作非函数节点并处理
@@ -78,5 +78,4 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFibe
 		}
 		fiber = fiber.parent as TFiberNode
 	}
-	return undefined
 }

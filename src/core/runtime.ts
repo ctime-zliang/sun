@@ -1,13 +1,13 @@
 import { TFiberNode } from '../types/fiber.types'
 
 type T__RUNTIME_PROFILE___ = {
-	fiberRoot: TFiberNode | undefined
+	globalFiberRoot: TFiberNode | undefined
 	rootFiber: TFiberNode | undefined
 	rootFiberList: Array<TFiberNode>
 	nextWorkUnitFiber: TFiberNode | undefined
 }
 export const __RUNTIME_PROFILE___: T__RUNTIME_PROFILE___ = {
-	fiberRoot: undefined,
+	globalFiberRoot: undefined,
 	rootFiber: undefined,
 	rootFiberList: [],
 	nextWorkUnitFiber: undefined,
