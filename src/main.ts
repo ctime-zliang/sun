@@ -51,9 +51,10 @@ export function createTextElement(text: string): TVDom {
  * @return {void}
  */
 let renderIndex: number = -1
-export function render(element: any, container: HTMLElement): void {debugger
+export function render(element: any, container: HTMLElement): void {
 	/*
-		创建渲染应用的容器对应的 fiber 节点
+		创建当前渲染应用的根 fiber 节点
+		该 fiber 节点对应 container DOM 节点, 第一个子节点为 element 对象(函数)
 	 */
 	const rootFiber: TFiberNode = generateFiberStructData(
 		{
@@ -77,7 +78,8 @@ export function render(element: any, container: HTMLElement): void {debugger
 	if (__RUNTIME_PROFILE___.globalFiberRoot && !__RUNTIME_PROFILE___.globalFiberRoot.current) {
 		__RUNTIME_PROFILE___.globalFiberRoot.current = rootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber
-		console.log(`Root.Fiber ===>>>`, rootFiber)
+		console.log(`AppRootFiber ===>>>`, rootFiber)
+		console.log(`__RUNTIME_PROFILE___ ===>>>`, __RUNTIME_PROFILE___)
 		window.requestIdleCallback(initWorkLoop())
 	}
 }

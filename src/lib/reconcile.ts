@@ -37,7 +37,8 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 		const sameType: boolean = !!(oldFiberOfNowWIPFiber && element.type == oldFiberOfNowWIPFiber.type)
 		if (sameType) {
 			/*
-				之前存在的节点, 需要更新 
+				之前存在的节点, 需要更新
+				重建对应的 fiber 节点
 			 */
 			newChildFiber = generateFiberStructData({
 				stateNode: (oldFiberOfNowWIPFiber as TFiberNode).stateNode,
@@ -48,10 +49,10 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 				alternate: oldFiberOfNowWIPFiber,
 				effectTag: ENUM_EFFECT_TAG.UPDATE,
 			})
-		}
-		if (!sameType) {
+		} else {
 			/*
-				之前不存在的节点, 需要置入 
+				之前不存在的节点, 需要新建并插入
+				创建对应的 fiber 节点 
 			 */
 			newChildFiber = generateFiberStructData({
 				stateNode: null,
