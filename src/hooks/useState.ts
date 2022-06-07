@@ -21,20 +21,18 @@ export function useState(initValue: any): TUseStateHook {
 
 	const setState: (action: any) => void = (action: any): void => {
 		hook.queue.push(action)
-		const newRootFiber: TFiberNode = generateFiberStructData(
-			{
-				stateNode: rootFiber.stateNode,
-				type: rootFiber.type,
-				props: rootFiber.props,
-				alternate: rootFiber,
-				dirty: true,
-				/*
+		const newRootFiber: TFiberNode = generateFiberStructData({
+			stateNode: rootFiber.stateNode,
+			type: rootFiber.type,
+			props: rootFiber.props,
+			alternate: rootFiber,
+			dirty: true,
+			/*
 					保留索引值 
 				 */
-				index: rootFiber.index,
-				root: true,
-			}
-		)
+			index: rootFiber.index,
+			root: true,
+		})
 		__RUNTIME_PROFILE___.rootFiberList.splice(rootFiber.index, 1, newRootFiber)
 		;(__RUNTIME_PROFILE___.globalFiberRoot as TFiberNode).current = newRootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = newRootFiber

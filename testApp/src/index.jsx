@@ -15,10 +15,12 @@ const App = () => {
 	}
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }}>
-			<article onClick={setCountAction1} style="border: 1px solid green">{count1}</article>
+			<article onClick={setCountAction1} style="border: 1px solid green">
+				{count1}
+			</article>
 		</div>
 	)
 }
 
-// Sun.render(<TraverseFiberTree />, document.querySelector(`#app`))
+// render(<TraverseFiberTree />, document.querySelector(`#app`))
 render(<App />, document.querySelector(`#app2`))

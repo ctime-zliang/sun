@@ -14,7 +14,7 @@ export function generateInitialVDOMStructData(type: string, props: { [key: strin
 		type,
 		props,
 		children: [],
-		__classOf: typeof type
+		__classOf: typeof type,
 	}
 }
 
@@ -30,26 +30,27 @@ export function generateInitialFiberStructData(): TFiberNode {
 			ClassComponent = class
 			HostComponent = DOM节点 tagName 
 		*/
-		type: null,  // 标记当前 Fiber 节点的类型
-		elementType: undefined,  // 标记当前 Fiber 节点对应的 DOM 节点类型
-		stateNode: null,  // 当前 Fiber 节点对应的 DOM
-		props: {},  // fiber 节点的 vDom 属性
-		child: null,  // fiber 节点的第一个子节点 fiber
-		parent: null,  // fiber 节点的返回节点(父节点)
-		current: null,  
-		sibling: null,  // fiber 节点的下一个兄弟节点 
-		alternate: null,  // 当前 fiber 节点在更新前的上一轮 fiber 节点对象
-		effectTag: ENUM_EFFECT_TAG.NO_EFFECT,  // fiber 节点的更新状态
+		type: null, // 标记当前 Fiber 节点的类型
+		elementType: undefined, // 标记当前 Fiber 节点对应的 DOM 节点类型
+		stateNode: null, // 当前 Fiber 节点对应的 DOM
+		props: {}, // fiber 节点的 vDom 属性
+		child: null, // fiber 节点的第一个子节点 fiber
+		parent: null, // fiber 节点的返回节点(父节点)
+		current: null,
+		sibling: null, // fiber 节点的下一个兄弟节点
+		alternate: null, // 当前 fiber 节点在更新前的上一轮 fiber 节点对象
+		effectTag: ENUM_EFFECT_TAG.NO_EFFECT, // fiber 节点的更新状态
 		key: undefined,
-		dirty: false,  // 是否需要更新 fiber 节点
+		dirty: false, // 是否需要更新 fiber 节点
 		/* ... */
-		hooks: [],  // hooks
+		hooks: [], // hooks
 	}
 }
 
 /**
  * @description 创建适用于非根节点的 Fiber 结构体数据
  * @function generateInitialFiberStructData
+ * @param {any} args 满足 TFiberNode 节点的配置项
  * @return {TFiberNode}
  */
 export function generateFiberStructData(args: any = {}): TFiberNode {
@@ -77,6 +78,7 @@ export function generateRootFiberStructData(): TFiberNode {
 /**
  * @description 获取根 Fiber 节点
  * @function generateRootFiberStructData
+ * @param {TFiberNode} fiber fiber 节点
  * @return {TFiberNode}
  */
 export function getRootFiber(fiber: TFiberNode): TRootFiberNode {
@@ -90,21 +92,25 @@ export function getRootFiber(fiber: TFiberNode): TRootFiberNode {
 /**
  * @description 判断是否是需要新建的节点
  * @function isNewly
+ * @param {any} oldObj 旧节点属性
+ * @param {any} newObj 新节点属性
  * @return {function}
  */
 export function isNewly(oldObj: { [key: string]: any }, newObj: { [key: string]: any }): (key: string) => boolean {
-	return (key: string) => {
+	return (key: string): boolean => {
 		return oldObj[key] !== newObj[key]
 	}
 }
 
 /**
  * @description 判断是否是已存在可复用的节点
- * @function isNewly
+ * @function isOld
+ * @param {any} oldObj 旧节点属性
+ * @param {any} newObj 新节点属性
  * @return {function}
  */
 export function isOld(oldObj: { [key: string]: any }, newObj: { [key: string]: any }): (key: string) => boolean {
-	return (key: string) => {
+	return (key: string): boolean => {
 		return !(key in newObj)
 	}
 }
@@ -112,6 +118,7 @@ export function isOld(oldObj: { [key: string]: any }, newObj: { [key: string]: a
 /**
  * @description 判断是否是 HTML 属性
  * @function isProperty
+ * @param {string} key 属性名称
  * @return {boolean}
  */
 export function isProperty(key: string): boolean {
@@ -121,6 +128,7 @@ export function isProperty(key: string): boolean {
 /**
  * @description 判断是否是 HTML 系统事件
  * @function isSystemEvent
+ * @param {string} key 属性名称
  * @return {boolean}
  */
 export function isSystemEvent(key: string): boolean {
@@ -130,6 +138,7 @@ export function isSystemEvent(key: string): boolean {
 /**
  * @description 判断是否是正常的 Fiber 节点
  * @function isSystemEvent
+ * @param {TFiberNode} fiber fiber 节点
  * @return {boolean}
  */
 export function isApprovedComponent(fiber: TFiberNode): boolean {
@@ -139,6 +148,7 @@ export function isApprovedComponent(fiber: TFiberNode): boolean {
 /**
  * @description 判断是否是函数组件
  * @function isSystemEvent
+ * @param {TFiberNode} fiber fiber 节点
  * @return {boolean}
  */
 export function isFunctionComponent(fiber: TFiberNode): boolean {
@@ -148,6 +158,7 @@ export function isFunctionComponent(fiber: TFiberNode): boolean {
 /**
  * @description 同步阻塞
  * @function syncBlock
+ * @param {number} delay 阻塞时长
  * @return {void}
  */
 export function syncBlock(delay: number = 1000): void {

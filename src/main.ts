@@ -19,7 +19,10 @@ __RUNTIME_PROFILE___.globalFiberRoot = generateRootFiberStructData() as TFiberNo
  * @param {any} children 子节点列表
  * @return {TVDom}
  */
-export function createElement(type: string, props: { [key: string]: any }, ...children: any[]): TVDom {
+export function createElement(type: string, props: { [key: string]: any }, ...children: Array<any>): TVDom {
+	/*
+		Array.flat(Infinity) 性能问题
+	 */
 	//@ts-ignore
 	const flatChildren: Array<any> = children.flat(Infinity) // or children.flat(1)
 	return generateInitialVDOMStructData(type, {
@@ -56,20 +59,18 @@ export function render(element: any, container: HTMLElement): void {
 		创建当前渲染应用的根 fiber 节点
 		该 fiber 节点对应 container DOM 节点, 第一个子节点为 element 对象(函数)
 	 */
-	const rootFiber: TFiberNode = generateFiberStructData(
-		{
-			stateNode: container,
-			type: container.nodeName.toLowerCase(),
-			props: { children: [element] },
-			alternate: null,
-			dirty: true,
-			/*
+	const rootFiber: TFiberNode = generateFiberStructData({
+		stateNode: container,
+		type: container.nodeName.toLowerCase(),
+		props: { children: [element] },
+		alternate: null,
+		dirty: true,
+		/*
 				当前 fiber 的索引编号, 保证值与该 fiber 在 fiber-list 中的位置索引一致 
 			 */
-			index: ++renderIndex,
-			root: true,
-		}
-	)
+		index: ++renderIndex,
+		root: true,
+	})
 	__RUNTIME_PROFILE___.rootFiberList.push(rootFiber)
 	/*
 		__RUNTIME_PROFILE___.globalFiberRoot 是一定存在的
