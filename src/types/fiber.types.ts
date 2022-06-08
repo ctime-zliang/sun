@@ -1,5 +1,6 @@
 import { TExtendHTMLDOMElment } from './dom.types'
 import { TUseStateHookStructData } from './hooks.types'
+import { TVDom } from './vdom.types'
 
 export type TFiberNode = {
 	// FunctionComponent: Function
@@ -7,13 +8,13 @@ export type TFiberNode = {
 	// HostComponent: any
 	/* ... */
 	type: Function | string | null
-	elementType: string | undefined
+	props: TVDom | any
+	/* ... */
+	// elementType: string | undefined
 	stateNode: TExtendHTMLDOMElment | null
-	props: { [key: string]: any }
 	child: TFiberNode | null
 	parent: TFiberNode | null
 	sibling: TFiberNode | null
-	current: TFiberNode | null
 	alternate: TFiberNode | null
 	effectTag: string
 	key: string | undefined
@@ -23,6 +24,7 @@ export type TFiberNode = {
 	/* ... */
 	root?: boolean
 	index?: number
+	current?: TFiberNode | null
 }
 
 export type TRootFiberNode = {
@@ -31,13 +33,13 @@ export type TRootFiberNode = {
 	// HostComponent: any
 	/* ... */
 	type: Function | string | null
-	elementType: string | undefined
+	props: TVDom | any
+	/* ... */
+	// elementType: string | undefined
 	stateNode: HTMLElement | Text | null
-	props: { [key: string]: any }
 	child: TFiberNode | null
 	parent: TFiberNode | null
 	sibling: TFiberNode | null
-	current: TFiberNode | null
 	alternate: TFiberNode | null
 	effectTag: string
 	key: string | undefined
@@ -47,4 +49,5 @@ export type TRootFiberNode = {
 	/* ... */
 	root: boolean
 	index: number
+	current: TFiberNode | null
 }

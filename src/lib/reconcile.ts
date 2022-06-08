@@ -2,9 +2,13 @@ import { __RUNTIME_PROFILE___ } from '../core/runtime'
 import { generateFiberStructData } from '../utils/utils'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
+import { TVDom } from 'src/types/vdom.types'
 
 export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode {
-	const children: { [key: string]: any } = wipFiber.props.children
+	/*
+		获取当前 fiber 节点所对应的所有子节点的 vDom 列表
+	 */
+	const children: Array<TVDom> = wipFiber.props.children
 	/*
 		需要清除上一轮更新完毕时保存的上上一轮的当前层 fiber 节点的引用
 	 */
@@ -20,8 +24,9 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 
 	let i: number = 0
 	for (; i < children.length || oldFiberOfNowWIPFiber != null; i++) {
+		const childVDomItem: TVDom = children[i]
 		let newChildFiber: TFiberNode | null = null
-		if (!children[i]) {
+		if (!childVDomItem) {
 			/*
 				当 oldFiber 无法找到对应的新 fiber 时, 即代表需要删除该节点 
 			 */
@@ -33,17 +38,16 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 			}
 			continue
 		}
-		const element: TFiberNode = children[i]
-		const sameType: boolean = !!(oldFiberOfNowWIPFiber && element.type == oldFiberOfNowWIPFiber.type)
+		const sameType: boolean = !!(oldFiberOfNowWIPFiber && childVDomItem.type == oldFiberOfNowWIPFiber.type)
 		if (sameType) {
 			/*
 				之前存在的节点, 需要更新
-				重建对应的 fiber 节点
+					通过该层的 vDom 重建对应的 fiber 节点 
 			 */
 			newChildFiber = generateFiberStructData({
 				stateNode: (oldFiberOfNowWIPFiber as TFiberNode).stateNode,
-				type: element.type,
-				props: element.props,
+				type: childVDomItem.type,
+				props: childVDomItem.props,
 				parent: wipFiber,
 				dirty: true,
 				alternate: oldFiberOfNowWIPFiber,
@@ -52,12 +56,12 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 		} else {
 			/*
 				之前不存在的节点, 需要新建并插入
-				创建对应的 fiber 节点 
+					通过该层的 vDom 创建对应的 fiber 节点 
 			 */
 			newChildFiber = generateFiberStructData({
 				stateNode: null,
-				type: element.type,
-				props: element.props,
+				type: childVDomItem.type,
+				props: childVDomItem.props,
 				parent: wipFiber,
 				dirty: true,
 				alternate: null,
@@ -70,7 +74,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 			}
 		}
 		/*
-			oldFiberOfNowWIPFiber 作为当前 wipFiber 的上一轮更新完毕后的镜像存储节点
+			oldFiberOfNowWIPFiber 作为当前 wipFiber 的上一轮更新完毕后的镜像(引用持有)存储节点
 			每轮循环中需随着循环进行, 后移到下一个兄弟节点
 		 */
 		if (oldFiberOfNowWIPFiber) {

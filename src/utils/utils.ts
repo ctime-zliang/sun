@@ -13,7 +13,6 @@ export function generateInitialVDOMStructData(type: string, props: { [key: strin
 	return {
 		type,
 		props,
-		children: [],
 		__classOf: typeof type,
 	}
 }
@@ -30,20 +29,35 @@ export function generateInitialFiberStructData(): TFiberNode {
 			ClassComponent = class
 			HostComponent = DOM节点 tagName 
 		*/
-		type: null, // 标记当前 Fiber 节点的类型
-		elementType: undefined, // 标记当前 Fiber 节点对应的 DOM 节点类型
-		stateNode: null, // 当前 Fiber 节点对应的 DOM
-		props: {}, // fiber 节点的 vDom 属性
-		child: null, // fiber 节点的第一个子节点 fiber
-		parent: null, // fiber 节点的返回节点(父节点)
-		current: null,
-		sibling: null, // fiber 节点的下一个兄弟节点
-		alternate: null, // 当前 fiber 节点在更新前的上一轮 fiber 节点对象
-		effectTag: ENUM_EFFECT_TAG.NO_EFFECT, // fiber 节点的更新状态
-		key: undefined,
-		dirty: false, // 是否需要更新 fiber 节点
+		// 标记当前 Fiber 节点的类型
+		// 对于 FunctionComponent, 即函数本身
+		// 对于 ClassComponent, 即 class
+		// 对于 HostComponent, 指 DOM 节点 tagName
+		// 此项对应 React Fiber 设计中的 fiber.type
+		type: null,
+		// fiber 节点的 vDom 属性
+		props: {},
 		/* ... */
-		hooks: [], // hooks
+		// 标记当前 Fiber 节点对应的 DOM 节点类型
+		// elementType: undefined,
+		// 当前 Fiber 节点对应的真实 DOM
+		stateNode: null,
+		// fiber 节点的第一个子节点 fiber
+		child: null,
+		// fiber 节点的返回节点(父节点)
+		parent: null,
+		// fiber 节点的下一个兄弟节点
+		sibling: null,
+		// 当前 fiber 节点在更新前的上一轮 fiber 节点对象
+		alternate: null,
+		// fiber 节点的更新状态
+		effectTag: ENUM_EFFECT_TAG.NO_EFFECT,
+		key: undefined,
+		// 是否需要更新 fiber 节点
+		dirty: false,
+		/* ... */
+		// hooks
+		hooks: [],
 	}
 }
 

@@ -5,10 +5,12 @@ import { createDOM } from './dom'
 import { isFunctionComponent } from '../utils/utils'
 import { TFiberNode, TRootFiberNode } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/common.types'
+import { TVDom } from 'src/types/vdom.types'
 
 export function initWorkLoop() {
-	let deletions: Array<any> = []
+	let deletions: Array<TFiberNode> = []
 	let currentRootFiber: TFiberNode
+
 	function workLoop(deadline: TRequestIdleCallbackParams): void {
 		let shouldYield: boolean = false
 		while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
@@ -53,14 +55,11 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFibe
 	if (!fiber.type) {
 		return
 	}
-	/*
-		在首次 render 时, fiber 为当前应用所在的容器节点对应的 fiber, 视作非函数节点并处理
-	 */
 	if (isFunctionComponent(fiber)) {
 		__RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt = fiber
 		__RUNTIME_COMPT_PROFILE___.hookIndexOfNowCompt = 0
-		const children: Array<TFiberNode> = [(fiber.type as Function).call(undefined, fiber.props)]
-		fiber.props.children = children
+		const childrenVDomItems: Array<TVDom> = [(fiber.type as Function).call(undefined, fiber.props)]
+		fiber.props.children = childrenVDomItems
 		reconcileChilren(fiber, deletions)
 	} else {
 		if (!fiber.stateNode) {
@@ -68,14 +67,24 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFibe
 		}
 		reconcileChilren(fiber, deletions)
 	}
+
+	/*
+		优先
+		按照 fiber 节点列表深度遍 
+	 */
 	if (fiber.child) {
 		return fiber.child
 	}
 
+	/*
+		 按照 fiber 节点列表依次遍历下一个兄弟 fiber 节点
+	 */
 	while (fiber) {
 		if (fiber.sibling) {
 			return fiber.sibling
 		}
 		fiber = fiber.parent as TFiberNode
 	}
+
+	return
 }
