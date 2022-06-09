@@ -61,7 +61,7 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFibe
 		/* 
 			对于函数组件, 当前的 fiber 节点即为 <App /> 函数本身
 		 */
-		__RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt = fiber as TFiberNode
+		__RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt = fiber
 		__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt = 0
 		/*
 			函数组件

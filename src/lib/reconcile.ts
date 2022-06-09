@@ -93,7 +93,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 			newChildFiber -- nextNewChildFiber --
 
 			且后续的 child fiber 节点将作为第一个 child fiber 节点的兄弟节点依次串联			
-		*/
+		 */
 		if (i === 0) {
 			wipFiber.child = newChildFiber
 		} else if (prevSiblingFiber) {
