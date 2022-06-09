@@ -62,6 +62,7 @@ export function createTextElement(text: string): TVDom {
  */
 let renderIndex: number = -1
 export function render(element: TVDom, container: HTMLElement): void {
+	debugger
 	const nodeName: string = container.nodeName.toLowerCase()
 	/*
 		创建当前渲染应用的根 fiber 节点

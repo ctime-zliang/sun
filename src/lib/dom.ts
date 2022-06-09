@@ -6,8 +6,8 @@ import { TExtendHTMLDOMElment } from 'src/types/dom.types'
 /**
  * @description 追加 DOM
  * @function commitAppendChild
- * @param {object} childDom 被追加的子节点
- * @param {object} parentDom 目标父节点
+ * @param {HTMLElement | Text} childDom 被追加的子节点
+ * @param {HTMLElement | Text | null} parentDom 目标父节点
  * @return {undefined}
  */
 export function commitAppendChild(childDom: HTMLElement | Text, parentDom: HTMLElement | Text | null): void {
@@ -20,8 +20,8 @@ export function commitAppendChild(childDom: HTMLElement | Text, parentDom: HTMLE
 /**
  * @description 移除 DOM
  * @function commitDeleteChild
- * @param {object} fiber fiber 节点对象
- * @param {object} parentDom 目标父节点
+ * @param {TFiberNode} fiber fiber 节点对象
+ * @param {HTMLElement | Text | null} parentDom 目标父节点
  * @return {undefined}
  */
 export function commitDeleteChild(fiber: TFiberNode, parentDom: HTMLElement | Text | null): void {
@@ -38,8 +38,8 @@ export function commitDeleteChild(fiber: TFiberNode, parentDom: HTMLElement | Te
 /**
  * @description 创建标准 DOM 对象
  * @function createDOM
- * @param {object} fiber fiber 节点对象
- * @return {htmlelement} 元素 HTMLElement DOM 对象
+ * @param {TFiberNode} fiber fiber 节点对象
+ * @return {TExtendHTMLDOMElment} 元素 HTMLElement DOM 对象
  */
 export function createDOM(fiber: TFiberNode): TExtendHTMLDOMElment {
 	const dom: TExtendHTMLDOMElment =
@@ -53,7 +53,7 @@ export function createDOM(fiber: TFiberNode): TExtendHTMLDOMElment {
 /**
  * @description 更新 DOM
  * @function updateDOM
- * @param {object} dom HTMLElement 节点对象
+ * @param {TExtendHTMLDOMElment} dom HTMLElement 节点对象
  * @param {object} oldProps Props 属性对象
  * @param {object} newProps Props 属性对象
  * @return {undefined}
@@ -122,7 +122,7 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 	for (let i: number = 0; i < systemEventOfNewProps.length; i++) {
 		const item: string = systemEventOfNewProps[i]
 		if (isNewly(oldProps, newProps)(item)) {
-			const eventType = item.toLowerCase().substring(2)
+			const eventType: string = item.toLowerCase().substring(2)
 			dom.addEventListener(eventType, newProps[item])
 		}
 	}

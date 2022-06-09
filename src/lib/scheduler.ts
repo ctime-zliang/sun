@@ -7,7 +7,7 @@ import { TFiberNode, TRootFiberNode } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/common.types'
 import { TVDom } from 'src/types/vdom.types'
 
-export function initWorkLoop() {
+export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 	let deletions: Array<TFiberNode> = []
 	let currentRootFiber: TFiberNode
 
@@ -18,6 +18,7 @@ export function initWorkLoop() {
 			shouldYield = deadline.timeRemaining() < 1
 		}
 		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.globalFiberRoot?.current) {
+			debugger
 			/*
 				暂存当前活动的应用的顶层 fiber(rootFiber) 
 				清除全局 globalFiberRoot 对该活动应用的 rootFiber 的引用
@@ -52,9 +53,11 @@ export function initWorkLoop() {
 }
 
 export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFiberNode | undefined {
+	debugger
 	if (!fiber.type) {
 		return
 	}
+
 	if (isFunctionComponent(fiber)) {
 		__RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt = fiber
 		__RUNTIME_COMPT_PROFILE___.hookIndexOfNowCompt = 0
@@ -68,17 +71,10 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFibe
 		reconcileChilren(fiber, deletions)
 	}
 
-	/*
-		优先
-		按照 fiber 节点列表深度遍 
-	 */
 	if (fiber.child) {
 		return fiber.child
 	}
 
-	/*
-		 按照 fiber 节点列表依次遍历下一个兄弟 fiber 节点
-	 */
 	while (fiber) {
 		if (fiber.sibling) {
 			return fiber.sibling

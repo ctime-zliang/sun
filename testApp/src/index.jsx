@@ -14,8 +14,9 @@ const App = () => {
 		})
 	}
 	return (
-		<div className="row-index" style={{ border: '1px solid red' }}>
-			<article onClick={setCountAction1}>{count1}</article>
+		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
+			<article>{count1}</article>
+			<article>{count1}</article>
 		</div>
 	)
 }

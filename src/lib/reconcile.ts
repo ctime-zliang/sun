@@ -5,8 +5,12 @@ import { TFiberNode } from '../types/fiber.types'
 import { TVDom } from 'src/types/vdom.types'
 
 export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode {
+	debugger
 	/*
-		获取当前 fiber 节点所对应的所有子节点的 vDom 列表
+		获取当前 fiber 节点下所有子节点的 vDom 列表
+			fiber 节点的 child 属性将指向该节点的第一个子 fiber 节点
+			fiber 节点的 sibling 属性将指向该节点的下一个兄弟 fiber 节点
+			fiber 节点的 props 属性同 vDom 的 props
 	 */
 	const children: Array<TVDom> = wipFiber.props.children
 	/*
@@ -84,7 +88,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 		/* 
 			将第一个 child fiber 节点作为本次执行 reconcile 时传入的 fiber 节点的子节点
 			
-					now-fiber
+					now-fiber(wipFiber)
 					/
 				   / 
 			newChildFiber -- nextNewChildFiber --
