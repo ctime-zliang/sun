@@ -26,28 +26,3 @@ export type TFiberNode = {
 	index?: number
 	current?: TFiberNode | null
 }
-
-export type TRootFiberNode = {
-	// FunctionComponent: Function
-	// ClassComponent: Function,
-	// HostComponent: any
-	/* ... */
-	type: Function | string | null
-	props: TVDom | any
-	/* ... */
-	// elementType: string | undefined
-	stateNode: HTMLElement | Text | null
-	child: TFiberNode | null
-	parent: TFiberNode | null
-	sibling: TFiberNode | null
-	alternate: TFiberNode | null
-	effectTag: string
-	key: string | undefined
-	dirty: boolean
-	/* ... */
-	hooks: Array<TUseStateHookStructData>
-	/* ... */
-	root: boolean
-	index: number
-	current: TFiberNode | null
-}

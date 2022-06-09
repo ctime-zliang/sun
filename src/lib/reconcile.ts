@@ -5,7 +5,6 @@ import { TFiberNode } from '../types/fiber.types'
 import { TVDom } from 'src/types/vdom.types'
 
 export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode {
-	debugger
 	/*
 		获取当前 fiber 节点下所有子节点的 vDom 列表
 			fiber 节点的 child 属性将指向该节点的第一个子 fiber 节点

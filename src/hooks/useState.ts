@@ -1,14 +1,20 @@
-import { TFiberNode, TRootFiberNode } from '../types/fiber.types'
+import { TFiberNode } from '../types/fiber.types'
 import { TUseStateHookStructData, TUseStateHook, TUseStateHookAction } from '../types/hooks.types'
 import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtime'
 import { generateFiberStructData, getRootFiber } from '../utils/utils'
 import { getHook } from './hook'
 
 export function useState(initValue: any): TUseStateHook {
-	const componentFiber: TFiberNode | undefined = __RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt
-	const rootFiber: TRootFiberNode = getRootFiber(componentFiber as TFiberNode)
-	const oldHookOfCompt: TUseStateHookStructData | undefined = getHook()
-	const hook: TUseStateHookStructData = { state: oldHookOfCompt ? oldHookOfCompt.state : initValue, queue: [] }
+	/*
+		获取当前 hook(s) 所在的函数组件 <App /> 对应的 fiber 节点
+	 */
+	const componentFiber: TFiberNode | undefined = __RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt
+	const rootFiber: TFiberNode = getRootFiber(componentFiber as TFiberNode)
+	const oldHookOfCompt: TUseStateHookStructData | undefined = getHook(__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt)
+	const hook: TUseStateHookStructData = {
+		state: oldHookOfCompt ? oldHookOfCompt.state : initValue,
+		queue: [],
+	}
 	const actions: TUseStateHookAction = oldHookOfCompt ? oldHookOfCompt.queue : []
 
 	actions.forEach((item: Function): void => {
@@ -21,6 +27,9 @@ export function useState(initValue: any): TUseStateHook {
 
 	const setState: (action: any) => void = (action: any): void => {
 		hook.queue.push(action)
+		/*
+			重新创建 <App /> 应用的根 fiber 节点 
+		 */
 		const newRootFiber: TFiberNode = generateFiberStructData({
 			stateNode: rootFiber.stateNode,
 			type: rootFiber.type,
@@ -33,11 +42,17 @@ export function useState(initValue: any): TUseStateHook {
 			index: rootFiber.index,
 			root: true,
 		})
-		__RUNTIME_PROFILE___.rootFiberList.splice(rootFiber.index, 1, newRootFiber)
+		__RUNTIME_PROFILE___.rootFiberList.splice(rootFiber.index as number, 1, newRootFiber)
+		/*
+			将重建的 <App /> 应用的根 fiber 节点标记引用
+			在下一次执行 window.requestIdleCallback 回调时将重新从根 fiber 节点处理需要更新的应用
+		 */
 		;(__RUNTIME_PROFILE___.globalFiberRoot as TFiberNode).current = newRootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = newRootFiber
 	}
+
 	;(componentFiber as TFiberNode).hooks.push(hook)
-	__RUNTIME_COMPT_PROFILE___.hookIndexOfNowCompt++
+	__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt++
+
 	return [hook.state, setState]
 }

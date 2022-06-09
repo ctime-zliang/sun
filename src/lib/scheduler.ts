@@ -3,7 +3,7 @@ import { commitWork } from './commit'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 import { isFunctionComponent } from '../utils/utils'
-import { TFiberNode, TRootFiberNode } from '../types/fiber.types'
+import { TFiberNode } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/common.types'
 import { TVDom } from 'src/types/vdom.types'
 
@@ -18,7 +18,6 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 			shouldYield = deadline.timeRemaining() < 1
 		}
 		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.globalFiberRoot?.current) {
-			debugger
 			/*
 				暂存当前活动的应用的顶层 fiber(rootFiber) 
 				清除全局 globalFiberRoot 对该活动应用的 rootFiber 的引用
@@ -36,11 +35,12 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 			currentRootFiber.dirty = false
 			deletions.length = 0
 			console.log(`Commit.Fiber ===>>>`, currentRootFiber)
+			console.log(__RUNTIME_PROFILE___)
 
 			/* 
 				检查并尝试执行下一个实例
 			 */
-			const nextRootFiber = __RUNTIME_PROFILE___.rootFiberList[(currentRootFiber as TRootFiberNode).index + 1] || null
+			const nextRootFiber: TFiberNode = __RUNTIME_PROFILE___.rootFiberList[(currentRootFiber.index as number) + 1] || undefined
 			if (nextRootFiber && nextRootFiber.dirty) {
 				__RUNTIME_PROFILE___.nextWorkUnitFiber = nextRootFiber
 				__RUNTIME_PROFILE___.globalFiberRoot.current = nextRootFiber
@@ -53,14 +53,22 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 }
 
 export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFiberNode | undefined {
-	debugger
 	if (!fiber.type) {
 		return
 	}
 
 	if (isFunctionComponent(fiber)) {
-		__RUNTIME_COMPT_PROFILE___.workInProgressFiberOfNowCompt = fiber
-		__RUNTIME_COMPT_PROFILE___.hookIndexOfNowCompt = 0
+		/* 
+			对于函数组件, 当前的 fiber 节点即为 <App /> 函数本身
+		 */
+		__RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt = fiber as TFiberNode
+		__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt = 0
+		/*
+			函数组件
+				此时 fiber.type 的值即为 <App /> 函数
+				在编译后的代码中, <App /> 函数内的 JSX 将被编译成 createElement/createTextElement 的嵌套调用
+				因此执行 <App /> 函数将返回一系列 vDom 嵌套对象
+		 */
 		const childrenVDomItems: Array<TVDom> = [(fiber.type as Function).call(undefined, fiber.props)]
 		fiber.props.children = childrenVDomItems
 		reconcileChilren(fiber, deletions)

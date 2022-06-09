@@ -6,7 +6,6 @@ import { UsestateHookIndex, UsestateHookTest } from './component/usestate-test'
 import { Outer, Child1 } from './component/props-test'
 
 const App = () => {
-	console.log(`Component: App`)
 	const [count1, setCount1] = useState(0)
 	const setCountAction1 = () => {
 		setCount1(state => {

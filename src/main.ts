@@ -62,7 +62,6 @@ export function createTextElement(text: string): TVDom {
  */
 let renderIndex: number = -1
 export function render(element: TVDom, container: HTMLElement): void {
-	debugger
 	const nodeName: string = container.nodeName.toLowerCase()
 	/*
 		创建当前渲染应用的根 fiber 节点
@@ -93,10 +92,9 @@ export function render(element: TVDom, container: HTMLElement): void {
 			首次 render 时将全局顶层的 globalFiberRoot 指向当前需要渲染的 <App /> 根 fiber 节点
 			并将该 <App /> 对应的 fiber 树标记为 work fiber 节点树
 		 */
-		__RUNTIME_PROFILE___.globalFiberRoot.current = rootFiber
-		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber
-		console.log(`AppRootFiber ===>>>`, rootFiber)
-		console.log(`__RUNTIME_PROFILE___ ===>>>`, __RUNTIME_PROFILE___)
+		__RUNTIME_PROFILE___.globalFiberRoot.current = rootFiber as TFiberNode
+		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber as TFiberNode
+		console.log(`AppRoot.Fiber ===>>>`, rootFiber)
 		window.requestIdleCallback(initWorkLoop())
 	}
 }
