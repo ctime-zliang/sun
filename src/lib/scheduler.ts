@@ -4,7 +4,7 @@ import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 import { isFunctionComponent } from '../utils/utils'
 import { TFiberNode } from '../types/fiber.types'
-import { TRequestIdleCallbackParams } from '../types/common.types'
+import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from 'src/types/vdom.types'
 
 export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
