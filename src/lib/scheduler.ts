@@ -52,7 +52,7 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 	return workLoop
 }
 
-export function performUnitWork(fiber: TFiberNode, deletions: Array<any>): TFiberNode | undefined {
+export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode | undefined {
 	if (!fiber.type) {
 		return
 	}
