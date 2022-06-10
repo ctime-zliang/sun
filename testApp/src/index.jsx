@@ -1,4 +1,8 @@
 // import Sun, { useState } from '../../build/sun'
+/* ... */
+import { setIntervalAnimateMain } from './modules/setIntervalAnimate'
+import { updateInnerContentMain } from './modules/updateElementInnerContent'
+/* ... */
 import Sun, { render, useState } from '../../src/index'
 import { ClickAddLi, ClickAddLongChild } from './component/click-add-li'
 import { TraverseFiberTree } from './component/traverse-fiber-tree'
@@ -21,4 +25,9 @@ const App = () => {
 }
 
 // render(<TraverseFiberTree />, document.querySelector(`#app`))
-render(<App />, document.querySelector(`#app2`))
+render(<ClickAddLongChild />, document.querySelector(`#app2`))
+
+window.addEventListener('DOMContentLoaded', function (e) {
+	setIntervalAnimateMain()
+	updateInnerContentMain()
+})

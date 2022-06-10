@@ -30,16 +30,17 @@ export function ClickAddLi() {
 	)
 }
 
-let count = 0
-let MAX_COUNT = 5000
+let MAX_COUNT = 10000
+let COUNT = 0
 export function ClickAddLongChild() {
 	console.log(`Component: ClickAddLongChild`)
 	const [list, setList] = useState([])
 	const modifyList = () => {
-		++count
 		const array = []
+		COUNT++
+		const random = Math.random() + ''
 		for (let i = 0; i < MAX_COUNT; i++) {
-			array.push(i + ' - ' + count)
+			array.push(random + ' - ' + COUNT)
 		}
 		setList(array)
 	}

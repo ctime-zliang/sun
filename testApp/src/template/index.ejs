@@ -9,65 +9,12 @@
     user-select: none;
 }
 </style>
-<script>
-function getStyle(element, name) {
-    if (element.currentStyle) {
-        return element.currentStyle[name]
-    }
-    return window.getComputedStyle(element, null)[name]
-}
-    
-function startMove(element, attr, target, callback) {
-    clearInterval(element.timer)
-    element.timer = setInterval(() => {
-        let cur = 0        
-        if (attr === 'opacity') {
-            cur = Math.round(parseFloat(getStyle(element, attr)) * 100)
-        } else {
-            cur = parseInt(getStyle(element, attr))
-        }
-        let speed = (target - cur) / 10
-        speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed)
-        if (target === cur) {
-            clearInterval(element.timer)
-            callback()
-        } else {
-            if (attr === 'opacity') {
-                element.style.filter = 'alpha(opacity:' + (cur + speed) + ')'
-                element.style.opacity = (cur + speed) / 100
-            } else {
-                element.style[attr] = cur + speed + 'px'
-            }
-        }
-    }, 16.67)
-}
-
-const cache = {}
-
-function main1() {
-    cache.element = document.querySelector(`#moveBox`)
-    move()
-}
-
-function move() {
-    startMove(cache.element, 'width', 500, () => {
-        startMove(cache.element, 'width', 100, move)
-    })
-}
-</script>
-
-<script>
-window.addEventListener('DOMContentLoaded', () => {
-    main1()
-})
-</script>
 </head>
 
 <body>	
 <noscript>No Surpport Script</noscript>
-<section id="area1" style="position: relative; height: 150px;">
-    <div id="moveBox" style="position: absolute; width: 100px; height: 100px; background: red;"></div>
-</section>
+<section id="area1"></section>
+<section id="area2"></section>
 <section class="app" id="app"></section>
 <section class="app" id="app2"></section>
 <section class="app" id="app3"></section>
