@@ -34,7 +34,7 @@ function updateInnerContent(): void {
 	const allLiElements: NodeList = ulistWrapperElement.querySelectorAll('li')
 	const arrAllLiElements: Array<HTMLElement> = Array.from(allLiElements) as Array<HTMLElement>
 	for (let i: number = 0; i < arrAllLiElements.length; i++) {
-		arrAllLiElements[i].nodeValue = random
+		arrAllLiElements[i].innerHTML = random
 	}
 }
 
