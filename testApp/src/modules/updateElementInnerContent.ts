@@ -28,6 +28,7 @@ function updateInnerContent(): void {
 			htmlString += `<li>${random}</li>`
 		}
 		ulistWrapperElement.innerHTML = htmlString
+		cache.isAppend = false
 		return
 	}
 	const allLiElements: NodeList = ulistWrapperElement.querySelectorAll('li')
