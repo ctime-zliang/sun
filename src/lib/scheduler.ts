@@ -5,7 +5,8 @@ import { createDOM } from './dom'
 import { isFunctionComponent } from '../utils/utils'
 import { TFiberNode } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
-import { TVDom } from 'src/types/vdom.types'
+import { TVDom } from '../types/vdom.types'
+import { globalConfig } from '../config/config'
 
 export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 	let deletions: Array<TFiberNode> = []
@@ -46,7 +47,7 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 				__RUNTIME_PROFILE___.globalFiberRoot.current = nextRootFiber
 			}
 		}
-		window.requestIdleCallback(workLoop)
+		window.requestIdleCallback(workLoop, { timeout: globalConfig.requestIdleCallbackTimeout })
 	}
 
 	return workLoop

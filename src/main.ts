@@ -4,6 +4,7 @@ import { generateFiberStructData, generateInitialVDOMStructData, generateRootFib
 import { TVDom } from './types/vdom.types'
 import { ENUM_NODE_TYPE } from './config/effect.enum'
 import { TFiberNode } from './types/fiber.types'
+import { globalConfig } from './config/config'
 
 /* 
 	创建一个全局顶层 fiber: globalFiberRoot
@@ -95,6 +96,6 @@ export function render(element: TVDom, container: HTMLElement): void {
 		__RUNTIME_PROFILE___.globalFiberRoot.current = rootFiber as TFiberNode
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber as TFiberNode
 		console.log(`AppRoot.Fiber ===>>>`, rootFiber)
-		window.requestIdleCallback(initWorkLoop())
+		window.requestIdleCallback(initWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
 	}
 }

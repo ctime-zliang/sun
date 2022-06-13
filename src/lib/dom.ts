@@ -1,7 +1,7 @@
 import { isProperty, isOld, isNewly, isSystemEvent } from '../utils/utils'
 import { ENUM_NODE_TYPE } from '../config/effect.enum'
-import { TFiberNode } from 'src/types/fiber.types'
-import { TExtendHTMLDOMElment } from 'src/types/dom.types'
+import { TFiberNode } from '../types/fiber.types'
+import { TExtendHTMLDOMElment } from '../types/dom.types'
 
 /**
  * @description 追加 DOM

@@ -2,7 +2,7 @@ import { __RUNTIME_PROFILE___ } from '../core/runtime'
 import { generateFiberStructData } from '../utils/utils'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
-import { TVDom } from 'src/types/vdom.types'
+import { TVDom } from '../types/vdom.types'
 
 export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode {
 	/*
