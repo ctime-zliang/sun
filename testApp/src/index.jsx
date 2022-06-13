@@ -29,5 +29,5 @@ render(<ClickAddLongChild />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	setIntervalAnimateMain()
-	updateInnerContentMain()
+	// updateInnerContentMain()
 })
