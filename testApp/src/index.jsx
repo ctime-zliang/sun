@@ -1,5 +1,6 @@
 // import Sun, { useState } from '../../build/sun'
 /* ... */
+import frameCountPerSecond from './modules/frameCountPerSecond'
 import { setIntervalAnimateMain } from './modules/setIntervalAnimate'
 import { updateInnerContentMain } from './modules/updateElementInnerContent'
 /* ... */
@@ -29,5 +30,6 @@ render(<ClickAddLongChild />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	setIntervalAnimateMain()
+	frameCountPerSecond()
 	// updateInnerContentMain()
 })
