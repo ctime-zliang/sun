@@ -107,6 +107,10 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 					dom[item] = newProps[item]
 					break
 				}
+				case 'nodeValue': {
+					dom.nodeValue = newProps.nodeValue
+					break
+				}
 				default: {
 					dom[item] = newProps[item]
 					if (dom.setAttribute && typeof newProps[item] != 'undefined') {

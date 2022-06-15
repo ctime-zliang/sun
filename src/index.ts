@@ -1,5 +1,7 @@
 import { createElement, createTextElement, render as _render } from './main'
 import { useState as useStateHook } from './hooks/useState'
+import { useEffect as useEffectHook } from './hooks/useEffect'
+/* ... */
 import { TUseStateHook } from './types/hooks.types'
 import { TVDom } from './types/vdom.types'
 
@@ -9,8 +11,10 @@ Sun.createElement = createElement as (type: string, props: { [key: string]: any 
 Sun.createTextElement = createTextElement as (text: string) => TVDom
 Sun.render = _render as (element: any, containe: HTMLElement) => void
 Sun.useState = useStateHook as (initValue: any) => TUseStateHook
+Sun.useEffect = useEffectHook as (callback: () => any, dependences: Array<any> | undefined) => void
 
 export const render: (element: any, containe: HTMLElement) => void = _render
 export const useState: (initValue: any) => TUseStateHook = useStateHook
+export const useEffect: (callback: () => any, dependences: Array<any> | undefined) => void = useEffectHook
 
 export default Sun

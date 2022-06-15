@@ -1,8 +1,8 @@
 import { TFiberNode } from '../types/fiber.types'
-import { TUseStateHookStructData, TUseStateHook, TUseStateHookAction } from '../types/hooks.types'
+import { TUseStateHookStruct, TUseStateHook, TUseStateHookAction } from '../types/hooks.types'
 import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtime'
 import { generateFiberStructData, getRootFiber } from '../utils/utils'
-import { getHook } from './hook'
+import { getHookItem } from './hook'
 
 export function useState(initValue: any): TUseStateHook {
 	/*
@@ -10,8 +10,8 @@ export function useState(initValue: any): TUseStateHook {
 	 */
 	const componentFiber: TFiberNode | undefined = __RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt
 	const rootFiber: TFiberNode = getRootFiber(componentFiber as TFiberNode)
-	const oldHookOfCompt: TUseStateHookStructData | undefined = getHook(__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt)
-	const hook: TUseStateHookStructData = {
+	const oldHookOfCompt: TUseStateHookStruct = getHookItem(__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt) as TUseStateHookStruct
+	const hook: TUseStateHookStruct = {
 		state: oldHookOfCompt ? oldHookOfCompt.state : initValue,
 		queue: [],
 	}

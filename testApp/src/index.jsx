@@ -4,7 +4,7 @@ import frameCountPerSecond from './modules/frameCountPerSecond'
 import { setIntervalAnimateMain } from './modules/setIntervalAnimate'
 import { updateInnerContentMain } from './modules/updateElementInnerContent'
 /* ... */
-import Sun, { render, useState } from '../../src/index'
+import Sun, { render, useState, useEffect } from '../../src/index'
 import { ClickAddLi, ClickAddLongChild } from './component/click-add-li'
 import { TraverseFiberTree } from './component/traverse-fiber-tree'
 import { UsestateHookIndex, UsestateHookTest } from './component/usestate-test'
@@ -17,16 +17,32 @@ const App = () => {
 			return state + 1
 		})
 	}
+	useEffect(() => {
+		console.log(`************************* App.useEffect 1`)
+		setCount1(state => {
+			return state + 1
+		})
+	}, [])
+	// useEffect(() => {
+	// 	console.log(`************************* App.useEffect 2`)
+	// }, [])
+	// useEffect(() => {
+	// 	console.log(`************************* App.useEffect 3`)
+	// 	setCount1(state => {
+	// 		return state + 1
+	// 	})
+	// }, [])
+
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
 			<article>{count1}</article>
-			<article>{count1}</article>
+			{/* {count1 <= 1 ? <div>A</div> : <article>B</article>} */}
 		</div>
 	)
 }
 
 // render(<TraverseFiberTree />, document.querySelector(`#app`))
-render(<ClickAddLongChild />, document.querySelector(`#app2`))
+render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	setIntervalAnimateMain()
