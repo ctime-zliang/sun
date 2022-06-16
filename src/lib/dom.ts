@@ -5,12 +5,12 @@ import { TExtendHTMLDOMElment } from '../types/dom.types'
 
 /**
  * @description 追加 DOM
- * @function commitAppendChild
+ * @function appendChild
  * @param {HTMLElement | Text} childDom 被追加的子节点
  * @param {HTMLElement | Text | null} parentDom 目标父节点
  * @return {undefined}
  */
-export function commitAppendChild(childDom: HTMLElement | Text, parentDom: HTMLElement | Text | null): void {
+export function appendChild(childDom: HTMLElement | Text, parentDom: HTMLElement | Text | null): void {
 	if (!parentDom) {
 		return
 	}
@@ -19,12 +19,12 @@ export function commitAppendChild(childDom: HTMLElement | Text, parentDom: HTMLE
 
 /**
  * @description 移除 DOM
- * @function commitDeleteChild
+ * @function removeChild
  * @param {TFiberNode} fiber fiber 节点对象
  * @param {HTMLElement | Text | null} parentDom 目标父节点
  * @return {undefined}
  */
-export function commitDeleteChild(fiber: TFiberNode, parentDom: HTMLElement | Text | null): void {
+export function removeChild(fiber: TFiberNode, parentDom: HTMLElement | Text | null): void {
 	if (!parentDom) {
 		return
 	}

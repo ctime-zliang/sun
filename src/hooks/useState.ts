@@ -6,7 +6,7 @@ import { getHookItem } from './hook'
 
 export function useState(initValue: any): TUseStateHook {
 	/*
-		获取当前 hook(s) 所在的函数组件 <App /> 对应的 fiber 节点
+		获取当前 hook(s) 所在的函数组件对应的 fiber 节点
 	 */
 	const componentFiber: TFiberNode | undefined = __RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt
 	const rootFiber: TFiberNode = getRootFiber(componentFiber as TFiberNode)

@@ -1,5 +1,5 @@
 import { TExtendHTMLDOMElment } from './dom.types'
-import { TUseStateHookStructData } from './hooks.types'
+import { TUseEffectHookStruct, TUseStateHookStruct } from './hooks.types'
 import { TVDom } from './vdom.types'
 
 export type TFiberNode = {
@@ -20,7 +20,7 @@ export type TFiberNode = {
 	key: string | undefined
 	dirty: boolean
 	/* ... */
-	hooks: Array<TUseStateHookStructData>
+	hooks: Array<TUseStateHookStruct | TUseEffectHookStruct>
 	/* ... */
 	root?: boolean
 	index?: number

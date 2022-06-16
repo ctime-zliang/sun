@@ -1,8 +1,10 @@
-import Sun, { useState } from '@/'
+import Sun, { useState, useEffect } from '@/'
 
 export function Child1(props) {
-	// console.log(`Component: Child1`)
-	const count = props.count || null
+	const count = props.count || 0
+	useEffect(() => {
+		console.log(`************************* Child1.useEffect 1`)
+	}, [])
 	return (
 		<div>
 			<div>Child1 Count: {count}</div>

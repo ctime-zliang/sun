@@ -19,9 +19,9 @@ const App = () => {
 	}
 	useEffect(() => {
 		console.log(`************************* App.useEffect 1`)
-		setCount1(state => {
-			return state + 1
-		})
+		// setCount1(state => {
+		// 	return state + 1
+		// })
 	}, [])
 	// useEffect(() => {
 	// 	console.log(`************************* App.useEffect 2`)
@@ -36,6 +36,7 @@ const App = () => {
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
 			<article>{count1}</article>
+			<Child1 count={count1} />
 			{/* {count1 <= 1 ? <div>A</div> : <article>B</article>} */}
 		</div>
 	)

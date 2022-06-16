@@ -1,32 +1,32 @@
 import { __RUNTIME_PROFILE___ } from '../core/runtime'
-import { updateDOM, commitAppendChild, commitDeleteChild } from './dom'
+import { updateDOM, appendChild, removeChild } from './dom'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 
-function commitDom(fiber: TFiberNode): void {
+function handleDom(fiber: TFiberNode): void {
 	if (!fiber.stateNode) {
 		return
 	}
 	/* 
-		查找当前 fiber 对应的 DOM 或距离最近且存在 DOM 的 fiber 并返回该 fiber 的 DOM
+		查找当前 fiber 节点对应的 DOM 节点的父节点
 	 */
 	let parentFiber: TFiberNode | null = fiber.parent
 	while (parentFiber && !parentFiber.stateNode) {
 		parentFiber = parentFiber.parent
 	}
 	if (parentFiber) {
-		const referenceDom: HTMLElement | Text | null = parentFiber.stateNode
+		const parentDom: HTMLElement | Text | null = parentFiber.stateNode
 		if (fiber.effectTag === ENUM_EFFECT_TAG.PLACEMENT) {
-			commitAppendChild(fiber.stateNode, referenceDom)
+			appendChild(fiber.stateNode, parentDom)
 		} else if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
-			commitDeleteChild(fiber, referenceDom)
+			removeChild(fiber, parentDom)
 		} else if (fiber.effectTag === ENUM_EFFECT_TAG.UPDATE) {
 			updateDOM(fiber.stateNode, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
 		}
 	}
 }
 
-export function commitWork(fiber: TFiberNode | null): void {
+export function commitHandleDomWork(fiber: TFiberNode | null): void {
 	if (!fiber) {
 		return
 	}
@@ -35,7 +35,7 @@ export function commitWork(fiber: TFiberNode | null): void {
 
 	while (current) {
 		if (current.dirty) {
-			commitDom(current)
+			handleDom(current)
 			current.dirty = false
 		}
 		/* 
@@ -44,7 +44,7 @@ export function commitWork(fiber: TFiberNode | null): void {
          */
 		if (current.child && ((current = current.child), current)) {
 			if (current.dirty) {
-				commitDom(current)
+				handleDom(current)
 				current.dirty = false
 			}
 			continue
@@ -61,7 +61,7 @@ export function commitWork(fiber: TFiberNode | null): void {
 				return
 			}
 			if (current.dirty) {
-				commitDom(current)
+				handleDom(current)
 				current.dirty = false
 			}
 			current = current.parent
