@@ -9,6 +9,7 @@ import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
 import { TraverseFiberTree } from './component/traverseFiberTree'
 import { UsestateHookIndex, UsestateHookTest } from './component/usestateTest'
 import { Outer, Child1 } from './component/propsTest'
+import { UseEffectExecSequentialWrapper } from './component/useEffectExecSequential'
 
 const App = () => {
 	const [count1, setCount1] = useState(0)
@@ -36,8 +37,7 @@ const App = () => {
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
 			<article>{count1}</article>
-			<Child1 count={count1} />
-			{/* {count1 <= 1 ? <div>A</div> : <article>B</article>} */}
+			{count1 <= 1 ? <Child1 /> : null}
 		</div>
 	)
 }

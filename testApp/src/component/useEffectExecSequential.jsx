@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import Sun, { useState, useEffect } from '@/'
 
-function A1(props: any) {
+function A1(props) {
 	useEffect(() => {
 		console.log(`Component A1 useEffect.`)
 		return () => {
@@ -8,15 +8,15 @@ function A1(props: any) {
 		}
 	})
 	return (
-		<>
+		<div>
 			<B1 />
 			<B2 />
 			<B3 />
-		</>
+		</div>
 	)
 }
 
-function B1(props: any) {
+function B1(props) {
 	useEffect(() => {
 		console.log(`Component B1 useEffect.`)
 		return () => {
@@ -24,13 +24,13 @@ function B1(props: any) {
 		}
 	})
 	return (
-		<>
+		<div>
 			<C1 />
-		</>
+		</div>
 	)
 }
 
-function C1(props: any) {
+function C1(props) {
 	useEffect(() => {
 		console.log(`Component C1 useEffect.`)
 		return () => {
@@ -40,7 +40,7 @@ function C1(props: any) {
 	return <div>C1</div>
 }
 
-function B2(props: any) {
+function B2(props) {
 	useEffect(() => {
 		console.log(`Component B2 useEffect.`)
 		return () => {
@@ -50,7 +50,7 @@ function B2(props: any) {
 	return <div>B2</div>
 }
 
-function B3(props: any) {
+function B3(props) {
 	useEffect(() => {
 		console.log(`Component B3 useEffect.`)
 		return () => {
@@ -58,14 +58,14 @@ function B3(props: any) {
 		}
 	})
 	return (
-		<>
+		<div>
 			<C2 />
 			<C3 />
-		</>
+		</div>
 	)
 }
 
-function C2(props: any) {
+function C2(props) {
 	useEffect(() => {
 		console.log(`Component C2 useEffect.`)
 		return () => {
@@ -75,7 +75,7 @@ function C2(props: any) {
 	return <div>C2</div>
 }
 
-function C3(props: any) {
+function C3(props) {
 	useEffect(() => {
 		console.log(`Component C3 useEffect.`)
 		return () => {
@@ -111,12 +111,12 @@ function C3(props: any) {
         C3
  */
 
-export function Wrapper(props: any) {
-	const [count, setCount] = useState<number>(0)
+export function UseEffectExecSequentialWrapper(props) {
+	const [count, setCount] = useState(0)
 	return (
-		<>
+		<div>
 			<button
-				onClick={(): void => {
+				onClick={() => {
 					setCount(count + 1)
 				}}
 			>
@@ -124,6 +124,6 @@ export function Wrapper(props: any) {
 			</button>
 			<span>{count}</span>
 			{count <= 2 ? <A1 /> : null}
-		</>
+		</div>
 	)
 }
