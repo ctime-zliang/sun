@@ -5,10 +5,10 @@ import { setIntervalAnimateMain } from './modules/setIntervalAnimate'
 import { updateInnerContentMain } from './modules/updateElementInnerContent'
 /* ... */
 import Sun, { render, useState, useEffect } from '../../src/index'
-import { ClickAddLi, ClickAddLongChild } from './component/click-add-li'
-import { TraverseFiberTree } from './component/traverse-fiber-tree'
-import { UsestateHookIndex, UsestateHookTest } from './component/usestate-test'
-import { Outer, Child1 } from './component/props-test'
+import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
+import { TraverseFiberTree } from './component/traverseFiberTree'
+import { UsestateHookIndex, UsestateHookTest } from './component/usestateTest'
+import { Outer, Child1 } from './component/propsTest'
 
 const App = () => {
 	const [count1, setCount1] = useState(0)
