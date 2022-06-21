@@ -10,8 +10,8 @@ import { TExtendHTMLDOMElment } from '../types/dom.types'
  * @param {HTMLElement | Text | null} parentDom 目标父节点
  * @return {undefined}
  */
-export function appendChild(childDom: HTMLElement | Text, parentDom: HTMLElement | Text | null): void {
-	if (!parentDom) {
+export function appendChild(childDom: TExtendHTMLDOMElment | null, parentDom: TExtendHTMLDOMElment | null): void {
+	if (!parentDom || !childDom) {
 		return
 	}
 	parentDom.appendChild(childDom)
@@ -20,19 +20,15 @@ export function appendChild(childDom: HTMLElement | Text, parentDom: HTMLElement
 /**
  * @description 移除 DOM
  * @function removeChild
- * @param {TFiberNode} fiber fiber 节点对象
+ * @param {HTMLElement | Text} childDom 被追加的子节点
  * @param {HTMLElement | Text | null} parentDom 目标父节点
  * @return {undefined}
  */
-export function removeChild(fiber: TFiberNode, parentDom: HTMLElement | Text | null): void {
-	if (!parentDom) {
+export function removeChild(childDom: TExtendHTMLDOMElment | null, parentDom: TExtendHTMLDOMElment | null): void {
+	if (!parentDom || !childDom) {
 		return
 	}
-	if (fiber.stateNode) {
-		parentDom.removeChild(fiber.stateNode)
-		return
-	}
-	// commitDeletion(fiber.child, parentDom)
+	parentDom.removeChild(childDom)
 }
 
 /**

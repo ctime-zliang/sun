@@ -36,8 +36,8 @@ const App = () => {
 
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
-			<article>{count1}</article>
-			{count1 <= 1 ? <Child1 /> : null}
+			{count1}
+			<UseEffectExecSequentialWrapper />
 		</div>
 	)
 }
@@ -46,7 +46,7 @@ const App = () => {
 render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
-	setIntervalAnimateMain()
-	frameCountPerSecond()
+	// setIntervalAnimateMain()
+	// frameCountPerSecond()
 	// updateInnerContentMain()
 })

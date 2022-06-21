@@ -15,45 +15,47 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 	/*
 		需要清除上一轮更新完毕时保存的上上一轮的当前层 fiber 节点的引用
 	 */
-	if (wipFiber.alternate && wipFiber.alternate.alternate) {
-		wipFiber.alternate.alternate = null
-	}
+	// if (wipFiber.alternate && wipFiber.alternate.alternate) {
+	// 	wipFiber.alternate.alternate = null
+	// }
 	/* 
 		需要循环遍历当前 vDom 下的所有子节点
 		作为参照对比, 此处读取上一轮更新完毕后该层 fiber 节点的第一个子节点
+		并与本轮更新中当前层 fiber 节点的子节点(vDom)做对比
 	 */
-	let oldFiberOfNowWIPFiber: TFiberNode | null = wipFiber.alternate && wipFiber.alternate.child
+	let oldChildFiberOfNowWIPFiber: TFiberNode | null = wipFiber.alternate && wipFiber.alternate.child
 	let prevSiblingFiber: TFiberNode | null = null
+	__RUNTIME_PROFILE___.globalFiberRoot
 
 	let i: number = 0
-	for (; i < children.length || oldFiberOfNowWIPFiber != null; i++) {
+	for (; i < children.length || oldChildFiberOfNowWIPFiber != null; i++) {
 		const childVDomItem: TVDom = children[i]
 		let newChildFiber: TFiberNode | null = null
 		if (!childVDomItem) {
 			/*
 				当 oldFiber 无法找到对应的新 fiber 时, 即代表需要删除该节点 
 			 */
-			if (oldFiberOfNowWIPFiber) {
-				oldFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
-				oldFiberOfNowWIPFiber.dirty = true
-				deletions.push(oldFiberOfNowWIPFiber)
-				oldFiberOfNowWIPFiber = oldFiberOfNowWIPFiber.sibling
+			if (oldChildFiberOfNowWIPFiber) {
+				oldChildFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
+				oldChildFiberOfNowWIPFiber.dirty = true
+				deletions.push(oldChildFiberOfNowWIPFiber)
+				oldChildFiberOfNowWIPFiber = oldChildFiberOfNowWIPFiber.sibling
 			}
 			continue
 		}
-		const sameType: boolean = !!(oldFiberOfNowWIPFiber && childVDomItem.type == oldFiberOfNowWIPFiber.type)
+		const sameType: boolean = !!(oldChildFiberOfNowWIPFiber && childVDomItem.type == oldChildFiberOfNowWIPFiber.type)
 		if (sameType) {
 			/*
 				之前存在的节点, 需要更新
 					通过该层的 vDom 重建对应的 fiber 节点 
 			 */
 			newChildFiber = generateFiberStructData({
-				stateNode: (oldFiberOfNowWIPFiber as TFiberNode).stateNode,
+				stateNode: (oldChildFiberOfNowWIPFiber as TFiberNode).stateNode,
 				type: childVDomItem.type,
 				props: childVDomItem.props,
 				parent: wipFiber,
 				dirty: true,
-				alternate: oldFiberOfNowWIPFiber,
+				alternate: oldChildFiberOfNowWIPFiber,
 				effectTag: ENUM_EFFECT_TAG.UPDATE,
 				/* 需要将 hooks 置空 */
 				hooks: [],
@@ -74,18 +76,18 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 				/* 需要将 hooks 置空 */
 				hooks: [],
 			})
-			if (oldFiberOfNowWIPFiber) {
-				oldFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
-				oldFiberOfNowWIPFiber.dirty = true
-				deletions.push(oldFiberOfNowWIPFiber)
+			if (oldChildFiberOfNowWIPFiber) {
+				oldChildFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
+				oldChildFiberOfNowWIPFiber.dirty = true
+				deletions.push(oldChildFiberOfNowWIPFiber)
 			}
 		}
 		/*
-			oldFiberOfNowWIPFiber 作为当前 wipFiber 的上一轮更新完毕后的镜像(引用持有)存储节点
+			oldChildFiberOfNowWIPFiber 作为当前 wipFiber 的上一轮更新完毕后的镜像(引用持有)存储节点
 			每轮循环中需随着循环进行, 后移到下一个兄弟节点
 		 */
-		if (oldFiberOfNowWIPFiber) {
-			oldFiberOfNowWIPFiber = oldFiberOfNowWIPFiber.sibling
+		if (oldChildFiberOfNowWIPFiber) {
+			oldChildFiberOfNowWIPFiber = oldChildFiberOfNowWIPFiber.sibling
 		}
 
 		/* 

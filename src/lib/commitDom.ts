@@ -2,8 +2,24 @@ import { __RUNTIME_PROFILE___ } from '../core/runtime'
 import { updateDOM, appendChild, removeChild } from './dom'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
+import { TExtendHTMLDOMElment } from 'src/types/dom.types'
+import { isFunctionComponent } from '../utils/utils'
 
 function handleDom(fiber: TFiberNode): void {
+	if (isFunctionComponent(fiber)) {
+		if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
+			let childFiber: TFiberNode = fiber.child as TFiberNode
+			while (!childFiber.stateNode) {
+				childFiber = childFiber.child as TFiberNode
+			}
+			let parentFiber: TFiberNode | null = fiber.parent
+			while (parentFiber && !parentFiber.stateNode) {
+				parentFiber = parentFiber.parent
+			}
+			removeChild(childFiber.stateNode, (parentFiber as TFiberNode).stateNode)
+		}
+		return
+	}
 	if (!fiber.stateNode) {
 		return
 	}
@@ -15,13 +31,21 @@ function handleDom(fiber: TFiberNode): void {
 		parentFiber = parentFiber.parent
 	}
 	if (parentFiber) {
-		const parentDom: HTMLElement | Text | null = parentFiber.stateNode
-		if (fiber.effectTag === ENUM_EFFECT_TAG.PLACEMENT) {
-			appendChild(fiber.stateNode, parentDom)
-		} else if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
-			removeChild(fiber, parentDom)
-		} else if (fiber.effectTag === ENUM_EFFECT_TAG.UPDATE) {
-			updateDOM(fiber.stateNode, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
+		const parentDom: TExtendHTMLDOMElment | null = parentFiber.stateNode
+		switch (fiber.effectTag) {
+			case ENUM_EFFECT_TAG.PLACEMENT: {
+				appendChild(fiber.stateNode, parentDom)
+				break
+			}
+			case ENUM_EFFECT_TAG.DELETION: {
+				removeChild(fiber.stateNode, parentDom)
+				break
+			}
+			case ENUM_EFFECT_TAG.UPDATE: {
+				updateDOM(fiber.stateNode, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
+				break
+			}
+			default:
 		}
 	}
 }
