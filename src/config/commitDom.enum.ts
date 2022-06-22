@@ -1,0 +1,4 @@
+export enum ENUM_COMMIT_DOM_ACTION {
+	NORMAL = 'NORMAL',
+	DELETION = 'DELETION',
+}

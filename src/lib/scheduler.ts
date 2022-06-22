@@ -16,6 +16,7 @@ import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
 import { dfs2 } from './commitEffect'
+import { ENUM_COMMIT_DOM_ACTION } from '../config/commitDom.enum'
 
 export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 	let deletions: Array<TFiberNode> = []
@@ -38,16 +39,25 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 			/*
 				提交 DOM 操作 
 			 */
+			console.time('commitHandleDomWork')
 			deletions.forEach(item => {
-				commitHandleDomWork(item)
+				commitHandleDomWork(item as TFiberNode, ENUM_COMMIT_DOM_ACTION.DELETION)
 			})
-			commitHandleDomWork(currentRootFiber.child)
+			commitHandleDomWork(currentRootFiber.child as TFiberNode, ENUM_COMMIT_DOM_ACTION.NORMAL)
+			console.timeEnd('commitHandleDomWork')
 			currentRootFiber.dirty = false
 			deletions.length = 0
 			// const fiberList: Array<TFiberNode> = dfs2(currentRootFiber)
 			console.log(`Commit.Fiber ===>>>`, currentRootFiber)
 			console.log(__RUNTIME_PROFILE___)
-			// console.log(fiberList)
+			window.setTimeout(() => {
+				__RUNTIME_PROFILE___.hooksCache.forEach((item: any): void => {
+					if (item.useEffect && item.isupdated && item.callback instanceof Function) {
+						item.returnCallback = item.callback()
+					}
+				})
+				__RUNTIME_PROFILE___.hooksCache.length = 0
+			})
 
 			/* 
 				检查并尝试执行下一个实例

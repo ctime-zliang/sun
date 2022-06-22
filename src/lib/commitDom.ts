@@ -6,28 +6,34 @@ import { TExtendHTMLDOMElment } from 'src/types/dom.types'
 import { isFunctionComponent } from '../utils/utils'
 
 function handleDom(fiber: TFiberNode, tag: any): void {
-	if (fiber.props['data-tag']) {
-		console.log(fiber.props['data-tag'], String(tag))
-	}
-	if (isFunctionComponent(fiber)) {
-		if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
-			let childFiber: TFiberNode = fiber.child as TFiberNode
-			while (!childFiber.stateNode) {
-				childFiber = childFiber.child as TFiberNode
+	if (!fiber.stateNode) {
+		/**
+		 * 函数组件做特殊处理
+		 */
+		if (isFunctionComponent(fiber)) {
+			if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
+				/**
+				 * 找出该函数组件对应的 fiber 节点的第一个具有真实 DOM 句柄(fiber.stateNode)的子 fiber 节点
+				 */
+				let childFiber: TFiberNode = fiber.child as TFiberNode
+				while (!childFiber.stateNode) {
+					childFiber = childFiber.child as TFiberNode
+				}
+				/**
+				 * 找出该函数组件对应的 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的父 fiber 节点
+				 */
+				let parentFiber: TFiberNode | null = fiber.parent
+				while (parentFiber && !parentFiber.stateNode) {
+					parentFiber = parentFiber.parent
+				}
+				removeChild(childFiber.stateNode, (parentFiber as TFiberNode).stateNode)
 			}
-			let parentFiber: TFiberNode | null = fiber.parent
-			while (parentFiber && !parentFiber.stateNode) {
-				parentFiber = parentFiber.parent
-			}
-			removeChild(childFiber.stateNode, (parentFiber as TFiberNode).stateNode)
+			return
 		}
 		return
 	}
-	if (!fiber.stateNode) {
-		return
-	}
 	/**
-	 * 查找当前 fiber 节点对应的 DOM 节点的父节点
+	 * 找出该函数组件对应的 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的父 fiber 节点
 	 */
 	let parentFiber: TFiberNode | null = fiber.parent
 	while (parentFiber && !parentFiber.stateNode) {
@@ -53,12 +59,13 @@ function handleDom(fiber: TFiberNode, tag: any): void {
 	}
 }
 
-export function commitHandleDomWork(fiber: TFiberNode | null): void {
+export function commitHandleDomWork(fiber: TFiberNode, action: string): void {
 	if (!fiber) {
 		return
 	}
-	let root: TFiberNode | null = fiber
-	let current: TFiberNode | null = fiber
+	let root: TFiberNode = fiber
+	let current: TFiberNode = fiber
+	let functionParentFilter: TFiberNode = fiber
 
 	while (current) {
 		if (current.dirty) {
@@ -66,14 +73,31 @@ export function commitHandleDomWork(fiber: TFiberNode | null): void {
 			current.dirty = false
 		}
 		/**
-		 * 深度遍历子节点
-		 * 如果该节点没有子节点, 则跳过
+		 * 如果某一层 fiber 节点被标记为删除, 则无需进行后续操作
 		 */
+		if (current.effectTag === ENUM_EFFECT_TAG.DELETION) {
+			return
+		}
 		if (current.child) {
 			current = current.child
+			/**
+			 * 如果 current 不存在 child, 则判定 current 为当前子 fiber 链表结构的最后一个 fiber 节点
+			 */
 			if (!current.child) {
-				console.log('触底')
-				continue
+				/**
+				 * 找出 current 所在的函数组件 fiber 节点
+				 * 缓存下这个函数组件 fiber 节点
+				 * 缓存该函数组件下的所有 hooks
+				 */
+				functionParentFilter = current.parent as TFiberNode
+				while (functionParentFilter && !(functionParentFilter.type instanceof Function)) {
+					functionParentFilter = functionParentFilter.parent as TFiberNode
+				}
+				if (functionParentFilter.effectTag !== ENUM_EFFECT_TAG.DELETION) {
+					functionParentFilter.hooks.forEach((item: any): void => {
+						__RUNTIME_PROFILE___.hooksCache.push(item)
+					})
+				}
 			}
 			if (current.dirty) {
 				handleDom(current, '2')
@@ -84,24 +108,31 @@ export function commitHandleDomWork(fiber: TFiberNode | null): void {
 		if (current === root) {
 			return
 		}
-		/* 
-            对于外循环来讲, 会先检查当前节点是否存在兄弟节点
-            如果存在兄弟节点, 则跳过
-         */
+		/**
+		 * 当遍历到子 fiber 链表结构的最后一个子 fiber 节点后, 向上查找出距离最近的具有下一个兄弟 fiber 节点的父 fiber 节点
+		 */
 		while (!current.sibling) {
+			/**
+			 * 如果向上查找过程中遇到了函数组件对应的 fiber 节点, 必要时缓存该函数组件下的所有 hooks
+			 */
+			if (isFunctionComponent(current) && functionParentFilter !== current && functionParentFilter.effectTag !== ENUM_EFFECT_TAG.DELETION) {
+				current.hooks.forEach((item: any): void => {
+					__RUNTIME_PROFILE___.hooksCache.push(item)
+				})
+			}
 			if (!current.parent || current.parent === root) {
 				return
 			}
-			// if (current.dirty) {
-			// 	handleDom(current, '3')
-			// 	current.dirty = false
-			// }
 			current = current.parent
 		}
-		/* 
-            将指针跳转到下一个兄弟节点
-            重新执行循环
-         */
+		/**
+		 * 如果被找到的目标 fiber 节点是函数组件对应的 fiber 节点, 必要时缓存该函数组件下的所有 hooks
+		 */
+		if (isFunctionComponent(current) && functionParentFilter !== current && functionParentFilter.effectTag !== ENUM_EFFECT_TAG.DELETION) {
+			current.hooks.forEach((item: any): void => {
+				__RUNTIME_PROFILE___.hooksCache.push(item)
+			})
+		}
 		current = current.sibling
 	}
 }

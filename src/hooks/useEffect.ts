@@ -10,6 +10,7 @@ export function useEffect(callback: () => any, dependences: Array<any> | undefin
 	const componentFiber: TFiberNode | undefined = __RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt
 	const oldHookOfCompt: TUseEffectHookStruct = getHookItem(__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt) as TUseEffectHookStruct
 	const hook: TUseEffectHookStruct = {
+		useEffect: true,
 		isupdated: false,
 		dependences: undefined,
 		callback,
@@ -33,13 +34,6 @@ export function useEffect(callback: () => any, dependences: Array<any> | undefin
 		})
 	} else {
 		hook.isupdated = true
-	}
-	if (hook.isupdated) {
-		window.setTimeout(() => {
-			if (hook.callback instanceof Function) {
-				hook.returnCallback = hook.callback && hook.callback()
-			}
-		})
 	}
 
 	;(componentFiber as TFiberNode).hooks.push(hook)

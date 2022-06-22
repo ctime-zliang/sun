@@ -12,6 +12,7 @@ export function useState(initValue: any): TUseStateHook {
 	const rootFiber: TFiberNode = getRootFiber(componentFiber as TFiberNode)
 	const oldHookOfCompt: TUseStateHookStruct = getHookItem(__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt) as TUseStateHookStruct
 	const hook: TUseStateHookStruct = {
+		useState: true,
 		state: oldHookOfCompt ? oldHookOfCompt.state : initValue,
 		queue: [],
 	}

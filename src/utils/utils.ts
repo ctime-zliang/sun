@@ -151,7 +151,7 @@ export function isSystemEvent(key: string): boolean {
 
 /**
  * @description 判断是否是正常的 Fiber 节点
- * @function isSystemEvent
+ * @function isApprovedComponent
  * @param {TFiberNode} fiber fiber 节点
  * @return {boolean}
  */
@@ -161,7 +161,7 @@ export function isApprovedComponent(fiber: TFiberNode): boolean {
 
 /**
  * @description 判断是否是函数组件
- * @function isSystemEvent
+ * @function isFunctionComponent
  * @param {TFiberNode} fiber fiber 节点
  * @return {boolean}
  */

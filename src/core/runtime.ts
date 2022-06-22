@@ -4,11 +4,13 @@ type T__RUNTIME_PROFILE___ = {
 	globalFiberRoot: TFiberNode | undefined
 	rootFiberList: Array<TFiberNode>
 	nextWorkUnitFiber: TFiberNode | undefined
+	hooksCache: Array<() => any>
 }
 export const __RUNTIME_PROFILE___: T__RUNTIME_PROFILE___ = {
 	globalFiberRoot: undefined,
 	rootFiberList: [],
 	nextWorkUnitFiber: undefined,
+	hooksCache: [],
 }
 
 type T__RUNTIME_COMPT_PROFILE___ = {
