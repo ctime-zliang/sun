@@ -1,3 +1,11 @@
+/*
+ * @Author: ctime-zliang 1156282805@qq.com
+ * @Date: 2022-06-09 13:23:38
+ * @LastEditors: ctime-zliang 1156282805@qq.com
+ * @LastEditTime: 2022-06-22 18:14:52
+ * @FilePath: \WebDev Document\library-develop\sun\src\lib\scheduler.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtime'
 import { commitHandleDomWork } from './commitDom'
 import { reconcileChilren } from './reconcile'

@@ -8,7 +8,7 @@ function A1(props) {
 		}
 	})
 	return (
-		<div>
+		<div data-tag="A1">
 			<B1 />
 			<B2 />
 			<B3 />
@@ -24,7 +24,7 @@ function B1(props) {
 		}
 	})
 	return (
-		<div>
+		<div data-tag="B1">
 			<C1 />
 		</div>
 	)
@@ -37,7 +37,7 @@ function C1(props) {
 			console.log(`Component C1 useEffect callback.`)
 		}
 	})
-	return <div>C1</div>
+	return <div data-tag="C1">C1</div>
 }
 
 function B2(props) {
@@ -47,7 +47,7 @@ function B2(props) {
 			console.log(`Component B2 useEffect callback.`)
 		}
 	})
-	return <div>B2</div>
+	return <div data-tag="B2">B2</div>
 }
 
 function B3(props) {
@@ -58,7 +58,7 @@ function B3(props) {
 		}
 	})
 	return (
-		<div>
+		<div data-tag="B3">
 			<C2 />
 			<C3 />
 		</div>
@@ -72,7 +72,7 @@ function C2(props) {
 			console.log(`Component C2 useEffect callback.`)
 		}
 	})
-	return <div>C2</div>
+	return <div data-tag="C2">C2</div>
 }
 
 function C3(props) {
@@ -82,7 +82,7 @@ function C3(props) {
 			console.log(`Component C3 useEffect callback.`)
 		}
 	})
-	return <div>C3</div>
+	return <div data-tag="C3">C3</div>
 }
 
 /*
@@ -114,15 +114,16 @@ function C3(props) {
 export function UseEffectExecSequentialWrapper(props) {
 	const [count, setCount] = useState(0)
 	return (
-		<div>
+		<div data-tag="wrapper">
 			<button
+				data-tag="button"
 				onClick={() => {
 					setCount(count + 1)
 				}}
 			>
 				Set Count
 			</button>
-			<span>{count}</span>
+			<span data-tag="span">{count}</span>
 			{count <= 2 ? <A1 /> : null}
 		</div>
 	)
