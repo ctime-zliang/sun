@@ -194,7 +194,7 @@ export function syncBlock(delay: number = 1000): void {
  * @param {object} hooksCache 缓存容器
  * @return {void}
  */
-export function cacheHooks(fiber: TFiberNode, cacheHooks: Array<any>) {
+export function cacheHooks(fiber: TFiberNode, cacheHooks: Array<any>): void {
 	fiber.hooks.forEach((item: any): void => {
 		cacheHooks.push(item)
 	})

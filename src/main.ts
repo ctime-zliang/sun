@@ -6,14 +6,14 @@ import { ENUM_NODE_TYPE } from './config/effect.enum'
 import { TFiberNode } from './types/fiber.types'
 import { globalConfig } from './config/config'
 
-/* 
-	创建一个全局顶层 fiber: globalFiberRoot
-	
-		当需要 render 多个实例时
-		globalFiberRoot.current 将依次(按照 render 调用先后顺序)指向各个 <App /> 对应的 fiber 树
-
-		当多个 <App /> 实例存在且某些实例发生更新时
-		globalFiberRoot.current 将依次指向这些需要更新的 <App /> 对应的 fiber 树
+/**
+ * 创建一个全局顶层 fiber: globalFiberRoot
+ *
+ * 		当需要 render 多个实例时
+ * 		globalFiberRoot.current 将依次(按照 render 调用先后顺序)指向各个 <App /> 对应的 fiber 树
+ *
+ * 		当多个 <App /> 实例存在且某些实例发生更新时
+ * 		globalFiberRoot.current 将依次指向这些需要更新的 <App /> 对应的 fiber 树
  */
 __RUNTIME_PROFILE___.globalFiberRoot = generateRootFiberStructData() as TFiberNode
 
@@ -26,8 +26,8 @@ __RUNTIME_PROFILE___.globalFiberRoot = generateRootFiberStructData() as TFiberNo
  * @return {TVDom}
  */
 export function createElement(type: string, props: { [key: string]: any }, ...children: Array<any>): TVDom {
-	/*
-		Array.flat(Infinity) 性能问题
+	/**
+	 * Array.flat(Infinity) 性能问题
 	 */
 	//@ts-ignore
 	const flatChildren: Array<any> = children.flat(Infinity) // or children.flat(1)
@@ -95,7 +95,7 @@ export function render(element: TVDom, container: HTMLElement): void {
 		 */
 		__RUNTIME_PROFILE___.globalFiberRoot.current = rootFiber as TFiberNode
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber as TFiberNode
-		console.log(`AppRoot.Fiber ===>>>`, rootFiber)
+		// console.log(`AppRoot.Fiber ===>>>`, rootFiber)
 		window.requestIdleCallback(initWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
 	}
 }
