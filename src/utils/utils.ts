@@ -55,8 +55,10 @@ export function generateInitialFiberStructData(): TFiberNode {
 		key: undefined,
 		// 是否需要更新 fiber 节点
 		dirty: false,
-		// 是否已读取所有 hooks
-		cacheHook: false,
+		// commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
+		chm: false,
+		// commit 阶段在处理函数组件对应的 fiber 节点且该函数组件需要 delete 时是否已缓存其下的所有 hooks
+		chum: false,
 		/* ... */
 		// hooks
 		hooks: [],

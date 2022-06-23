@@ -25,5 +25,6 @@ export type TFiberNode = {
 	root?: boolean
 	index?: number
 	current?: TFiberNode | null
-	cacheHook?: boolean
+	chm?: boolean
+	chum?: boolean
 }
