@@ -1,4 +1,4 @@
-import Sun, { useState } from '@/'
+import Sun, { useState, useEffect } from '@/'
 
 let len = 0
 export function ClickAddLi() {
@@ -6,11 +6,11 @@ export function ClickAddLi() {
 	const [list, setList] = useState([1])
 	const modifyList = () => {
 		const array = []
+		len++
 		for (let i = 0; i < len; i++) {
 			array.push(i)
 		}
 		setList(array)
-		len++
 	}
 	return (
 		<div className="row-view">
@@ -30,17 +30,26 @@ export function ClickAddLi() {
 	)
 }
 
-let MAX_COUNT = 10000
-let COUNT = 0
+function LiElement(props) {
+	const { item, count } = props
+	useEffect(() => {
+		console.log(item)
+	}, [])
+	return (
+		<li>
+			{item} - {count}
+		</li>
+	)
+}
+let count = 0
 export function ClickAddLongChild() {
-	console.log(`Component: ClickAddLongChild`)
 	const [list, setList] = useState([])
 	const modifyList = () => {
 		const array = []
-		COUNT++
 		const random = Math.random() + ''
-		for (let i = 0; i < MAX_COUNT; i++) {
-			array.push(random + ' - ' + COUNT)
+		++count
+		for (let i = 0; i < 10000; i++) {
+			array.push(random + ' - ' + i)
 		}
 		setList(array)
 	}
@@ -48,8 +57,8 @@ export function ClickAddLongChild() {
 		<div style={{ border: '1px solid red' }}>
 			<button onClick={modifyList}>Modify List {String(list.length)}</button>
 			<ul style="border: 1px solid green;">
-				{list.map((item, index) => {
-					return <li>{item}</li>
+				{list.map(item => {
+					return <LiElement item={item} count={count}></LiElement>
 				})}
 			</ul>
 		</div>

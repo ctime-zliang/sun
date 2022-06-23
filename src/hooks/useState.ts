@@ -5,8 +5,8 @@ import { generateFiberStructData, getRootFiber } from '../utils/utils'
 import { getHookItem } from './hook'
 
 export function useState(initValue: any): TUseStateHook {
-	/*
-		获取当前 hook(s) 所在的函数组件对应的 fiber 节点
+	/**
+	 * 获取当前 hook(s) 所在的函数组件对应的 fiber 节点
 	 */
 	const componentFiber: TFiberNode | undefined = __RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt
 	const rootFiber: TFiberNode = getRootFiber(componentFiber as TFiberNode)
@@ -28,8 +28,8 @@ export function useState(initValue: any): TUseStateHook {
 
 	const setState: (action: any) => void = (action: any): void => {
 		hook.queue.push(action)
-		/*
-			重新创建 <App /> 应用的根 fiber 节点 
+		/**
+		 * 重新创建 <App /> 应用的根 fiber 节点
 		 */
 		const newRootFiber: TFiberNode = generateFiberStructData({
 			stateNode: rootFiber.stateNode,
@@ -37,22 +37,23 @@ export function useState(initValue: any): TUseStateHook {
 			props: rootFiber.props,
 			alternate: rootFiber,
 			dirty: true,
-			/*
-					保留索引值 
-				 */
+			/**
+			 * 保留索引值
+			 */
 			index: rootFiber.index,
 			root: true,
 		})
 		__RUNTIME_PROFILE___.rootFiberList.splice(rootFiber.index as number, 1, newRootFiber)
-		/*
-			将重建的 <App /> 应用的根 fiber 节点标记引用
-			在下一次执行 window.requestIdleCallback 回调时将重新从根 fiber 节点处理需要更新的应用
+		/**
+		 * 将重建的 <App /> 应用的根 fiber 节点标记引用
+		 * 在下一次执行 window.requestIdleCallback 回调时将重新从根 fiber 节点处理需要更新的应用
+		 *
 		 */
 		;(__RUNTIME_PROFILE___.globalFiberRoot as TFiberNode).current = newRootFiber
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = newRootFiber
 	}
 
-	;(componentFiber as TFiberNode).hooks.push(hook)
+	componentFiber.hooks.push(hook)
 	__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt++
 
 	return [hook.state, setState]

@@ -23,26 +23,19 @@ const App = () => {
 		// 	return state + 1
 		// })
 	}, [])
-	// useEffect(() => {
-	// 	console.log(`************************* App.useEffect 2`)
-	// }, [])
-	// useEffect(() => {
-	// 	console.log(`************************* App.useEffect 3`)
-	// 	setCount1(state => {
-	// 		return state + 1
-	// 	})
-	// }, [])
+	useEffect(() => {
+		console.log(`************************* App.useEffect 2`)
+	}, [])
 
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
 			{count1}
-			<UseEffectExecSequentialWrapper />
 		</div>
 	)
 }
 
-// render(<TraverseFiberTree />, document.querySelector(`#app`))
-render(<UseEffectExecSequentialWrapper />, document.querySelector(`#app2`))
+render(<UseEffectExecSequentialWrapper />, document.querySelector(`#app`))
+// render(<TraverseFiberTree />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()

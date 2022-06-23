@@ -64,10 +64,10 @@ export function createTextElement(text: string): TVDom {
 let renderIndex: number = -1
 export function render(element: TVDom, container: HTMLElement): void {
 	const nodeName: string = container.nodeName.toLowerCase()
-	/*
-		创建当前渲染应用的根 fiber 节点
-			该 fiber 节点将对应 container DOM 节点
-			其第一个子节点为 <App /> 返回的 VDom 对象
+	/**
+	 * 创建当前渲染应用的根 fiber 节点
+	 * 		该 fiber 节点将对应 container DOM 节点
+	 * 		其第一个子节点为 <App /> 返回的 VDom 对象
 	 */
 	const rootFiber: TFiberNode = generateFiberStructData({
 		type: nodeName,
@@ -78,20 +78,20 @@ export function render(element: TVDom, container: HTMLElement): void {
 		// elementType: nodeName,
 		alternate: null,
 		dirty: true,
-		/*
-			当前 fiber 的索引编号, 保证值与该 fiber 在 rootFiberList 中的位置索引一致 
+		/**
+		 * 当前 fiber 的索引编号, 保证值与该 fiber 在 rootFiberList 中的位置索引一致
 		 */
 		index: ++renderIndex,
 		root: true,
 	})
-	/* 
-		存在多个 render 实例时, 需要记录每个 <App /> 对应的 fiber 树(根节点)
+	/**
+	 * 存在多个 render 实例时, 需要记录每个 <App /> 对应的 fiber 树(根节点)
 	 */
 	__RUNTIME_PROFILE___.rootFiberList.push(rootFiber)
 	if (__RUNTIME_PROFILE___.globalFiberRoot && !__RUNTIME_PROFILE___.globalFiberRoot.current) {
-		/*
-			首次 render 时将全局顶层的 globalFiberRoot 指向当前需要渲染的 <App /> 根 fiber 节点
-			并将该 <App /> 对应的 fiber 树标记为 work fiber 节点树
+		/**
+		 * 首次 render 时将全局顶层的 globalFiberRoot 指向当前需要渲染的 <App /> 根 fiber 节点
+		 * 并将该 <App /> 对应的 fiber 树标记为 work fiber 节点树
 		 */
 		__RUNTIME_PROFILE___.globalFiberRoot.current = rootFiber as TFiberNode
 		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber as TFiberNode

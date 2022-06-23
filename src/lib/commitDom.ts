@@ -3,7 +3,7 @@ import { updateDOM, appendChild, removeChild } from './dom'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TExtendHTMLDOMElment } from 'src/types/dom.types'
-import { isFunctionComponent } from '../utils/utils'
+import { cacheHooks, isFunctionComponent } from '../utils/utils'
 
 function handleDom(fiber: TFiberNode, tag: any): void {
 	if (!fiber.stateNode) {
@@ -12,7 +12,7 @@ function handleDom(fiber: TFiberNode, tag: any): void {
 		 */
 		if (isFunctionComponent(fiber)) {
 			if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
-				// handleFunctionFiber(fiber)
+				handleFunctionFiber(fiber)
 				/**
 				 * 找出该函数组件对应的 fiber 节点的第一个具有真实 DOM 句柄(fiber.stateNode)的子 fiber 节点
 				 */
@@ -60,54 +60,68 @@ function handleDom(fiber: TFiberNode, tag: any): void {
 	}
 }
 
-// function handleFunctionFiber(fiber: TFiberNode): void {
-// 	if (!fiber) {
-// 		return
-// 	}
-// 	const root: TFiberNode = fiber
-// 	let current: TFiberNode = fiber
+function handleFunctionFiber(fiber: TFiberNode): void {
+	if (!fiber) {
+		return
+	}
+	const root: TFiberNode = fiber
+	let current: TFiberNode = fiber
 
-// 	while (current) {
-// 		if (current.child) {
-// 			current = current.child
-// 			if (!current.child) {
-// 				let nowFunctionParentFiber = current.parent as TFiberNode
-// 				while (nowFunctionParentFiber && !(nowFunctionParentFiber.type instanceof Function)) {
-// 					nowFunctionParentFiber = nowFunctionParentFiber.parent as TFiberNode
-// 				}
-// 				if (!nowFunctionParentFiber.chum) {
-// 					nowFunctionParentFiber.hooks.forEach((item: any): void => {
-// 						__RUNTIME_PROFILE___.unmountedHooksCache.push(item)
-// 					})
-// 					nowFunctionParentFiber.chum = true
-// 				}
-// 			}
-// 			continue
-// 		}
-// 		if (current === root) {
-// 			return
-// 		}
-// 		while (!current.sibling) {
-// 			if (isFunctionComponent(current) && !current.chum) {
-// 				current.hooks.forEach((item: any): void => {
-// 					__RUNTIME_PROFILE___.unmountedHooksCache.push(item)
-// 				})
-// 				current.chum = true
-// 			}
-// 			if (!current.parent || current.parent === root) {
-// 				return
-// 			}
-// 			current = current.parent
-// 		}
-// 		if (isFunctionComponent(current) && !current.chum) {
-// 			current.hooks.forEach((item: any): void => {
-// 				__RUNTIME_PROFILE___.unmountedHooksCache.push(item)
-// 			})
-// 			current.chum = true
-// 		}
-// 		current = current.sibling
-// 	}
-// }
+	while (current) {
+		if (current.child) {
+			current = current.child
+			if (!current.child) {
+				/**
+				 * 找出 current 所在的函数组件 fiber 节点
+				 * 缓存该函数组件下的所有 hooks
+				 */
+				let nowFunctionParentFiber = current.parent as TFiberNode
+				while (nowFunctionParentFiber && !(nowFunctionParentFiber.type instanceof Function)) {
+					nowFunctionParentFiber = nowFunctionParentFiber.parent as TFiberNode
+				}
+				if (!nowFunctionParentFiber.chum) {
+					cacheHooks(nowFunctionParentFiber, __RUNTIME_PROFILE___.unmountedHooksCache)
+					nowFunctionParentFiber.chum = true
+				}
+			}
+			continue
+		}
+		if (current === root) {
+			console.warn(`===>>> current === root <<<===`)
+			return
+		}
+		while (!current.sibling) {
+			/**
+			 * 如果向上查找过程中遇到了函数组件对应的 fiber 节点, 缓存该函数组件下的所有 hooks
+			 */
+			if (isFunctionComponent(current) && !current.chum) {
+				cacheHooks(current, __RUNTIME_PROFILE___.unmountedHooksCache)
+				current.chum = true
+			}
+			if (current.parent === root) {
+				/**
+				 * 满足此条件即退出此函数
+				 * 调用此函数传入的 fiber 即为一个函数组件对应的 fiber 节点
+				 * 因此 root 肯定是一个函数组件的 fiber 节点
+				 */
+				if (isFunctionComponent(root) && !root.chum) {
+					cacheHooks(root, __RUNTIME_PROFILE___.unmountedHooksCache)
+					root.chum = true
+				}
+				return
+			}
+			current = current.parent as TFiberNode
+		}
+		/**
+		 * 如果被找到的目标 fiber 节点是函数组件对应的 fiber 节点, 缓存该函数组件下的所有 hooks
+		 */
+		if (isFunctionComponent(current) && !current.chum) {
+			cacheHooks(current, __RUNTIME_PROFILE___.unmountedHooksCache)
+			current.chum = true
+		}
+		current = current.sibling
+	}
+}
 
 export function commit(fiber: TFiberNode, action: string): void {
 	if (!fiber) {
@@ -139,9 +153,7 @@ export function commit(fiber: TFiberNode, action: string): void {
 					nowFunctionParentFiber = nowFunctionParentFiber.parent as TFiberNode
 				}
 				if (!nowFunctionParentFiber.chm) {
-					nowFunctionParentFiber.hooks.forEach((item: any): void => {
-						__RUNTIME_PROFILE___.mountedHooksCache.push(item)
-					})
+					cacheHooks(nowFunctionParentFiber, __RUNTIME_PROFILE___.mountedHooksCache)
 					nowFunctionParentFiber.chm = true
 				}
 			}
@@ -152,6 +164,7 @@ export function commit(fiber: TFiberNode, action: string): void {
 			continue
 		}
 		if (current === root) {
+			console.warn(`===>>> current === root <<<===`)
 			return
 		}
 		/**
@@ -162,23 +175,19 @@ export function commit(fiber: TFiberNode, action: string): void {
 			 * 如果向上查找过程中遇到了函数组件对应的 fiber 节点, 缓存该函数组件下的所有 hooks
 			 */
 			if (isFunctionComponent(current) && !current.chm) {
-				current.hooks.forEach((item: any): void => {
-					__RUNTIME_PROFILE___.mountedHooksCache.push(item)
-				})
+				cacheHooks(current, __RUNTIME_PROFILE___.mountedHooksCache)
 				current.chm = true
 			}
-			if (!current.parent || current.parent === root) {
+			if (current.parent === root) {
 				return
 			}
-			current = current.parent
+			current = current.parent as TFiberNode
 		}
 		/**
 		 * 如果被找到的目标 fiber 节点是函数组件对应的 fiber 节点, 缓存该函数组件下的所有 hooks
 		 */
 		if (isFunctionComponent(current) && !current.chm) {
-			current.hooks.forEach((item: any): void => {
-				__RUNTIME_PROFILE___.mountedHooksCache.push(item)
-			})
+			cacheHooks(current, __RUNTIME_PROFILE___.mountedHooksCache)
 			current.chm = true
 		}
 		current = current.sibling

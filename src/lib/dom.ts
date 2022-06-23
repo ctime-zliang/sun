@@ -60,8 +60,8 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 	const commPropsOfOldProps = Object.keys(oldProps).filter(isProperty)
 	const commPropsOfNewProps = Object.keys(newProps).filter(isProperty)
 
-	/*
-		移除系统事件
+	/**
+	 * 移除系统事件
 	 */
 	for (let i: number = 0; i < systemEventOfOldProps.length; i++) {
 		const item: string = systemEventOfOldProps[i]
@@ -70,8 +70,8 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 			dom.removeEventListener(eventType, oldProps[item])
 		}
 	}
-	/* 
-		删除旧属性
+	/**
+	 * 删除旧属性
 	 */
 	for (let i: number = 0; i < commPropsOfOldProps.length; i++) {
 		const item: string = commPropsOfOldProps[i]
@@ -82,8 +82,8 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 			}
 		}
 	}
-	/*
-		更新或写入新属性 
+	/**
+	 * 更新或写入新属性
 	 */
 	for (let i: number = 0; i < commPropsOfNewProps.length; i++) {
 		const item: string = commPropsOfNewProps[i]
@@ -116,8 +116,8 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 			}
 		}
 	}
-	/*
-		绑定系统事件
+	/**
+	 * 绑定系统事件
 	 */
 	for (let i: number = 0; i < systemEventOfNewProps.length; i++) {
 		const item: string = systemEventOfNewProps[i]
