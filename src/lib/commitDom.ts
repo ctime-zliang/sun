@@ -12,12 +12,7 @@ function handleDom(fiber: TFiberNode, tag: any): void {
 		 */
 		if (isFunctionComponent(fiber)) {
 			if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
-				/**
-				 * 缓存该函数组件对应的 fiber 节点中的所有 hooks
-				 */
-				fiber.hooks.forEach((item: any): void => {
-					__RUNTIME_PROFILE___.unmountedHooksCache.push(item)
-				})
+				handleFunctionFiber(fiber)
 				/**
 				 * 找出该函数组件对应的 fiber 节点的第一个具有真实 DOM 句柄(fiber.stateNode)的子 fiber 节点
 				 */
@@ -65,7 +60,51 @@ function handleDom(fiber: TFiberNode, tag: any): void {
 	}
 }
 
-export function commitHandleDomWork(fiber: TFiberNode, action: string): void {
+function handleFunctionFiber(fiber: TFiberNode): void {
+	if (!fiber) {
+		return
+	}
+	const root: TFiberNode = fiber
+	let current: TFiberNode = fiber
+	let prevFunctionParentFiber: TFiberNode | undefined = undefined
+
+	while (current) {
+		if (isFunctionComponent(current)) {
+			// if (prevFunctionParentFiber !== current) {
+			// 	current.hooks.forEach((item: any): void => {
+			// 		__RUNTIME_PROFILE___.unmountedHooksCache.push(item)
+			// 	})
+			// 	console.log('~~~1', current.type)
+			// }
+			// prevFunctionParentFiber = current
+		}
+		if (current.child) {
+			current = current.child
+			if (isFunctionComponent(current)) {
+				if (prevFunctionParentFiber !== current) {
+					current.hooks.forEach((item: any): void => {
+						__RUNTIME_PROFILE___.unmountedHooksCache.push(item)
+					})
+					console.log('~~~2', current.type)
+				}
+				prevFunctionParentFiber = current
+			}
+			continue
+		}
+		if (current === root) {
+			return
+		}
+		while (!current.sibling) {
+			if (!current.parent || current.parent === root) {
+				return
+			}
+			current = current.parent
+		}
+		current = current.sibling
+	}
+}
+
+export function commit(fiber: TFiberNode, action: string): void {
 	if (!fiber) {
 		return
 	}
@@ -122,6 +161,7 @@ export function commitHandleDomWork(fiber: TFiberNode, action: string): void {
 				current.hooks.forEach((item: any): void => {
 					__RUNTIME_PROFILE___.mountedHooksCache.push(item)
 				})
+				prevFunctionParentFiber = current
 			}
 			if (!current.parent || current.parent === root) {
 				return
@@ -135,6 +175,7 @@ export function commitHandleDomWork(fiber: TFiberNode, action: string): void {
 			current.hooks.forEach((item: any): void => {
 				__RUNTIME_PROFILE___.mountedHooksCache.push(item)
 			})
+			prevFunctionParentFiber = current
 		}
 		current = current.sibling
 	}

@@ -109,7 +109,7 @@ function C4(props) {
     |
     B1 —— B2 —— B3
     |     |     |
-    C1    C2    C3 —— C4
+    C1    C2    C3(C4)
 
     effect do - mounted
         C1

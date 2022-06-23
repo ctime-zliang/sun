@@ -1,5 +1,5 @@
 import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtime'
-import { commitHandleDomWork } from './commitDom'
+import { commit } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 import { isFunctionComponent } from '../utils/utils'
@@ -32,15 +32,16 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 			 */
 			console.time('commitHandleDomWork')
 			deletions.forEach(item => {
-				commitHandleDomWork(item as TFiberNode, ENUM_COMMIT_DOM_ACTION.DELETION)
+				commit(item as TFiberNode, ENUM_COMMIT_DOM_ACTION.DELETION)
 			})
-			commitHandleDomWork(currentRootFiber.child as TFiberNode, ENUM_COMMIT_DOM_ACTION.NORMAL)
+			commit(currentRootFiber.child as TFiberNode, ENUM_COMMIT_DOM_ACTION.NORMAL)
 			console.timeEnd('commitHandleDomWork')
 			currentRootFiber.dirty = false
 			deletions.length = 0
 			// const fiberList: Array<TFiberNode> = dfs2(currentRootFiber)
 			console.log(`Commit.Fiber ===>>>`, currentRootFiber)
-			console.log(__RUNTIME_PROFILE___)
+			console.log(__RUNTIME_PROFILE___.mountedHooksCache.length)
+			// debugger
 			__RUNTIME_PROFILE___.unmountedHooksCache.forEach((item: any): void => {
 				if (item.useEffect && item.returnCallback instanceof Function) {
 					item.returnCallback.call(undefined)
