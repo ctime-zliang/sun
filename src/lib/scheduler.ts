@@ -40,7 +40,6 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 			deletions.length = 0
 			// const fiberList: Array<TFiberNode> = dfs2(currentRootFiber)
 			console.log(`Commit.Fiber ===>>>`, currentRootFiber)
-			console.log(__RUNTIME_PROFILE___.mountedHooksCache.length)
 			// debugger
 			__RUNTIME_PROFILE___.unmountedHooksCache.forEach((item: any): void => {
 				if (item.useEffect && item.returnCallback instanceof Function) {

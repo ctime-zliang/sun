@@ -55,6 +55,8 @@ export function generateInitialFiberStructData(): TFiberNode {
 		key: undefined,
 		// 是否需要更新 fiber 节点
 		dirty: false,
+		// 是否已读取所有 hooks
+		cacheHook: false,
 		/* ... */
 		// hooks
 		hooks: [],
