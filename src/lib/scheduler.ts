@@ -1,11 +1,3 @@
-/*
- * @Author: ctime-zliang 1156282805@qq.com
- * @Date: 2022-06-09 13:23:38
- * @LastEditors: ctime-zliang 1156282805@qq.com
- * @LastEditTime: 2022-06-22 18:14:52
- * @FilePath: \WebDev Document\library-develop\sun\src\lib\scheduler.ts
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtime'
 import { commitHandleDomWork } from './commitDom'
 import { reconcileChilren } from './reconcile'
@@ -15,7 +7,6 @@ import { TFiberNode } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
-import { dfs2 } from './commitEffect'
 import { ENUM_COMMIT_DOM_ACTION } from '../config/commitDom.enum'
 
 export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
@@ -25,16 +16,16 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 	function workLoop(deadline: TRequestIdleCallbackParams): void {
 		let shouldYield: boolean = false
 		while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
-			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber, deletions) as TFiberNode | undefined
+			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber, deletions) as TFiberNode
 			shouldYield = deadline.timeRemaining() < 1
 		}
-		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.globalFiberRoot?.current) {
+		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.globalFiberRoot.current) {
 			/*
 				暂存当前活动的应用的顶层 fiber(rootFiber) 
 				清除全局 globalFiberRoot 对该活动应用的 rootFiber 的引用
 			 */
-			currentRootFiber = __RUNTIME_PROFILE___.globalFiberRoot.current
-			__RUNTIME_PROFILE___.globalFiberRoot.current = null
+			currentRootFiber = __RUNTIME_PROFILE___.globalFiberRoot.current as TFiberNode
+			__RUNTIME_PROFILE___.globalFiberRoot.current = undefined
 
 			/*
 				提交 DOM 操作 
@@ -50,13 +41,19 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 			// const fiberList: Array<TFiberNode> = dfs2(currentRootFiber)
 			console.log(`Commit.Fiber ===>>>`, currentRootFiber)
 			console.log(__RUNTIME_PROFILE___)
+			__RUNTIME_PROFILE___.unmountedHooksCache.forEach((item: any): void => {
+				if (item.useEffect && item.returnCallback instanceof Function) {
+					item.returnCallback.call(undefined)
+				}
+			})
+			__RUNTIME_PROFILE___.unmountedHooksCache.length = 0
 			window.setTimeout(() => {
-				__RUNTIME_PROFILE___.hooksCache.forEach((item: any): void => {
+				__RUNTIME_PROFILE___.mountedHooksCache.forEach((item: any): void => {
 					if (item.useEffect && item.isupdated && item.callback instanceof Function) {
-						item.returnCallback = item.callback()
+						item.returnCallback = item.callback.call(undefined)
 					}
 				})
-				__RUNTIME_PROFILE___.hooksCache.length = 0
+				__RUNTIME_PROFILE___.mountedHooksCache.length = 0
 			})
 
 			/* 

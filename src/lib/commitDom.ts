@@ -13,6 +13,12 @@ function handleDom(fiber: TFiberNode, tag: any): void {
 		if (isFunctionComponent(fiber)) {
 			if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
 				/**
+				 * 缓存该函数组件对应的 fiber 节点中的所有 hooks
+				 */
+				fiber.hooks.forEach((item: any): void => {
+					__RUNTIME_PROFILE___.unmountedHooksCache.push(item)
+				})
+				/**
 				 * 找出该函数组件对应的 fiber 节点的第一个具有真实 DOM 句柄(fiber.stateNode)的子 fiber 节点
 				 */
 				let childFiber: TFiberNode = fiber.child as TFiberNode
@@ -63,18 +69,15 @@ export function commitHandleDomWork(fiber: TFiberNode, action: string): void {
 	if (!fiber) {
 		return
 	}
-	let root: TFiberNode = fiber
+	const root: TFiberNode = fiber
 	let current: TFiberNode = fiber
-	let functionParentFilter: TFiberNode = fiber
+	let prevFunctionParentFiber: TFiberNode | undefined = undefined
 
 	while (current) {
 		if (current.dirty) {
 			handleDom(current, '1')
 			current.dirty = false
 		}
-		/**
-		 * 如果某一层 fiber 节点被标记为删除, 则无需进行后续操作
-		 */
 		if (current.effectTag === ENUM_EFFECT_TAG.DELETION) {
 			return
 		}
@@ -86,18 +89,18 @@ export function commitHandleDomWork(fiber: TFiberNode, action: string): void {
 			if (!current.child) {
 				/**
 				 * 找出 current 所在的函数组件 fiber 节点
-				 * 缓存下这个函数组件 fiber 节点
 				 * 缓存该函数组件下的所有 hooks
 				 */
-				functionParentFilter = current.parent as TFiberNode
-				while (functionParentFilter && !(functionParentFilter.type instanceof Function)) {
-					functionParentFilter = functionParentFilter.parent as TFiberNode
+				let nowFunctionParentFiber = current.parent as TFiberNode
+				while (nowFunctionParentFiber && !(nowFunctionParentFiber.type instanceof Function)) {
+					nowFunctionParentFiber = nowFunctionParentFiber.parent as TFiberNode
 				}
-				if (functionParentFilter.effectTag !== ENUM_EFFECT_TAG.DELETION) {
-					functionParentFilter.hooks.forEach((item: any): void => {
-						__RUNTIME_PROFILE___.hooksCache.push(item)
+				if (prevFunctionParentFiber !== nowFunctionParentFiber) {
+					nowFunctionParentFiber.hooks.forEach((item: any): void => {
+						__RUNTIME_PROFILE___.mountedHooksCache.push(item)
 					})
 				}
+				prevFunctionParentFiber = nowFunctionParentFiber
 			}
 			if (current.dirty) {
 				handleDom(current, '2')
@@ -113,11 +116,11 @@ export function commitHandleDomWork(fiber: TFiberNode, action: string): void {
 		 */
 		while (!current.sibling) {
 			/**
-			 * 如果向上查找过程中遇到了函数组件对应的 fiber 节点, 必要时缓存该函数组件下的所有 hooks
+			 * 如果向上查找过程中遇到了函数组件对应的 fiber 节点, 缓存该函数组件下的所有 hooks
 			 */
-			if (isFunctionComponent(current) && functionParentFilter !== current && functionParentFilter.effectTag !== ENUM_EFFECT_TAG.DELETION) {
+			if (isFunctionComponent(current) && prevFunctionParentFiber !== current) {
 				current.hooks.forEach((item: any): void => {
-					__RUNTIME_PROFILE___.hooksCache.push(item)
+					__RUNTIME_PROFILE___.mountedHooksCache.push(item)
 				})
 			}
 			if (!current.parent || current.parent === root) {
@@ -126,11 +129,11 @@ export function commitHandleDomWork(fiber: TFiberNode, action: string): void {
 			current = current.parent
 		}
 		/**
-		 * 如果被找到的目标 fiber 节点是函数组件对应的 fiber 节点, 必要时缓存该函数组件下的所有 hooks
+		 * 如果被找到的目标 fiber 节点是函数组件对应的 fiber 节点, 缓存该函数组件下的所有 hooks
 		 */
-		if (isFunctionComponent(current) && functionParentFilter !== current && functionParentFilter.effectTag !== ENUM_EFFECT_TAG.DELETION) {
+		if (isFunctionComponent(current) && prevFunctionParentFiber !== current) {
 			current.hooks.forEach((item: any): void => {
-				__RUNTIME_PROFILE___.hooksCache.push(item)
+				__RUNTIME_PROFILE___.mountedHooksCache.push(item)
 			})
 		}
 		current = current.sibling

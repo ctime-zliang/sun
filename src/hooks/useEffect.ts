@@ -7,7 +7,7 @@ export function useEffect(callback: () => any, dependences: Array<any> | undefin
 	/*
 		获取当前 hook(s) 所在的函数组件对应的 fiber 节点
 	 */
-	const componentFiber: TFiberNode | undefined = __RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt
+	const componentFiber: TFiberNode = __RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt as TFiberNode
 	const oldHookOfCompt: TUseEffectHookStruct = getHookItem(__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt) as TUseEffectHookStruct
 	const hook: TUseEffectHookStruct = {
 		useEffect: true,
@@ -36,6 +36,6 @@ export function useEffect(callback: () => any, dependences: Array<any> | undefin
 		hook.isupdated = true
 	}
 
-	;(componentFiber as TFiberNode).hooks.push(hook)
+	componentFiber.hooks.push(hook)
 	__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt++
 }

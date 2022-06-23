@@ -1,6 +1,7 @@
 import Sun, { useState, useEffect } from '@/'
 
 function A1(props) {
+	const { count } = props
 	useEffect(() => {
 		console.log(`Component A1 useEffect.`)
 		return () => {
@@ -9,14 +10,15 @@ function A1(props) {
 	})
 	return (
 		<div data-tag="A1">
-			<B1 />
-			<B2 />
-			<B3 />
+			<B1 count={count} />
+			<B2 count={count} />
+			<B3 count={count} />
 		</div>
 	)
 }
 
 function B1(props) {
+	const { count } = props
 	useEffect(() => {
 		console.log(`Component B1 useEffect.`)
 		return () => {
@@ -25,22 +27,24 @@ function B1(props) {
 	})
 	return (
 		<div data-tag="B1">
-			<C1 />
+			<C1 count={count} />
 		</div>
 	)
 }
 
 function C1(props) {
+	const { count } = props
 	useEffect(() => {
 		console.log(`Component C1 useEffect.`)
 		return () => {
 			console.log(`Component C1 useEffect return-callback.`)
 		}
 	})
-	return <div data-tag="C1">C1</div>
+	return <div data-tag="C1">C1 - {count}</div>
 }
 
 function B2(props) {
+	const { count } = props
 	useEffect(() => {
 		console.log(`Component B2 useEffect.`)
 		return () => {
@@ -49,54 +53,53 @@ function B2(props) {
 	})
 	return (
 		<div data-tag="B2">
-			<C2 />
+			<C2 count={count} />
 		</div>
 	)
 }
 
 function C2(props) {
+	const { count } = props
 	useEffect(() => {
 		console.log(`Component C2 useEffect.`)
 		return () => {
 			console.log(`Component C2 useEffect return-callback.`)
 		}
 	})
-	return <div data-tag="C2">C2</div>
+	return <div data-tag="C2">C2 - {count}</div>
 }
 
 function B3(props) {
+	const { count } = props
 	useEffect(() => {
 		console.log(`Component B3 useEffect.`)
 		return () => {
 			console.log(`Component B3 useEffect return-callback.`)
 		}
 	})
-	return (
-		<div data-tag="B3">
-			<C3 />
-			<C4 />
-		</div>
-	)
+	return <div data-tag="B3">{count <= 2 ? <C3 count={count} /> : <C4 count={count} />}</div>
 }
 
 function C3(props) {
+	const { count } = props
 	useEffect(() => {
 		console.log(`Component C3 useEffect.`)
 		return () => {
 			console.log(`Component C3 useEffect return-callback.`)
 		}
 	})
-	return <div data-tag="C3">C3</div>
+	return <div data-tag="C3">C3 - {count}</div>
 }
 
 function C4(props) {
+	const { count } = props
 	useEffect(() => {
 		console.log(`Component C4 useEffect.`)
 		return () => {
 			console.log(`Component C4 useEffect return-callback.`)
 		}
 	})
-	return <div data-tag="C4">C4</div>
+	return <div data-tag="C4">C4 - {count}</div>
 }
 
 /*
@@ -141,7 +144,8 @@ export function UseEffectExecSequentialWrapper(props) {
 				Set Count
 			</button>
 			<span>{count}</span>
-			{count <= 1 ? <A1 /> : null}
+			{count <= 4 ? <A1 count={count} /> : null}
+			{count >= 1 ? <div>大于等于 1</div> : <div>小于 1</div>}
 		</div>
 	)
 }

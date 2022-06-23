@@ -1,4 +1,3 @@
-// import Sun, { useState } from '../../build/sun'
 /* ... */
 import frameCountPerSecond from './modules/frameCountPerSecond'
 import { setIntervalAnimateMain } from './modules/setIntervalAnimate'
