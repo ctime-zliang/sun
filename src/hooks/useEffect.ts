@@ -20,7 +20,8 @@ export function useEffect(callback: () => any, dependences: Array<any> | undefin
 		hook.isupdated = true
 		hook.dependences = dependences instanceof Array ? Array.from(dependences) : undefined
 	} else {
-		// hook.callback = oldHookOfCompt.callback
+		hook.callback = oldHookOfCompt.callback
+		hook.returnCallback = oldHookOfCompt.returnCallback
 		hook.dependences = oldHookOfCompt.dependences
 	}
 	/**

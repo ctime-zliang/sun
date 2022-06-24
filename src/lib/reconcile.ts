@@ -38,6 +38,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 			if (oldChildFiberOfNowWIPFiber) {
 				oldChildFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
 				oldChildFiberOfNowWIPFiber.dirty = true
+				oldChildFiberOfNowWIPFiber.chm = false
 				deletions.push(oldChildFiberOfNowWIPFiber)
 				oldChildFiberOfNowWIPFiber = oldChildFiberOfNowWIPFiber.sibling
 			}
@@ -79,6 +80,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 			if (oldChildFiberOfNowWIPFiber) {
 				oldChildFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
 				oldChildFiberOfNowWIPFiber.dirty = true
+				oldChildFiberOfNowWIPFiber.chm = false
 				deletions.push(oldChildFiberOfNowWIPFiber)
 			}
 		}

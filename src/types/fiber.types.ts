@@ -26,5 +26,4 @@ export type TFiberNode = {
 	index?: number
 	current?: TFiberNode | null
 	chm?: boolean
-	chum?: boolean
 }

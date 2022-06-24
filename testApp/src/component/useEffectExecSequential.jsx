@@ -117,7 +117,7 @@ function C4(props) {
 		C2
         B2
         C3
-        C4
+        (C4)
         B3
         A1
 
@@ -127,7 +127,7 @@ function C4(props) {
 		C2
         B2
         C3
-        C4
+        (C4)
         B3
         A1
  */

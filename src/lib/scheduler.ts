@@ -31,24 +31,22 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 			 * 提交 DOM 操作
 			 */
 			console.time('commit')
-			deletions.forEach((item: TFiberNode): void => {
-				commit(item as TFiberNode, ENUM_COMMIT_DOM_ACTION.DELETION)
-			})
+			// deletions.forEach((item: TFiberNode): void => {
+			// 	commit(item as TFiberNode, ENUM_COMMIT_DOM_ACTION.DELETION)
+			// })
 			commit(currentRootFiber.child as TFiberNode, ENUM_COMMIT_DOM_ACTION.NORMAL)
 			console.timeEnd('commit')
 			currentRootFiber.dirty = false
 			deletions.length = 0
 			console.log(`Commit.Fiber ===>>>`, currentRootFiber)
 
-			/**
-			 * 组件卸载时执行 useEffect 的回调返回函数
-			 */
-			__RUNTIME_PROFILE___.unmountedHooksCache.forEach((item: any): void => {
+			console.log(__RUNTIME_PROFILE___.mountedHooksCache.length, __RUNTIME_PROFILE___)
+			// debugger
+			__RUNTIME_PROFILE___.mountedHooksCache.forEach((item: any): void => {
 				if (item.useEffect && item.returnCallback instanceof Function) {
 					item.returnCallback.call(undefined)
 				}
 			})
-			__RUNTIME_PROFILE___.unmountedHooksCache.length = 0
 			/**
 			 * 在组件树全部挂载并视图渲染完毕后的下一个事件循环中执行 useEffect 的回调函数
 			 */
