@@ -3,7 +3,7 @@ import { updateDOM, appendChild, removeChild } from './dom'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TExtendHTMLDOMElment } from 'src/types/dom.types'
-import { cacheUseEffectHooks, isFunctionComponent } from '../utils/utils'
+import { isFunctionComponent } from '../utils/utils'
 import { ENUM_COMMIT_DOM_ACTION } from '../config/commitDom.enum'
 
 function handleDom(fiber: TFiberNode, tag: any): void {
@@ -69,7 +69,11 @@ function cacheFunctionComponentHooks(fiber: TFiberNode, action: string): void {
 	 * 缓存其 useEffect hooks
 	 */
 	if (action === ENUM_COMMIT_DOM_ACTION.DELETION && !fiber.dchm) {
-		cacheUseEffectHooks(fiber, __RTP___.unmountedHooksCache)
+		fiber.hooks.forEach((item: any): void => {
+			if (item.useEffect) {
+				__RTP___.unmountedHooksCache.push(item)
+			}
+		})
 		fiber.dchm = true
 		return
 	}
@@ -78,7 +82,11 @@ function cacheFunctionComponentHooks(fiber: TFiberNode, action: string): void {
 	 * 缓存其 useEffect hooks
 	 */
 	if (!fiber.chm) {
-		cacheUseEffectHooks(fiber, __RTP___.mountedHooksCache)
+		fiber.hooks.forEach((item: any): void => {
+			if (item.useEffect && item.isupdated) {
+				__RTP___.mountedHooksCache.push(item)
+			}
+		})
 		fiber.chm = true
 	}
 }

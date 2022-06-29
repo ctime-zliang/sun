@@ -187,18 +187,3 @@ export function syncBlock(delay: number = 1000): void {
 		++i
 	}
 }
-
-/**
- * @description 缓存 hooks
- * @function cacheUseEffectHooks
- * @param {TFiberNode} fiber 节点
- * @param {object} hooksCache 缓存容器
- * @return {void}
- */
-export function cacheUseEffectHooks(fiber: TFiberNode, cacheUseEffectHooks: Array<any>): void {
-	fiber.hooks.forEach((item: any): void => {
-		if (item.useEffect) {
-			cacheUseEffectHooks.push(item)
-		}
-	})
-}

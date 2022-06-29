@@ -82,13 +82,31 @@ function B3(props) {
 
 function C31(props) {
 	const { count } = props
+	const [number, setNumber] = useState(0)
+
+	useEffect(() => {
+		let timer = window.setInterval(() => {
+			console.log(`==>>> C31: useEffect setInterval update.`)
+			// setNumber((value) => {
+			// 	return value + 1
+			// })
+		}, 500)
+		return () => {
+			window.clearInterval(timer)
+		}
+	}, [])
+
 	useEffect(() => {
 		console.log(`Component C31 useEffect.`)
 		return () => {
 			console.log(`Component C31 useEffect return-callback.`)
 		}
 	})
-	return <div data-tag="C31">C31 - {count}</div>
+	return (
+		<div data-tag="C31">
+			C31 - {count} - {number}
+		</div>
+	)
 }
 
 function C32(props) {
