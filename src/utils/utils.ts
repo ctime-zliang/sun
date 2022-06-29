@@ -57,6 +57,8 @@ export function generateInitialFiberStructData(): TFiberNode {
 		dirty: false,
 		// commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
 		chm: false,
+		//
+		dchm: false,
 		/* ... */
 		// hooks
 		hooks: [],
@@ -168,7 +170,7 @@ export function isApprovedComponent(fiber: TFiberNode): boolean {
  * @return {boolean}
  */
 export function isFunctionComponent(fiber: TFiberNode): boolean {
-	return !!(fiber && fiber.type && fiber.type instanceof Function)
+	return !!(fiber.type && fiber.type instanceof Function)
 }
 
 /**
@@ -187,13 +189,15 @@ export function syncBlock(delay: number = 1000): void {
 
 /**
  * @description 缓存 hooks
- * @function cacheHooks
+ * @function cacheUseEffectHooks
  * @param {TFiberNode} fiber 节点
  * @param {object} hooksCache 缓存容器
  * @return {void}
  */
-export function cacheHooks(fiber: TFiberNode, cacheHooks: Array<any>): void {
+export function cacheUseEffectHooks(fiber: TFiberNode, cacheUseEffectHooks: Array<any>): void {
 	fiber.hooks.forEach((item: any): void => {
-		cacheHooks.push(item)
+		if (item.useEffect) {
+			cacheUseEffectHooks.push(item)
+		}
 	})
 }

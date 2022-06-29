@@ -25,7 +25,7 @@ const App = () => {
 	}, [])
 	useEffect(() => {
 		console.log(`************************* App.useEffect 2`)
-	}, [])
+	})
 
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
@@ -34,7 +34,7 @@ const App = () => {
 	)
 }
 
-render(<UseEffectExecSequentialWrapper />, document.querySelector(`#app`))
+render(<App />, document.querySelector(`#app`))
 // render(<TraverseFiberTree />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {

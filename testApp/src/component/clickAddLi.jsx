@@ -49,7 +49,7 @@ export function ClickAddLongChild() {
 		const random = Math.random() + ''
 		++count
 		for (let i = 0; i < 10000; i++) {
-			array.push(random + ' - ' + i)
+			array.push(random)
 		}
 		setList(array)
 	}
@@ -59,6 +59,7 @@ export function ClickAddLongChild() {
 			<ul style="border: 1px solid green;">
 				{list.map(item => {
 					return <LiElement item={item} count={count}></LiElement>
+					// return <li>{item}-{count}</li>
 				})}
 			</ul>
 		</div>

@@ -11,7 +11,7 @@ function A1(props) {
 	return (
 		<div data-tag="A1">
 			<B1 count={count} />
-			<B2 count={count} />
+			{count <= 3 ? <B2 count={count} /> : null}
 			<B3 count={count} />
 		</div>
 	)
@@ -77,29 +77,29 @@ function B3(props) {
 			console.log(`Component B3 useEffect return-callback.`)
 		}
 	})
-	return <div data-tag="B3">{count <= 2 ? <C3 count={count} /> : <C4 count={count} />}</div>
+	return <div data-tag="B3">{count <= 2 ? <C31 count={count} /> : <C32 count={count} />}</div>
 }
 
-function C3(props) {
+function C31(props) {
 	const { count } = props
 	useEffect(() => {
-		console.log(`Component C3 useEffect.`)
+		console.log(`Component C31 useEffect.`)
 		return () => {
-			console.log(`Component C3 useEffect return-callback.`)
+			console.log(`Component C31 useEffect return-callback.`)
 		}
 	})
-	return <div data-tag="C3">C3 - {count}</div>
+	return <div data-tag="C31">C31 - {count}</div>
 }
 
-function C4(props) {
+function C32(props) {
 	const { count } = props
 	useEffect(() => {
-		console.log(`Component C4 useEffect.`)
+		console.log(`Component C32 useEffect.`)
 		return () => {
-			console.log(`Component C4 useEffect return-callback.`)
+			console.log(`Component C32 useEffect return-callback.`)
 		}
 	})
-	return <div data-tag="C4">C4 - {count}</div>
+	return <div data-tag="C32">C32 - {count}</div>
 }
 
 /*
@@ -109,15 +109,15 @@ function C4(props) {
     |
     B1 —— B2 —— B3
     |     |     |
-    C1    C2    C3( —— C4)
+    C1    C2    C31( —— C32)
 
     effect do - mounted
         C1
         B1
 		C2
         B2
-        C3
-        (C4)
+        C31
+        (C32)
         B3
         A1
 
@@ -126,8 +126,8 @@ function C4(props) {
         B1
 		C2
         B2
-        C3
-        (C4)
+        C31
+        (C32)
         B3
         A1
  */
