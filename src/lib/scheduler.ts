@@ -1,4 +1,4 @@
-import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtime'
+import { __RTP___, __RTCP___ } from '../core/runtime'
 import { commit } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
@@ -15,17 +15,17 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 
 	function workLoop(deadline: TRequestIdleCallbackParams): void {
 		let shouldYield: boolean = false
-		while (__RUNTIME_PROFILE___.nextWorkUnitFiber && !shouldYield) {
-			__RUNTIME_PROFILE___.nextWorkUnitFiber = performUnitWork(__RUNTIME_PROFILE___.nextWorkUnitFiber, deletions) as TFiberNode
+		while (__RTP___.nextWorkUnitFiber && !shouldYield) {
+			__RTP___.nextWorkUnitFiber = performUnitWork(__RTP___.nextWorkUnitFiber, deletions) as TFiberNode
 			shouldYield = deadline.timeRemaining() < 1
 		}
-		if (!__RUNTIME_PROFILE___.nextWorkUnitFiber && __RUNTIME_PROFILE___.globalFiberRoot.current) {
+		if (!__RTP___.nextWorkUnitFiber && __RTP___.globalFiberRoot.current) {
 			/**
 			 * 暂存当前活动的应用的顶层 fiber(rootFiber)
 			 * 清除全局 globalFiberRoot 对该活动应用的 rootFiber 的引用
 			 */
-			currentRootFiber = __RUNTIME_PROFILE___.globalFiberRoot.current as TFiberNode
-			__RUNTIME_PROFILE___.globalFiberRoot.current = undefined
+			currentRootFiber = __RTP___.globalFiberRoot.current as TFiberNode
+			__RTP___.globalFiberRoot.current = undefined
 
 			/**
 			 * 提交 DOM 操作
@@ -40,32 +40,32 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 			deletions.length = 0
 			console.log(`Commit.Fiber ===>>>`, currentRootFiber)
 
-			const useEffectHooks = [...__RUNTIME_PROFILE___.unmountedHooksCache, ...__RUNTIME_PROFILE___.mountedHooksCache]
+			const useEffectHooks = [...__RTP___.unmountedHooksCache, ...__RTP___.mountedHooksCache]
 			useEffectHooks.forEach((item: any): void => {
 				if (item.returnCallback instanceof Function) {
 					item.returnCallback.call(undefined)
 				}
 			})
-			__RUNTIME_PROFILE___.unmountedHooksCache.length = 0
+			__RTP___.unmountedHooksCache.length = 0
 			/**
 			 * 在组件树全部挂载并视图渲染完毕后的下一个事件循环中执行 useEffect 的回调函数
 			 */
 			window.setTimeout(() => {
-				__RUNTIME_PROFILE___.mountedHooksCache.forEach((item: any): void => {
+				__RTP___.mountedHooksCache.forEach((item: any): void => {
 					if (item.isupdated && item.callback instanceof Function) {
 						item.returnCallback = item.callback.call(undefined)
 					}
 				})
-				__RUNTIME_PROFILE___.mountedHooksCache.length = 0
+				__RTP___.mountedHooksCache.length = 0
 			})
 
 			/**
 			 * 检查并尝试执行下一个实例
 			 */
-			const nextRootFiber: TFiberNode = __RUNTIME_PROFILE___.rootFiberList[(currentRootFiber.index as number) + 1] || undefined
+			const nextRootFiber: TFiberNode = __RTP___.rootFiberList[(currentRootFiber.index as number) + 1] || undefined
 			if (nextRootFiber && nextRootFiber.dirty) {
-				__RUNTIME_PROFILE___.nextWorkUnitFiber = nextRootFiber
-				__RUNTIME_PROFILE___.globalFiberRoot.current = nextRootFiber
+				__RTP___.nextWorkUnitFiber = nextRootFiber
+				__RTP___.globalFiberRoot.current = nextRootFiber
 			}
 		}
 		window.requestIdleCallback(workLoop, { timeout: globalConfig.requestIdleCallbackTimeout })
@@ -83,8 +83,8 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 		/**
 		 * 对于函数组件, 当前的 fiber 节点即为函数本身
 		 */
-		__RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt = fiber
-		__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt = 0
+		__RTCP___.wipFiberOfNowFunctionCompt = fiber
+		__RTCP___.hookIndexOfNowFunctionCompt = 0
 		/**
 		 * 函数组件
 		 * 		此时 fiber.type 的值即为函数

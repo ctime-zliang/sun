@@ -1,4 +1,4 @@
-import { __RUNTIME_PROFILE___ } from '../core/runtime'
+import { __RTP___ } from '../core/runtime'
 import { updateDOM, appendChild, removeChild } from './dom'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
@@ -64,13 +64,21 @@ function cacheFunctionComponentHooks(fiber: TFiberNode, action: string): void {
 	if (!isFunctionComponent(fiber)) {
 		return
 	}
+	/**
+	 * 对于需要删除的 fiber 节点
+	 * 缓存其 useEffect hooks
+	 */
 	if (action === ENUM_COMMIT_DOM_ACTION.DELETION && !fiber.dchm) {
-		cacheUseEffectHooks(fiber, __RUNTIME_PROFILE___.unmountedHooksCache)
+		cacheUseEffectHooks(fiber, __RTP___.unmountedHooksCache)
 		fiber.dchm = true
 		return
 	}
+	/**
+	 * 其他 fiber 节点
+	 * 缓存其 useEffect hooks
+	 */
 	if (!fiber.chm) {
-		cacheUseEffectHooks(fiber, __RUNTIME_PROFILE___.mountedHooksCache)
+		cacheUseEffectHooks(fiber, __RTP___.mountedHooksCache)
 		fiber.chm = true
 	}
 }

@@ -1,4 +1,4 @@
-import { __RUNTIME_PROFILE___ } from './core/runtime'
+import { __RTP___ } from './core/runtime'
 import { initWorkLoop } from './lib/scheduler'
 import { generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData } from './utils/utils'
 import { TVDom } from './types/vdom.types'
@@ -15,7 +15,7 @@ import { globalConfig } from './config/config'
  * 		当多个 <App /> 实例存在且某些实例发生更新时
  * 		globalFiberRoot.current 将依次指向这些需要更新的 <App /> 对应的 fiber 树
  */
-__RUNTIME_PROFILE___.globalFiberRoot = generateRootFiberStructData() as TFiberNode
+__RTP___.globalFiberRoot = generateRootFiberStructData() as TFiberNode
 
 /**
  * @description 创建元素 vDom
@@ -87,14 +87,14 @@ export function render(element: TVDom, container: HTMLElement): void {
 	/**
 	 * 存在多个 render 实例时, 需要记录每个 <App /> 对应的 fiber 树(根节点)
 	 */
-	__RUNTIME_PROFILE___.rootFiberList.push(rootFiber)
-	if (__RUNTIME_PROFILE___.globalFiberRoot && !__RUNTIME_PROFILE___.globalFiberRoot.current) {
+	__RTP___.rootFiberList.push(rootFiber)
+	if (__RTP___.globalFiberRoot && !__RTP___.globalFiberRoot.current) {
 		/**
 		 * 首次 render 时将全局顶层的 globalFiberRoot 指向当前需要渲染的 <App /> 根 fiber 节点
 		 * 并将该 <App /> 对应的 fiber 树标记为 work fiber 节点树
 		 */
-		__RUNTIME_PROFILE___.globalFiberRoot.current = rootFiber as TFiberNode
-		__RUNTIME_PROFILE___.nextWorkUnitFiber = rootFiber as TFiberNode
+		__RTP___.globalFiberRoot.current = rootFiber as TFiberNode
+		__RTP___.nextWorkUnitFiber = rootFiber as TFiberNode
 		// console.log(`AppRoot.Fiber ===>>>`, rootFiber)
 		window.requestIdleCallback(initWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
 	}

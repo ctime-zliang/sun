@@ -1,14 +1,14 @@
 import { TFiberNode } from '../types/fiber.types'
 import { TUseEffectHookStruct } from '../types/hooks.types'
-import { __RUNTIME_PROFILE___, __RUNTIME_COMPT_PROFILE___ } from '../core/runtime'
+import { __RTP___, __RTCP___ } from '../core/runtime'
 import { getHookItem } from './hook'
 
 export function useEffect(callback: () => any, dependences: Array<any> | undefined = undefined): void {
 	/**
 	 * 获取当前 hook(s) 所在的函数组件对应的 fiber 节点
 	 */
-	const componentFiber: TFiberNode = __RUNTIME_COMPT_PROFILE___.wipFiberOfNowFunctionCompt as TFiberNode
-	const oldHookOfCompt: TUseEffectHookStruct = getHookItem(__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt) as TUseEffectHookStruct
+	const componentFiber: TFiberNode = __RTCP___.wipFiberOfNowFunctionCompt as TFiberNode
+	const oldHookOfCompt: TUseEffectHookStruct = getHookItem(__RTCP___.hookIndexOfNowFunctionCompt) as TUseEffectHookStruct
 	const hook: TUseEffectHookStruct = {
 		useEffect: true,
 		isupdated: false,
@@ -38,5 +38,5 @@ export function useEffect(callback: () => any, dependences: Array<any> | undefin
 	}
 
 	componentFiber.hooks.push(hook)
-	__RUNTIME_COMPT_PROFILE___.hookIndexOfNowFunctionCompt++
+	__RTCP___.hookIndexOfNowFunctionCompt++
 }

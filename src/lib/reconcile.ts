@@ -1,4 +1,4 @@
-import { __RUNTIME_PROFILE___ } from '../core/runtime'
+import { __RTP___ } from '../core/runtime'
 import { generateFiberStructData } from '../utils/utils'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
@@ -25,7 +25,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 	 */
 	let oldChildFiberOfNowWIPFiber: TFiberNode | null = wipFiber.alternate && wipFiber.alternate.child
 	let prevSiblingFiber: TFiberNode | null = null
-	__RUNTIME_PROFILE___.globalFiberRoot
+	__RTP___.globalFiberRoot
 
 	let i: number = 0
 	for (; i < children.length || oldChildFiberOfNowWIPFiber != null; i++) {
