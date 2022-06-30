@@ -35,7 +35,7 @@ const App = () => {
 }
 
 render(<UseEffectExecSequentialWrapper />, document.querySelector(`#app`))
-// render(<TraverseFiberTree />, document.querySelector(`#app2`))
+// render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()

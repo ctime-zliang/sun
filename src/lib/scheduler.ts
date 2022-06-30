@@ -32,15 +32,14 @@ export function initWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 			 */
 			console.time('commit')
 			deletions.forEach((item: TFiberNode): void => {
-				commit(item as TFiberNode, ENUM_COMMIT_DOM_ACTION.DELETION)
+				commit(item, ENUM_COMMIT_DOM_ACTION.DELETION)
 			})
 			commit(currentRootFiber.child as TFiberNode, ENUM_COMMIT_DOM_ACTION.NORMAL)
 			console.timeEnd('commit')
 			currentRootFiber.dirty = false
 			deletions.length = 0
-			console.log(`Commit.Fiber ===>>>`, currentRootFiber)
 
-			const useEffectHooks = [...__RTP___.unmountedHooksCache, ...__RTP___.mountedHooksCache]
+			const useEffectHooks: Array<any> = [...__RTP___.unmountedHooksCache, ...__RTP___.mountedHooksCache]
 			useEffectHooks.forEach((item: any): void => {
 				if (item.returnCallback instanceof Function) {
 					item.returnCallback.call(undefined)

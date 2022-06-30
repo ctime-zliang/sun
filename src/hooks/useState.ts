@@ -49,7 +49,7 @@ export function useState(initValue: any): TUseStateHook {
 		 * 在下一次执行 window.requestIdleCallback 回调时将重新从根 fiber 节点处理需要更新的应用
 		 *
 		 */
-		;(__RTP___.globalFiberRoot as TFiberNode).current = newRootFiber
+		__RTP___.globalFiberRoot.current = newRootFiber
 		__RTP___.nextWorkUnitFiber = newRootFiber
 	}
 

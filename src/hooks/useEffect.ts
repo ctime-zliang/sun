@@ -26,6 +26,7 @@ export function useEffect(callback: () => any, dependences: Array<any> | undefin
 	}
 	/**
 	 * 对比依赖的变更
+	 * 浅层比较
 	 */
 	if (hook.dependences instanceof Array && dependences instanceof Array) {
 		hook.dependences.forEach((item: any, index: number): void => {
