@@ -1,10 +1,10 @@
 import { __RTP___ } from './core/runtime'
-import { initWorkLoop } from './lib/scheduler'
+import { initAsyncWorkLoop, initSyncWorkLoop } from './lib/scheduler'
 import { generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData } from './utils/utils'
 import { TVDom } from './types/vdom.types'
 import { ENUM_NODE_TYPE } from './config/effect.enum'
 import { TFiberNode } from './types/fiber.types'
-import { globalConfig } from './config/config'
+import { globalConfig, renderProfile } from './config/config'
 
 /**
  * 创建一个全局顶层 fiber: globalFiberRoot
@@ -62,7 +62,7 @@ export function createTextElement(text: string): TVDom {
  * @return {void}
  */
 let renderIndex: number = -1
-export function render(element: TVDom, container: HTMLElement): void {
+export function render(element: TVDom, container: HTMLElement, profile: { [key: string]: any } = {}): void {
 	const nodeName: string = container.nodeName.toLowerCase()
 	/**
 	 * 创建当前渲染应用的根 fiber 节点
@@ -84,6 +84,7 @@ export function render(element: TVDom, container: HTMLElement): void {
 		index: ++renderIndex,
 		root: true,
 	})
+	__RTP___.profileList.push({ ...renderProfile, ...profile })
 	/**
 	 * 存在多个 render 实例时, 需要记录每个 <App /> 对应的 fiber 树(根节点)
 	 */
@@ -96,6 +97,10 @@ export function render(element: TVDom, container: HTMLElement): void {
 		__RTP___.globalFiberRoot.current = rootFiber as TFiberNode
 		__RTP___.nextWorkUnitFiber = rootFiber as TFiberNode
 		// console.log(`AppRoot.Fiber ===>>>`, rootFiber)
-		window.requestIdleCallback(initWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
+		if (__RTP___.profileList[rootFiber.index as number].async) {
+			window.requestIdleCallback(initAsyncWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
+		} else {
+			initSyncWorkLoop()()
+		}
 	}
 }

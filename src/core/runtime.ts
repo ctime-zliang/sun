@@ -3,6 +3,7 @@ import { TFiberNode } from '../types/fiber.types'
 type T__RTP___ = {
 	globalFiberRoot: TFiberNode
 	rootFiberList: Array<TFiberNode>
+	profileList: Array<{ [key: string]: any }>
 	nextWorkUnitFiber: TFiberNode
 	mountedHooksCache: Array<() => any>
 	unmountedHooksCache: Array<() => any>
@@ -10,6 +11,7 @@ type T__RTP___ = {
 export const __RTP___: T__RTP___ = Object.create({
 	globalFiberRoot: undefined,
 	rootFiberList: [],
+	profileList: [],
 	nextWorkUnitFiber: undefined,
 	mountedHooksCache: [],
 	unmountedHooksCache: [],

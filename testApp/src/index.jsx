@@ -34,11 +34,11 @@ const App = () => {
 	)
 }
 
-render(<UseEffectExecSequentialWrapper />, document.querySelector(`#app`))
+render(<ClickAddLongChild />, document.querySelector(`#app`), { async: true })
 // render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
-	// setIntervalAnimateMain()
+	setIntervalAnimateMain()
 	// frameCountPerSecond()
 	// updateInnerContentMain()
 })

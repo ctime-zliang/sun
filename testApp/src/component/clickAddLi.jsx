@@ -58,8 +58,12 @@ export function ClickAddLongChild() {
 			<button onClick={modifyList}>Modify List {String(list.length)}</button>
 			<ul style="border: 1px solid green;">
 				{list.map(item => {
-					return <LiElement item={item} count={count}></LiElement>
-					// return <li>{item}-{count}</li>
+					// return <LiElement item={item} count={count}></LiElement>
+					return (
+						<li>
+							{item}-{count}
+						</li>
+					)
 				})}
 			</ul>
 		</div>
