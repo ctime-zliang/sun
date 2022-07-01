@@ -32,7 +32,7 @@ const App = () => {
 	})
 
 	const number = useMemo(() => {
-		syncBlock()
+		// syncBlock()
 		return count1 * 2
 	}, [])
 

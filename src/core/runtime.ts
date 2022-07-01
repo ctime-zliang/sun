@@ -5,6 +5,7 @@ type T__RTP__ = {
 	rootFiberList: Array<TFiberNode>
 	profileList: Array<{ [key: string]: any }>
 	nextWorkUnitFiber: TFiberNode
+	loopEndFiber: TFiberNode
 	mountedHooksCache: Array<() => any>
 	unmountedHooksCache: Array<() => any>
 }
@@ -13,6 +14,7 @@ export const __RTP__: T__RTP__ = Object.create({
 	rootFiberList: [],
 	profileList: [],
 	nextWorkUnitFiber: undefined,
+	loopEndFiber: undefined,
 	mountedHooksCache: [],
 	unmountedHooksCache: [],
 })

@@ -96,6 +96,7 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 		 */
 		__RTP__.globalFiberRoot.current = rootFiber as TFiberNode
 		__RTP__.nextWorkUnitFiber = rootFiber as TFiberNode
+		__RTP__.loopEndFiber = rootFiber
 		if (__RTP__.profileList[rootFiber.index as number].async) {
 			window.requestIdleCallback(initAsyncWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
 		} else {

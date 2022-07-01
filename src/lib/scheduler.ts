@@ -97,7 +97,7 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 }
 
 export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode | undefined {
-	if (!fiber.type) {
+	if (!fiber.type || !__RTP__.loopEndFiber) {
 		return
 	}
 
@@ -130,6 +130,9 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 	while (fiber) {
 		if (fiber.sibling) {
 			return fiber.sibling
+		}
+		if (fiber === __RTP__.loopEndFiber) {
+			return
 		}
 		fiber = fiber.parent as TFiberNode
 	}
