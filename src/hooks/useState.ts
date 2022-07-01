@@ -1,6 +1,6 @@
 import { TFiberNode } from '../types/fiber.types'
 import { TUseStateHookStruct, TUseStateHook } from '../types/hooks.types'
-import { __RTP__, __RTCP___ } from '../core/runtime'
+import { __RTP__, __RTCP__ } from '../core/runtime'
 import { generateFiberStructData, getRootFiber } from '../utils/utils'
 import { getHookItem } from './hook'
 import { initSyncWorkLoop } from '../lib/scheduler'
@@ -9,9 +9,9 @@ export function useState(initValue: any): TUseStateHook {
 	/**
 	 * 获取当前 hook(s) 所在的函数组件对应的 fiber 节点
 	 */
-	const componentFiber: TFiberNode | undefined = __RTCP___.wipFiberOfNowFunctionCompt
+	const componentFiber: TFiberNode | undefined = __RTCP__.wipFiberOfNowFunctionCompt
 	const rootFiber: TFiberNode = getRootFiber(componentFiber as TFiberNode)
-	const oldHookOfCompt: TUseStateHookStruct = getHookItem(__RTCP___.hookIndexOfNowFunctionCompt) as TUseStateHookStruct
+	const oldHookOfCompt: TUseStateHookStruct = getHookItem(__RTCP__.hookIndexOfNowFunctionCompt) as TUseStateHookStruct
 	const hook: TUseStateHookStruct = {
 		useState: true,
 		state: oldHookOfCompt ? oldHookOfCompt.state : initValue,
@@ -58,7 +58,7 @@ export function useState(initValue: any): TUseStateHook {
 	}
 
 	componentFiber.hooks.push(hook)
-	__RTCP___.hookIndexOfNowFunctionCompt++
+	__RTCP__.hookIndexOfNowFunctionCompt++
 
 	return [hook.state, setState]
 }

@@ -1,4 +1,4 @@
-import { __RTP__, __RTCP___ } from '../core/runtime'
+import { __RTP__, __RTCP__ } from '../core/runtime'
 import { commit } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
@@ -105,8 +105,8 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 		/**
 		 * 对于函数组件, 当前的 fiber 节点即为函数本身
 		 */
-		__RTCP___.wipFiberOfNowFunctionCompt = fiber
-		__RTCP___.hookIndexOfNowFunctionCompt = 0
+		__RTCP__.wipFiberOfNowFunctionCompt = fiber
+		__RTCP__.hookIndexOfNowFunctionCompt = 0
 		/**
 		 * 函数组件
 		 * 		此时 fiber.type 的值即为函数

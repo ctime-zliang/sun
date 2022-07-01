@@ -17,11 +17,11 @@ export const __RTP__: T__RTP__ = Object.create({
 	unmountedHooksCache: [],
 })
 
-type T__RTCP___ = {
+type T__RTCP__ = {
 	hookIndexOfNowFunctionCompt: number
 	wipFiberOfNowFunctionCompt: TFiberNode
 }
-export const __RTCP___: T__RTCP___ = Object.create({
+export const __RTCP__: T__RTCP__ = Object.create({
 	hookIndexOfNowFunctionCompt: 0,
 	wipFiberOfNowFunctionCompt: undefined,
 })

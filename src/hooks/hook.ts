@@ -1,9 +1,9 @@
 import { TUseStateHookStruct, TUseEffectHookStruct, TUseMemoHookStruct } from '../types/hooks.types'
-import { __RTCP___ } from '../core/runtime'
+import { __RTCP__ } from '../core/runtime'
 import { TFiberNode } from '../types/fiber.types'
 
 export function getHookItem(index: number): TUseStateHookStruct | TUseEffectHookStruct | TUseMemoHookStruct | undefined {
-	const alternate: TFiberNode | null = __RTCP___.wipFiberOfNowFunctionCompt?.alternate as TFiberNode
+	const alternate: TFiberNode | null = __RTCP__.wipFiberOfNowFunctionCompt?.alternate as TFiberNode
 	if (!alternate) {
 		return
 	}
