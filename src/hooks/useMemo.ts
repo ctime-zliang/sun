@@ -1,31 +1,36 @@
 import { TFiberNode } from '../types/fiber.types'
-import { TUseEffectHookStruct } from '../types/hooks.types'
+import { TUseMemoHookStruct } from '../types/hooks.types'
 import { __RTP___, __RTCP___ } from '../core/runtime'
 import { getHookItem, setHookUpdate } from './hook'
 
-export function useEffect(callback: () => any, dependences: Array<any> | undefined = undefined): void {
+export function useMemo(callback: () => any, dependences: Array<any> | undefined = undefined): any {
 	/**
 	 * 获取当前 hook(s) 所在的函数组件对应的 fiber 节点
 	 */
 	const componentFiber: TFiberNode = __RTCP___.wipFiberOfNowFunctionCompt as TFiberNode
-	const oldHookOfCompt: TUseEffectHookStruct = getHookItem(__RTCP___.hookIndexOfNowFunctionCompt) as TUseEffectHookStruct
-	const hook: TUseEffectHookStruct = {
-		useEffect: true,
+	const oldHookOfCompt: TUseMemoHookStruct = getHookItem(__RTCP___.hookIndexOfNowFunctionCompt) as TUseMemoHookStruct
+	const hook: TUseMemoHookStruct = {
+		useMemo: true,
 		isupdated: false,
 		dependences: undefined,
 		callback,
-		returnCallback: undefined,
+		returnValue: undefined,
 	}
 	if (!oldHookOfCompt) {
 		hook.isupdated = true
 		hook.dependences = dependences instanceof Array ? Array.from(dependences) : undefined
 	} else {
-		hook.callback = oldHookOfCompt.callback
-		hook.returnCallback = oldHookOfCompt.returnCallback
+		hook.returnValue = oldHookOfCompt.returnValue
 		hook.dependences = oldHookOfCompt.dependences
 	}
 	setHookUpdate(hook, dependences)
 
+	if (hook.isupdated && hook.callback) {
+		hook.returnValue = hook.callback()
+	}
+
 	componentFiber.hooks.push(hook)
 	__RTCP___.hookIndexOfNowFunctionCompt++
+
+	return hook.returnValue
 }

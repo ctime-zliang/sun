@@ -3,7 +3,9 @@ import frameCountPerSecond from './modules/frameCountPerSecond'
 import { setIntervalAnimateMain } from './modules/setIntervalAnimate'
 import { updateInnerContentMain } from './modules/updateElementInnerContent'
 /* ... */
-import Sun, { render, useState, useEffect } from '../../src/index'
+import { syncBlock } from './utils/utils'
+/* ... */
+import Sun, { render, useState, useEffect, useMemo } from '../../src/index'
 import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
 import { TraverseFiberTree } from './component/traverseFiberTree'
 import { UsestateHookIndex, UsestateHookTest } from './component/usestateTest'
@@ -29,9 +31,15 @@ const App = () => {
 		console.log(`************************* App.useEffect 2`)
 	})
 
+	const number = useMemo(() => {
+		syncBlock()
+		return count1 * 2
+	}, [])
+
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
-			{count1}
+			<div>{count1}</div>
+			<div>{number}</div>
 			<ClickAddLi />
 		</div>
 	)

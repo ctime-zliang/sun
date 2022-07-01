@@ -1,5 +1,5 @@
 import { TFiberNode } from '../types/fiber.types'
-import { TUseStateHookStruct, TUseStateHook, TUseStateHookAction } from '../types/hooks.types'
+import { TUseStateHookStruct, TUseStateHook } from '../types/hooks.types'
 import { __RTP___, __RTCP___ } from '../core/runtime'
 import { generateFiberStructData, getRootFiber } from '../utils/utils'
 import { getHookItem } from './hook'
@@ -17,7 +17,7 @@ export function useState(initValue: any): TUseStateHook {
 		state: oldHookOfCompt ? oldHookOfCompt.state : initValue,
 		queue: [],
 	}
-	const actions: TUseStateHookAction = oldHookOfCompt ? oldHookOfCompt.queue : []
+	const actions: Array<() => void> = oldHookOfCompt ? oldHookOfCompt.queue : []
 
 	actions.forEach((item: Function): void => {
 		if (item instanceof Function) {

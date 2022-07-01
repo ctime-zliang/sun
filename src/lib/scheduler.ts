@@ -133,6 +133,4 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 		}
 		fiber = fiber.parent as TFiberNode
 	}
-
-	return
 }

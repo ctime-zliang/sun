@@ -29,3 +29,11 @@ export function intervalAnimate(element: HTMLElement, attr: string, target: numb
 		}
 	}, 16.67)
 }
+
+export function syncBlock(delay: number = 1000): void {
+	const end: number = new Date().getTime() + delay
+	let i: number = 0
+	while (new Date().getTime() < end) {
+		++i
+	}
+}
