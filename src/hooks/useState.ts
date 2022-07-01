@@ -52,7 +52,6 @@ export function useState(initValue: any): TUseStateHook {
 		__RTP__.globalFiberRoot.current = newRootFiber
 		__RTP__.nextWorkUnitFiber = newRootFiber
 		__RTP__.loopEndFiber = newRootFiber
-
 		if (!__RTP__.profileList[newRootFiber.index as number].async) {
 			initSyncWorkLoop()()
 		}
