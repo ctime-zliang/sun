@@ -1,4 +1,4 @@
-import { __RTP___, __RTCP___ } from '../core/runtime'
+import { __RTP__, __RTCP___ } from '../core/runtime'
 import { commit } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
@@ -16,10 +16,10 @@ export function initSyncWorkLoop(): () => void {
 	console.time('syncWorkLoop')
 
 	function workLoop(): void {
-		while (__RTP___.nextWorkUnitFiber) {
-			__RTP___.nextWorkUnitFiber = performUnitWork(__RTP___.nextWorkUnitFiber, deletions) as TFiberNode
+		while (__RTP__.nextWorkUnitFiber) {
+			__RTP__.nextWorkUnitFiber = performUnitWork(__RTP__.nextWorkUnitFiber, deletions) as TFiberNode
 		}
-		if (!__RTP___.nextWorkUnitFiber && __RTP___.globalFiberRoot.current) {
+		if (!__RTP__.nextWorkUnitFiber && __RTP__.globalFiberRoot.current) {
 			console.timeEnd('syncWorkLoop')
 			workEnd(deletions, currentRootFiber)
 			return
@@ -36,11 +36,11 @@ export function initAsyncWorkLoop(): (deadline: TRequestIdleCallbackParams) => v
 
 	function worLoop(deadline: TRequestIdleCallbackParams): void {
 		let shouldYield: boolean = false
-		while (__RTP___.nextWorkUnitFiber && !shouldYield) {
-			__RTP___.nextWorkUnitFiber = performUnitWork(__RTP___.nextWorkUnitFiber, deletions) as TFiberNode
+		while (__RTP__.nextWorkUnitFiber && !shouldYield) {
+			__RTP__.nextWorkUnitFiber = performUnitWork(__RTP__.nextWorkUnitFiber, deletions) as TFiberNode
 			shouldYield = deadline.timeRemaining() < 1
 		}
-		if (!__RTP___.nextWorkUnitFiber && __RTP___.globalFiberRoot.current) {
+		if (!__RTP__.nextWorkUnitFiber && __RTP__.globalFiberRoot.current) {
 			workEnd(deletions, currentRootFiber)
 		}
 		window.requestIdleCallback(worLoop, { timeout: globalConfig.requestIdleCallbackTimeout })
@@ -54,8 +54,8 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 	 * 暂存当前活动的应用的顶层 fiber(rootFiber)
 	 * 清除全局 globalFiberRoot 对该活动应用的 rootFiber 的引用
 	 */
-	currentRootFiber = __RTP___.globalFiberRoot.current as TFiberNode
-	__RTP___.globalFiberRoot.current = undefined
+	currentRootFiber = __RTP__.globalFiberRoot.current as TFiberNode
+	__RTP__.globalFiberRoot.current = undefined
 
 	console.time('commit')
 	deletions.forEach((item: TFiberNode): void => {
@@ -67,32 +67,32 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 	currentRootFiber.dirty = false
 	deletions.length = 0
 
-	const useEffectHooks: Array<any> = [...__RTP___.unmountedHooksCache, ...__RTP___.mountedHooksCache]
+	const useEffectHooks: Array<any> = [...__RTP__.unmountedHooksCache, ...__RTP__.mountedHooksCache]
 	useEffectHooks.forEach((item: any): void => {
 		if (item.returnCallback instanceof Function) {
 			item.returnCallback.call(undefined)
 		}
 	})
-	__RTP___.unmountedHooksCache.length = 0
+	__RTP__.unmountedHooksCache.length = 0
 	/**
 	 * 在组件树全部挂载并视图渲染完毕后的下一个事件循环中执行 useEffect 的回调函数
 	 */
 	window.setTimeout(() => {
-		__RTP___.mountedHooksCache.forEach((item: any): void => {
+		__RTP__.mountedHooksCache.forEach((item: any): void => {
 			if (item.isupdated && item.callback instanceof Function) {
 				item.returnCallback = item.callback.call(undefined)
 			}
 		})
-		__RTP___.mountedHooksCache.length = 0
+		__RTP__.mountedHooksCache.length = 0
 	})
 
 	/**
 	 * 检查并尝试执行下一个实例
 	 */
-	const nextRootFiber: TFiberNode = __RTP___.rootFiberList[(currentRootFiber.index as number) + 1] || undefined
+	const nextRootFiber: TFiberNode = __RTP__.rootFiberList[(currentRootFiber.index as number) + 1] || undefined
 	if (nextRootFiber && nextRootFiber.dirty) {
-		__RTP___.nextWorkUnitFiber = nextRootFiber
-		__RTP___.globalFiberRoot.current = nextRootFiber
+		__RTP__.nextWorkUnitFiber = nextRootFiber
+		__RTP__.globalFiberRoot.current = nextRootFiber
 	}
 }
 

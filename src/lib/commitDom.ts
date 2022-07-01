@@ -1,4 +1,4 @@
-import { __RTP___ } from '../core/runtime'
+import { __RTP__ } from '../core/runtime'
 import { updateDOM, appendChild, removeChild } from './dom'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
@@ -71,7 +71,7 @@ function cacheFunctionComponentUseEffectHooks(fiber: TFiberNode, action: string)
 	if (action === ENUM_COMMIT_DOM_ACTION.DELETION && !fiber.dchm) {
 		fiber.hooks.forEach((item: any): void => {
 			if (item.useEffect) {
-				__RTP___.unmountedHooksCache.push(item)
+				__RTP__.unmountedHooksCache.push(item)
 			}
 		})
 		fiber.dchm = true
@@ -84,7 +84,7 @@ function cacheFunctionComponentUseEffectHooks(fiber: TFiberNode, action: string)
 	if (!fiber.chm) {
 		fiber.hooks.forEach((item: any): void => {
 			if (item.useEffect && item.isupdated) {
-				__RTP___.mountedHooksCache.push(item)
+				__RTP__.mountedHooksCache.push(item)
 			}
 		})
 		fiber.chm = true

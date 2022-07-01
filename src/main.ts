@@ -1,4 +1,4 @@
-import { __RTP___ } from './core/runtime'
+import { __RTP__ } from './core/runtime'
 import { initAsyncWorkLoop, initSyncWorkLoop } from './lib/scheduler'
 import { generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData } from './utils/utils'
 import { TVDom } from './types/vdom.types'
@@ -15,7 +15,7 @@ import { globalConfig, renderProfile } from './config/config'
  * 		当多个 <App /> 实例存在且某些实例发生更新时
  * 		globalFiberRoot.current 将依次指向这些需要更新的 <App /> 对应的 fiber 树
  */
-__RTP___.globalFiberRoot = generateRootFiberStructData() as TFiberNode
+__RTP__.globalFiberRoot = generateRootFiberStructData() as TFiberNode
 
 /**
  * @description 创建元素 vDom
@@ -84,29 +84,29 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 		index: ++renderIndex,
 		root: true,
 	})
-	__RTP___.profileList.push({ ...renderProfile, ...profile })
+	__RTP__.profileList.push({ ...renderProfile, ...profile })
 	/**
 	 * 存在多个 render 实例时, 需要记录每个 <App /> 对应的 fiber 树(根节点)
 	 */
-	__RTP___.rootFiberList.push(rootFiber)
-	if (__RTP___.globalFiberRoot && !__RTP___.globalFiberRoot.current) {
+	__RTP__.rootFiberList.push(rootFiber)
+	if (__RTP__.globalFiberRoot && !__RTP__.globalFiberRoot.current) {
 		/**
 		 * 首次 render 时将全局顶层的 globalFiberRoot 指向当前需要渲染的 <App /> 根 fiber 节点
 		 * 并将该 <App /> 对应的 fiber 树标记为 work fiber 节点树
 		 */
-		__RTP___.globalFiberRoot.current = rootFiber as TFiberNode
-		__RTP___.nextWorkUnitFiber = rootFiber as TFiberNode
-		if (__RTP___.profileList[rootFiber.index as number].async) {
+		__RTP__.globalFiberRoot.current = rootFiber as TFiberNode
+		__RTP__.nextWorkUnitFiber = rootFiber as TFiberNode
+		if (__RTP__.profileList[rootFiber.index as number].async) {
 			window.requestIdleCallback(initAsyncWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
 		} else {
 			initSyncWorkLoop()()
 		}
 	}
 
-	Object.defineProperty(window, '__RTP___', {
+	Object.defineProperty(window, '__RTP__', {
 		enumerable: false,
 		configurable: false,
 		writable: false,
-		value: __RTP___,
+		value: __RTP__,
 	})
 }

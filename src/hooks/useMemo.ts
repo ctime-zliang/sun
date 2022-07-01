@@ -1,6 +1,6 @@
 import { TFiberNode } from '../types/fiber.types'
 import { TUseMemoHookStruct } from '../types/hooks.types'
-import { __RTP___, __RTCP___ } from '../core/runtime'
+import { __RTP__, __RTCP___ } from '../core/runtime'
 import { getHookItem, setHookUpdate } from './hook'
 
 export function useMemo(callback: () => any, dependences: Array<any> | undefined = undefined): any {

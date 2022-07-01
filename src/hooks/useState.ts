@@ -1,6 +1,6 @@
 import { TFiberNode } from '../types/fiber.types'
 import { TUseStateHookStruct, TUseStateHook } from '../types/hooks.types'
-import { __RTP___, __RTCP___ } from '../core/runtime'
+import { __RTP__, __RTCP___ } from '../core/runtime'
 import { generateFiberStructData, getRootFiber } from '../utils/utils'
 import { getHookItem } from './hook'
 import { initSyncWorkLoop } from '../lib/scheduler'
@@ -44,15 +44,15 @@ export function useState(initValue: any): TUseStateHook {
 			index: rootFiber.index,
 			root: true,
 		})
-		__RTP___.rootFiberList.splice(rootFiber.index as number, 1, newRootFiber)
+		__RTP__.rootFiberList.splice(rootFiber.index as number, 1, newRootFiber)
 		/**
 		 * 将重建的 <App /> 应用的根 fiber 节点标记引用
 		 * 在下一次执行 window.requestIdleCallback 回调时将重新从根 fiber 节点处理需要更新的应用
 		 */
-		__RTP___.globalFiberRoot.current = newRootFiber
-		__RTP___.nextWorkUnitFiber = newRootFiber
+		__RTP__.globalFiberRoot.current = newRootFiber
+		__RTP__.nextWorkUnitFiber = newRootFiber
 
-		if (!__RTP___.profileList[newRootFiber.index as number].async) {
+		if (!__RTP__.profileList[newRootFiber.index as number].async) {
 			initSyncWorkLoop()()
 		}
 	}
