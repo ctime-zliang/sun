@@ -3,27 +3,26 @@ import Sun, { useState, useEffect } from '@/'
 let len = 0
 export function ClickAddLi() {
 	console.log(`Component: ClickAddLi`)
-	const [list, setList] = useState([1])
+
+	const [list, setList] = useState([])
 	const modifyList = () => {
 		const array = []
 		len++
 		for (let i = 0; i < len; i++) {
-			array.push(i)
+			array.push(i + 1)
 		}
 		setList(array)
 	}
+	useEffect(() => {
+		console.log(list)
+	}, [])
+
 	return (
 		<div className="row-view">
-			<article onClick={modifyList}>Modify List {list.length}</article>
+			<button onClick={modifyList}>Add List {list.length}</button>
 			<main>
-				<p>Initial Li</p>
 				{list.map((item, index) => {
-					return (
-						<p>
-							<div>{item}</div>
-							<div>{item}</div>
-						</p>
-					)
+					return <div>List {item}</div>
 				})}
 			</main>
 		</div>
@@ -43,6 +42,8 @@ function LiElement(props) {
 }
 let count = 0
 export function ClickAddLongChild() {
+	console.log(`Component: ClickAddLongChild`)
+
 	const [list, setList] = useState([])
 	const modifyList = () => {
 		const array = []

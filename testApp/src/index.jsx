@@ -11,6 +11,8 @@ import { Outer, Child1 } from './component/propsTest'
 import { UseEffectExecSequentialWrapper } from './component/useEffectExecSequential'
 
 const App = () => {
+	console.log(`Component: App`)
+
 	const [count1, setCount1] = useState(0)
 	const setCountAction1 = () => {
 		setCount1(state => {
@@ -19,9 +21,9 @@ const App = () => {
 	}
 	useEffect(() => {
 		console.log(`************************* App.useEffect 1`)
-		setCount1(state => {
-			return state + 1
-		})
+		// setCount1(state => {
+		// 	return state + 1
+		// })
 	}, [])
 	useEffect(() => {
 		console.log(`************************* App.useEffect 2`)
@@ -30,15 +32,16 @@ const App = () => {
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
 			{count1}
+			<ClickAddLi />
 		</div>
 	)
 }
 
-render(<ClickAddLongChild />, document.querySelector(`#app`), { async: true })
+render(<App />, document.querySelector(`#app`), { async: true })
 // render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
-	setIntervalAnimateMain()
+	// setIntervalAnimateMain()
 	// frameCountPerSecond()
 	// updateInnerContentMain()
 })

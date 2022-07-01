@@ -96,11 +96,17 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 		 */
 		__RTP___.globalFiberRoot.current = rootFiber as TFiberNode
 		__RTP___.nextWorkUnitFiber = rootFiber as TFiberNode
-		// console.log(`AppRoot.Fiber ===>>>`, rootFiber)
 		if (__RTP___.profileList[rootFiber.index as number].async) {
 			window.requestIdleCallback(initAsyncWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
 		} else {
 			initSyncWorkLoop()()
 		}
 	}
+
+	Object.defineProperty(window, '__RTP___', {
+		enumerable: false,
+		configurable: false,
+		writable: false,
+		value: __RTP___,
+	})
 }
