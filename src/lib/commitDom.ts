@@ -60,7 +60,7 @@ function handleDom(fiber: TFiberNode, tag: any): void {
 	}
 }
 
-function cacheFunctionComponentHooks(fiber: TFiberNode, action: string): void {
+function cacheFunctionComponentUseEffectHooks(fiber: TFiberNode, action: string): void {
 	if (!isFunctionComponent(fiber)) {
 		return
 	}
@@ -117,7 +117,7 @@ export function commit(fiber: TFiberNode, action: string): void {
 				while (nowFunctionParentFiber && !(nowFunctionParentFiber.type instanceof Function)) {
 					nowFunctionParentFiber = nowFunctionParentFiber.parent as TFiberNode
 				}
-				cacheFunctionComponentHooks(nowFunctionParentFiber, action)
+				cacheFunctionComponentUseEffectHooks(nowFunctionParentFiber, action)
 			}
 			if (current.dirty) {
 				handleDom(current, '2')
@@ -136,9 +136,9 @@ export function commit(fiber: TFiberNode, action: string): void {
 			/**
 			 * 如果向上查找过程中遇到了函数组件对应的 fiber 节点, 缓存该函数组件下的所有 hooks
 			 */
-			cacheFunctionComponentHooks(current, action)
+			cacheFunctionComponentUseEffectHooks(current, action)
 			if (current.parent === root) {
-				cacheFunctionComponentHooks(current, action)
+				cacheFunctionComponentUseEffectHooks(current, action)
 				return
 			}
 			current = current.parent as TFiberNode
@@ -146,7 +146,7 @@ export function commit(fiber: TFiberNode, action: string): void {
 		/**
 		 * 如果被找到的目标 fiber 节点是函数组件对应的 fiber 节点, 缓存该函数组件下的所有 hooks
 		 */
-		cacheFunctionComponentHooks(current, action)
+		cacheFunctionComponentUseEffectHooks(current, action)
 		current = current.sibling
 	}
 }
