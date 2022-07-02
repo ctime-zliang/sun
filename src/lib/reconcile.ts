@@ -7,7 +7,6 @@ import { TVDom } from '../types/vdom.types'
 function createNewChildFiber() {}
 
 export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode {
-	debugger
 	/**
 	 * 获取当前 fiber 节点下所有子节点的 vDom 列表
 	 * 		fiber 节点的 child 属性将指向该节点的第一个子 fiber 节点
@@ -28,7 +27,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 	 */
 	let oldChildFiberOfNowWIPFiber: TFiberNode | null = wipFiber.alternate && wipFiber.alternate.child
 	let prevSiblingFiber: TFiberNode | null = null
-
+	// debugger
 	let i: number = 0
 	for (; i < children.length || oldChildFiberOfNowWIPFiber != null; i++) {
 		const childVDomItem: TVDom = children[i]
@@ -46,26 +45,28 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 			}
 			continue
 		}
-		let sameType: boolean = false
-		const __triggerUpdate: boolean = !!(oldChildFiberOfNowWIPFiber && oldChildFiberOfNowWIPFiber.__triggerUpdate)
-		if (!oldChildFiberOfNowWIPFiber) {
-			sameType = false
-		} else {
-			sameType = childVDomItem.type == oldChildFiberOfNowWIPFiber.type
-		}
-		if (!__RTP__.triggerUpdateRootFiber && oldChildFiberOfNowWIPFiber && oldChildFiberOfNowWIPFiber.type instanceof Function) {
-			console.log(`===========================`)
-			newChildFiber = generateFiberStructData({
-				stateNode: oldChildFiberOfNowWIPFiber.stateNode,
-				type: oldChildFiberOfNowWIPFiber.type,
-				props: oldChildFiberOfNowWIPFiber.props,
-				parent: wipFiber,
-				dirty: false,
-				alternate: null,
-				effectTag: ENUM_EFFECT_TAG.PLACEMENT,
-				hooks: oldChildFiberOfNowWIPFiber.hooks,
-			})
-		} else if (sameType) {
+		const sameType: boolean = !!(oldChildFiberOfNowWIPFiber && childVDomItem.type == oldChildFiberOfNowWIPFiber.type)
+		const triggerUpdate: boolean = !!(oldChildFiberOfNowWIPFiber && oldChildFiberOfNowWIPFiber.triggerUpdate)
+		// if (!__RTP__.updateRangeStartFiber && oldChildFiberOfNowWIPFiber && oldChildFiberOfNowWIPFiber.type instanceof Function) {
+		// 	console.log(`===========================`)
+		// 	newChildFiber = generateFiberStructData({
+		// 		stateNode: oldChildFiberOfNowWIPFiber.stateNode,
+		// 		type: oldChildFiberOfNowWIPFiber.type,
+		// 		props: oldChildFiberOfNowWIPFiber.props,
+		// 		parent: wipFiber,
+		// 		dirty: false,
+		// 		alternate: null,
+		// 		effectTag: ENUM_EFFECT_TAG.NO_EFFECT,
+		// 		hooks: oldChildFiberOfNowWIPFiber.hooks,
+		// 	})
+		// } else
+		// if (__RTP__.updateRangeStartFiber) {
+		// 	console.log(oldChildFiberOfNowWIPFiber)
+		// 	if (!oldChildFiberOfNowWIPFiber) {
+		// 		debugger
+		// 	}
+		// }
+		if (sameType) {
 			/**
 			 * 之前存在的节点, 需要更新
 			 * 		通过该层的 vDom 重建对应的 fiber 节点
@@ -78,7 +79,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 				dirty: true,
 				alternate: oldChildFiberOfNowWIPFiber,
 				effectTag: ENUM_EFFECT_TAG.UPDATE,
-				__triggerUpdate,
+				triggerUpdate,
 				/* 需要将 hooks 置空 */
 				hooks: [],
 			})

@@ -7,8 +7,7 @@ type T__RTP__ = {
 	nextWorkUnitFiber: TFiberNode
 	mountedHooksCache: Array<() => any>
 	unmountedHooksCache: Array<() => any>
-	vertical: boolean
-	triggerUpdateRootFiber: TFiberNode | null
+	updateRangeStartFiber: TFiberNode | null
 }
 export const __RTP__: T__RTP__ = Object.create({
 	globalFiberRoot: null,
@@ -17,8 +16,7 @@ export const __RTP__: T__RTP__ = Object.create({
 	nextWorkUnitFiber: null,
 	mountedHooksCache: [],
 	unmountedHooksCache: [],
-	vertical: false,
-	triggerUpdateRootFiber: null,
+	updateRangeStartFiber: null,
 })
 
 type T__RTCP__ = {

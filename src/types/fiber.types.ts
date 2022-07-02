@@ -17,11 +17,11 @@ export type TFiberNode = {
 	effectTag: string
 	key: string | undefined
 	dirty: boolean
+	triggerUpdate: boolean
 	hooks: Array<TUseStateHookStruct | TUseEffectHookStruct | TUseMemoHookStruct>
 	root?: boolean
 	index?: number
 	current?: TFiberNode | null
 	__chm: boolean
 	__dchm: boolean
-	__triggerUpdate: boolean
 }

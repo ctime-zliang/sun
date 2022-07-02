@@ -1,10 +1,10 @@
 import Sun, { useState, useEffect } from '@/'
 
-let len = 0
+let len = 2
 export function ClickAddLi() {
 	console.log(`Component: ClickAddLi`)
 
-	const [list, setList] = useState([])
+	const [list, setList] = useState([1, 2])
 	const modifyList = () => {
 		const array = []
 		len++

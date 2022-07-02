@@ -57,14 +57,14 @@ export function generateInitialFiberStructData(): TFiberNode {
 		hooks: [],
 		// 是否需要更新 fiber 节点
 		dirty: false,
+		// 触发更新的标记位
+		triggerUpdate: false,
 		/* 特殊标记位 */
 		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
 		__chm: false,
 		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
 		// 针对需要删除的 fiber 节点
 		__dchm: false,
-		// 触发更新的标记位
-		__triggerUpdate: false,
 	}
 }
 

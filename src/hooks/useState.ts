@@ -29,7 +29,7 @@ export function useState(initValue: any): TUseStateHook {
 
 	const setState: (action: any) => void = (action: any): void => {
 		hook.queue.push(action)
-		componentFiber.__triggerUpdate = true
+		componentFiber.triggerUpdate = true
 		/**
 		 * 重新创建 <App /> 应用的根 fiber 节点
 		 */

@@ -84,7 +84,7 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 		index: ++renderIndex,
 		root: true,
 	})
-	rootFiber.__triggerUpdate = true
+	rootFiber.triggerUpdate = true
 	__RTP__.profileList.push({ ...renderProfile, ...profile })
 	/**
 	 * 存在多个 render 实例时, 需要记录每个 <App /> 对应的 fiber 树(根节点)
