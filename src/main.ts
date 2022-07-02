@@ -1,4 +1,4 @@
-import { __RTP__ } from './core/runtime'
+import { __RTP__, __RTCP__ } from './core/runtime'
 import { initAsyncWorkLoop, initSyncWorkLoop } from './lib/scheduler'
 import { generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData } from './utils/utils'
 import { TVDom } from './types/vdom.types'
@@ -84,6 +84,7 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 		index: ++renderIndex,
 		root: true,
 	})
+	rootFiber.__triggerUpdate = true
 	__RTP__.profileList.push({ ...renderProfile, ...profile })
 	/**
 	 * 存在多个 render 实例时, 需要记录每个 <App /> 对应的 fiber 树(根节点)
@@ -96,7 +97,6 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 		 */
 		__RTP__.globalFiberRoot.current = rootFiber as TFiberNode
 		__RTP__.nextWorkUnitFiber = rootFiber as TFiberNode
-		__RTP__.loopEndFiber = rootFiber
 		if (__RTP__.profileList[rootFiber.index as number].async) {
 			window.requestIdleCallback(initAsyncWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
 		} else {
@@ -104,10 +104,6 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 		}
 	}
 
-	Object.defineProperty(window, '__RTP__', {
-		enumerable: false,
-		configurable: false,
-		writable: false,
-		value: __RTP__,
-	})
+	window.__RTP__ = __RTP__
+	window.__RTCP__ = __RTCP__
 }

@@ -9,7 +9,7 @@ export function useState(initValue: any): TUseStateHook {
 	/**
 	 * 获取当前 hook(s) 所在的函数组件对应的 fiber 节点
 	 */
-	const componentFiber: TFiberNode | undefined = __RTCP__.wipFiberOfNowFunctionCompt
+	const componentFiber: TFiberNode = __RTCP__.wipFiberOfNowFunctionCompt as TFiberNode
 	const rootFiber: TFiberNode = getRootFiber(componentFiber as TFiberNode)
 	const oldHookOfCompt: TUseStateHookStruct = getHookItem(__RTCP__.hookIndexOfNowFunctionCompt) as TUseStateHookStruct
 	const hook: TUseStateHookStruct = {
@@ -29,6 +29,7 @@ export function useState(initValue: any): TUseStateHook {
 
 	const setState: (action: any) => void = (action: any): void => {
 		hook.queue.push(action)
+		componentFiber.__triggerUpdate = true
 		/**
 		 * 重新创建 <App /> 应用的根 fiber 节点
 		 */
@@ -51,7 +52,6 @@ export function useState(initValue: any): TUseStateHook {
 		 */
 		__RTP__.globalFiberRoot.current = newRootFiber
 		__RTP__.nextWorkUnitFiber = newRootFiber
-		__RTP__.loopEndFiber = newRootFiber
 		if (!__RTP__.profileList[newRootFiber.index as number].async) {
 			initSyncWorkLoop()()
 		}

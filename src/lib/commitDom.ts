@@ -68,26 +68,26 @@ function cacheFunctionComponentUseEffectHooks(fiber: TFiberNode, action: string)
 	 * 对于需要删除的 fiber 节点
 	 * 缓存其 useEffect hooks
 	 */
-	if (action === ENUM_COMMIT_DOM_ACTION.DELETION && !fiber.dchm) {
+	if (action === ENUM_COMMIT_DOM_ACTION.DELETION && !fiber.__dchm) {
 		fiber.hooks.forEach((item: any): void => {
 			if (item.useEffect) {
 				__RTP__.unmountedHooksCache.push(item)
 			}
 		})
-		fiber.dchm = true
+		fiber.__dchm = true
 		return
 	}
 	/**
 	 * 其他 fiber 节点
 	 * 缓存其 useEffect hooks
 	 */
-	if (!fiber.chm) {
+	if (!fiber.__chm) {
 		fiber.hooks.forEach((item: any): void => {
 			if (item.useEffect && item.isupdated) {
 				__RTP__.mountedHooksCache.push(item)
 			}
 		})
-		fiber.chm = true
+		fiber.__chm = true
 	}
 }
 

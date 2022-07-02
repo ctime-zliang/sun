@@ -39,7 +39,7 @@ const App = () => {
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
 			<div>{count1}</div>
-			<div>{number}</div>
+			{/* <div>{number}</div> */}
 			<ClickAddLi />
 		</div>
 	)

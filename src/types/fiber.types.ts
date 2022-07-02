@@ -6,10 +6,8 @@ export type TFiberNode = {
 	// FunctionComponent: Function
 	// ClassComponent: Function,
 	// HostComponent: any
-	/* ... */
 	type: Function | string | null
 	props: TVDom | any
-	/* ... */
 	// elementType: string | undefined
 	stateNode: TExtendHTMLDOMElment | null
 	child: TFiberNode | null
@@ -19,12 +17,11 @@ export type TFiberNode = {
 	effectTag: string
 	key: string | undefined
 	dirty: boolean
-	chm: boolean
-	dchm: boolean
-	/* ... */
 	hooks: Array<TUseStateHookStruct | TUseEffectHookStruct | TUseMemoHookStruct>
-	/* ... */
 	root?: boolean
 	index?: number
 	current?: TFiberNode | null
+	__chm: boolean
+	__dchm: boolean
+	__triggerUpdate: boolean
 }

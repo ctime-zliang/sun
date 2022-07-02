@@ -37,7 +37,6 @@ export function generateInitialFiberStructData(): TFiberNode {
 		type: null,
 		// fiber 节点的 vDom 属性
 		props: {},
-		/* ... */
 		// 标记当前 Fiber 节点对应的 DOM 节点类型
 		// elementType: undefined,
 		// 当前 Fiber 节点对应的真实 DOM
@@ -52,17 +51,20 @@ export function generateInitialFiberStructData(): TFiberNode {
 		alternate: null,
 		// fiber 节点的更新状态
 		effectTag: ENUM_EFFECT_TAG.NO_EFFECT,
+		// 索引键
 		key: undefined,
-		// 是否需要更新 fiber 节点
-		dirty: false,
-		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
-		chm: false,
-		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
-		// 针对需要删除的 fiber 节点
-		dchm: false,
-		/* ... */
 		// hooks
 		hooks: [],
+		// 是否需要更新 fiber 节点
+		dirty: false,
+		/* 特殊标记位 */
+		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
+		__chm: false,
+		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
+		// 针对需要删除的 fiber 节点
+		__dchm: false,
+		// 触发更新的标记位
+		__triggerUpdate: false,
 	}
 }
 

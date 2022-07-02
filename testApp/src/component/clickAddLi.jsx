@@ -13,9 +13,6 @@ export function ClickAddLi() {
 		}
 		setList(array)
 	}
-	useEffect(() => {
-		console.log(list)
-	}, [])
 
 	return (
 		<div className="row-view">

@@ -55,7 +55,13 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 	 * 清除全局 globalFiberRoot 对该活动应用的 rootFiber 的引用
 	 */
 	currentRootFiber = __RTP__.globalFiberRoot.current as TFiberNode
+	/**
+	 * 复位
+	 */
 	__RTP__.globalFiberRoot.current = undefined
+	__RTP__.triggerUpdateRootFiber = null
+	__RTCP__.hookIndexOfNowFunctionCompt = -1
+	__RTCP__.wipFiberOfNowFunctionCompt = null
 
 	console.time('commit')
 	deletions.forEach((item: TFiberNode): void => {
@@ -86,6 +92,8 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 		__RTP__.mountedHooksCache.length = 0
 	})
 
+	console.log(__RTP__)
+
 	/**
 	 * 检查并尝试执行下一个实例
 	 */
@@ -97,24 +105,31 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 }
 
 export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode | undefined {
-	if (!fiber.type || !__RTP__.loopEndFiber) {
+	debugger
+	if (!fiber.type) {
 		return
 	}
 
+	if (!__RTP__.triggerUpdateRootFiber && fiber.__triggerUpdate) {
+		__RTP__.triggerUpdateRootFiber = fiber
+	}
+
 	if (isFunctionComponent(fiber)) {
-		/**
-		 * 对于函数组件, 当前的 fiber 节点即为函数本身
-		 */
-		__RTCP__.wipFiberOfNowFunctionCompt = fiber
-		__RTCP__.hookIndexOfNowFunctionCompt = 0
-		/**
-		 * 函数组件
-		 * 		此时 fiber.type 的值即为函数
-		 * 		在编译后的代码中, 函数内的 JSX 将被编译成 createElement/createTextElement 的嵌套调用
-		 * 		因此执行函数将返回一系列 vDom 嵌套对象
-		 */
-		const childrenVDomItems: Array<TVDom> = [(fiber.type as Function).call(undefined, fiber.props)]
-		fiber.props.children = childrenVDomItems
+		if (!!__RTP__.triggerUpdateRootFiber) {
+			/**
+			 * 对于函数组件, 当前的 fiber 节点即为函数本身
+			 */
+			__RTCP__.wipFiberOfNowFunctionCompt = fiber
+			__RTCP__.hookIndexOfNowFunctionCompt = 0
+			/**
+			 * 函数组件
+			 * 		此时 fiber.type 的值即为函数
+			 * 		在编译后的代码中, 函数内的 JSX 将被编译成 createElement/createTextElement 的嵌套调用
+			 * 		因此执行函数将返回一系列 vDom 嵌套对象
+			 */
+			const childrenVDomItems: Array<TVDom> = [(fiber.type as Function).call(undefined, fiber.props)]
+			fiber.props.children = childrenVDomItems
+		}
 		reconcileChilren(fiber, deletions)
 	} else {
 		if (!fiber.stateNode) {
@@ -122,6 +137,8 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 		}
 		reconcileChilren(fiber, deletions)
 	}
+
+	fiber.__triggerUpdate = false
 
 	if (fiber.child) {
 		return fiber.child
@@ -131,8 +148,8 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 		if (fiber.sibling) {
 			return fiber.sibling
 		}
-		if (fiber === __RTP__.loopEndFiber) {
-			return
+		if (__RTP__.triggerUpdateRootFiber === fiber) {
+			__RTP__.triggerUpdateRootFiber = null
 		}
 		fiber = fiber.parent as TFiberNode
 	}

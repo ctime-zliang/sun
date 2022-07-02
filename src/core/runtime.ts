@@ -5,25 +5,27 @@ type T__RTP__ = {
 	rootFiberList: Array<TFiberNode>
 	profileList: Array<{ [key: string]: any }>
 	nextWorkUnitFiber: TFiberNode
-	loopEndFiber: TFiberNode
 	mountedHooksCache: Array<() => any>
 	unmountedHooksCache: Array<() => any>
+	vertical: boolean
+	triggerUpdateRootFiber: TFiberNode | null
 }
 export const __RTP__: T__RTP__ = Object.create({
-	globalFiberRoot: undefined,
+	globalFiberRoot: null,
 	rootFiberList: [],
 	profileList: [],
-	nextWorkUnitFiber: undefined,
-	loopEndFiber: undefined,
+	nextWorkUnitFiber: null,
 	mountedHooksCache: [],
 	unmountedHooksCache: [],
+	vertical: false,
+	triggerUpdateRootFiber: null,
 })
 
 type T__RTCP__ = {
 	hookIndexOfNowFunctionCompt: number
-	wipFiberOfNowFunctionCompt: TFiberNode
+	wipFiberOfNowFunctionCompt: TFiberNode | null
 }
 export const __RTCP__: T__RTCP__ = Object.create({
-	hookIndexOfNowFunctionCompt: 0,
-	wipFiberOfNowFunctionCompt: undefined,
+	hookIndexOfNowFunctionCompt: -1,
+	wipFiberOfNowFunctionCompt: null,
 })
