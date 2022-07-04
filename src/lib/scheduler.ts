@@ -1,6 +1,6 @@
 import { __RTP__, __RTCP__ } from '../core/runtime'
 import { commit } from './commitDom'
-import { reconcileChilren } from './reconcile'
+import { reconcileChilren, reconcileSelf } from './reconcile'
 import { createDOM } from './dom'
 import { isFunctionComponent } from '../utils/utils'
 import { TFiberNode } from '../types/fiber.types'
@@ -116,42 +116,39 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 
 	if (isFunctionComponent(fiber)) {
 		if (!!__RTP__.updateRangeStartFiber) {
+			/**
+			 * 对于函数组件, 当前的 fiber 节点即为函数本身
+			 */
+			__RTCP__.wipFiberOfNowFunctionCompt = fiber
+			__RTCP__.hookIndexOfNowFunctionCompt = 0
+			/**
+			 * 函数组件
+			 * 		此时 fiber.type 的值即为函数
+			 * 		在编译后的代码中, 函数内的 JSX 将被编译成 createElement/createTextElement 的嵌套调用
+			 * 		因此执行函数将返回一系列 vDom 嵌套对象
+			 */
+			const childrenVDomItems: Array<TVDom> = [(fiber.type as Function).call(undefined, fiber.props)]
+			fiber.props.children = childrenVDomItems
 			// debugger
-			console.log('function run', fiber.type)
+			console.log('function run -', fiber.type)
 		} else {
-			console.log('function passs', fiber.type)
+			reconcileSelf(fiber)
+			console.log('function passs -', fiber.type)
 			// debugger
 		}
-		// if (!!__RTP__.updateRangeStartFiber) {
-		// 	/**
-		// 	 * 对于函数组件, 当前的 fiber 节点即为函数本身
-		// 	 */
-		// 	__RTCP__.wipFiberOfNowFunctionCompt = fiber
-		// 	__RTCP__.hookIndexOfNowFunctionCompt = 0
-		// 	/**
-		// 	 * 函数组件
-		// 	 * 		此时 fiber.type 的值即为函数
-		// 	 * 		在编译后的代码中, 函数内的 JSX 将被编译成 createElement/createTextElement 的嵌套调用
-		// 	 * 		因此执行函数将返回一系列 vDom 嵌套对象
-		// 	 */
-		// 	const childrenVDomItems: Array<TVDom> = [(fiber.type as Function).call(undefined, fiber.props)]
-		// 	fiber.props.children = childrenVDomItems
-		// } else {
-		// 	debugger
-		// }
-		/**
-		 * 对于函数组件, 当前的 fiber 节点即为函数本身
-		 */
-		__RTCP__.wipFiberOfNowFunctionCompt = fiber
-		__RTCP__.hookIndexOfNowFunctionCompt = 0
-		/**
-		 * 函数组件
-		 * 		此时 fiber.type 的值即为函数
-		 * 		在编译后的代码中, 函数内的 JSX 将被编译成 createElement/createTextElement 的嵌套调用
-		 * 		因此执行函数将返回一系列 vDom 嵌套对象
-		 */
-		const childrenVDomItems: Array<TVDom> = [(fiber.type as Function).call(undefined, fiber.props)]
-		fiber.props.children = childrenVDomItems
+		// /**
+		//  * 对于函数组件, 当前的 fiber 节点即为函数本身
+		//  */
+		// __RTCP__.wipFiberOfNowFunctionCompt = fiber
+		// __RTCP__.hookIndexOfNowFunctionCompt = 0
+		// /**
+		//  * 函数组件
+		//  * 		此时 fiber.type 的值即为函数
+		//  * 		在编译后的代码中, 函数内的 JSX 将被编译成 createElement/createTextElement 的嵌套调用
+		//  * 		因此执行函数将返回一系列 vDom 嵌套对象
+		//  */
+		// const childrenVDomItems: Array<TVDom> = [(fiber.type as Function).call(undefined, fiber.props)]
+		// fiber.props.children = childrenVDomItems
 		reconcileChilren(fiber, deletions)
 	} else {
 		if (!fiber.stateNode) {

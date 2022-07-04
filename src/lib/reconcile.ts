@@ -4,9 +4,25 @@ import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TVDom } from '../types/vdom.types'
 
-function createNewChildFiber() {}
+export function reconcileSelf(fiber: TFiberNode): void {
+	const alternate: TFiberNode = fiber.alternate as TFiberNode
+	if (alternate) {
+		alternate.alternate = null
+		/* ... */
+		fiber.child = alternate.child
+		fiber.effectTag = alternate.effectTag
+		fiber.hooks = alternate.hooks
+		fiber.key = alternate.key
+		fiber.parent = alternate.parent
+		fiber.props = alternate.props
+		fiber.triggerUpdate = alternate.triggerUpdate
+		fiber.type = alternate.type
+		fiber.__chm = alternate.__chm
+		fiber.__dchm = alternate.__dchm
+	}
+}
 
-export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode {
+export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNode>): void {
 	/**
 	 * 获取当前 fiber 节点下所有子节点的 vDom 列表
 	 * 		fiber 节点的 child 属性将指向该节点的第一个子 fiber 节点
@@ -130,5 +146,4 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 		}
 		prevSiblingFiber = newChildFiber
 	}
-	return wipFiber
 }
