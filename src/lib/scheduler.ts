@@ -117,7 +117,9 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 	if (isFunctionComponent(fiber)) {
 		if (!!__RTP__.updateRangeStartFiber) {
 			// debugger
+			console.log('function run', fiber.type)
 		} else {
+			console.log('function passs', fiber.type)
 			// debugger
 		}
 		// if (!!__RTP__.updateRangeStartFiber) {
