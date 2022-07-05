@@ -7,18 +7,21 @@ import { TVDom } from '../types/vdom.types'
 export function reconcileSelf(fiber: TFiberNode): void {
 	const alternate: TFiberNode = fiber.alternate as TFiberNode
 	if (alternate) {
-		alternate.alternate = null
-		/* ... */
 		fiber.child = alternate.child
 		fiber.effectTag = alternate.effectTag
 		fiber.hooks = alternate.hooks
 		fiber.key = alternate.key
-		fiber.parent = alternate.parent
+		// fiber.parent = alternate.parent
 		fiber.props = alternate.props
 		fiber.triggerUpdate = alternate.triggerUpdate
 		fiber.type = alternate.type
 		fiber.__chm = alternate.__chm
 		fiber.__dchm = alternate.__dchm
+		if (fiber.alternate) {
+			fiber.alternate.alternate = null
+		}
+		//@ts-ignore
+		fiber.__aa = 1
 	}
 }
 
@@ -43,7 +46,6 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 	 */
 	let oldChildFiberOfNowWIPFiber: TFiberNode | null = wipFiber.alternate && wipFiber.alternate.child
 	let prevSiblingFiber: TFiberNode | null = null
-	// debugger
 	let i: number = 0
 	for (; i < children.length || oldChildFiberOfNowWIPFiber != null; i++) {
 		const childVDomItem: TVDom = children[i]
@@ -63,23 +65,9 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 		}
 		const sameType: boolean = !!(oldChildFiberOfNowWIPFiber && childVDomItem.type == oldChildFiberOfNowWIPFiber.type)
 		const triggerUpdate: boolean = !!(oldChildFiberOfNowWIPFiber && oldChildFiberOfNowWIPFiber.triggerUpdate)
-		// if (!__RTP__.updateRangeStartFiber && oldChildFiberOfNowWIPFiber && oldChildFiberOfNowWIPFiber.type instanceof Function) {
-		// 	console.log(`===========================`)
-		// 	newChildFiber = generateFiberStructData({
-		// 		stateNode: oldChildFiberOfNowWIPFiber.stateNode,
-		// 		type: oldChildFiberOfNowWIPFiber.type,
-		// 		props: oldChildFiberOfNowWIPFiber.props,
-		// 		parent: wipFiber,
-		// 		dirty: false,
-		// 		alternate: null,
-		// 		effectTag: ENUM_EFFECT_TAG.NO_EFFECT,
-		// 		hooks: oldChildFiberOfNowWIPFiber.hooks,
-		// 	})
-		// } else
-		// if (__RTP__.updateRangeStartFiber) {
-		// 	console.log(oldChildFiberOfNowWIPFiber)
-		// 	if (!oldChildFiberOfNowWIPFiber) {
-		// 		debugger
+		// if (oldChildFiberOfNowWIPFiber) {
+		// 	if (!__RTP__.updateRangeStartFiber && wipFiber.triggerUpdate) {
+		// 		__RTP__.updateRangeStartFiber = wipFiber
 		// 	}
 		// }
 		if (sameType) {
