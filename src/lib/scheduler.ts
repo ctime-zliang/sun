@@ -131,13 +131,11 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 			const childrenVDomItems: Array<TVDom> = [(fiber.type as Function).call(undefined, fiber.props)]
 			fiber.props.children = childrenVDomItems
 		} else {
-			const alternate: TFiberNode = fiber.alternate as TFiberNode
-			if (alternate) {
+			if (fiber.alternate) {
+				const alternate: TFiberNode = fiber.alternate as TFiberNode
 				fiber.hooks = alternate.hooks
 				fiber.props.children = alternate.props.children
-				if (fiber.alternate) {
-					fiber.alternate.alternate = null
-				}
+				fiber.alternate.alternate = null
 				const hooks: Array<TUseStateHookStruct | TUseEffectHookStruct> = fiber.hooks as Array<TUseStateHookStruct | TUseEffectHookStruct>
 				for (let i: number = 0; i < hooks.length; i++) {
 					if ((hooks[i] as TUseStateHookStruct).useState) {
