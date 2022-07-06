@@ -14,6 +14,8 @@ export function useState(initValue: any): TUseStateHook {
 	const oldHookOfCompt: TUseStateHookStruct = getHookItem(__RTCP__.hookIndexOfNowFunctionCompt) as TUseStateHookStruct
 	const hook: TUseStateHookStruct = {
 		useState: true,
+		rootFiber: rootFiber,
+		nowFiber: componentFiber,
 		state: oldHookOfCompt ? oldHookOfCompt.state : initValue,
 		queue: [],
 	}
@@ -29,23 +31,23 @@ export function useState(initValue: any): TUseStateHook {
 
 	const setState: (action: any) => void = (action: any): void => {
 		hook.queue.push(action)
-		componentFiber.triggerUpdate = true
+		hook.nowFiber.triggerUpdate = true
 		/**
 		 * 重新创建 <App /> 应用的根 fiber 节点
 		 */
 		const newRootFiber: TFiberNode = generateFiberStructData({
-			stateNode: rootFiber.stateNode,
-			type: rootFiber.type,
-			props: rootFiber.props,
-			alternate: rootFiber,
+			stateNode: hook.rootFiber.stateNode,
+			type: hook.rootFiber.type,
+			props: hook.rootFiber.props,
+			alternate: hook.rootFiber,
 			dirty: true,
 			/**
 			 * 保留索引值
 			 */
-			index: rootFiber.index,
+			index: hook.rootFiber.index,
 			root: true,
 		})
-		__RTP__.rootFiberList.splice(rootFiber.index as number, 1, newRootFiber)
+		__RTP__.rootFiberList.splice(hook.rootFiber.index as number, 1, newRootFiber)
 		/**
 		 * 将重建的 <App /> 应用的根 fiber 节点标记引用
 		 * 在下一次执行 window.requestIdleCallback 回调时将重新从根 fiber 节点处理需要更新的应用
@@ -57,7 +59,7 @@ export function useState(initValue: any): TUseStateHook {
 		}
 	}
 
-	componentFiber.hooks.push(hook)
+	hook.nowFiber.hooks.push(hook)
 	__RTCP__.hookIndexOfNowFunctionCompt++
 
 	return [hook.state, setState]

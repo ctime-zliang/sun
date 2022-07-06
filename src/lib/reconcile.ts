@@ -3,27 +3,7 @@ import { generateFiberStructData } from '../utils/utils'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TVDom } from '../types/vdom.types'
-
-export function reconcileSelf(fiber: TFiberNode): void {
-	const alternate: TFiberNode = fiber.alternate as TFiberNode
-	if (alternate) {
-		fiber.child = alternate.child
-		fiber.effectTag = alternate.effectTag
-		fiber.hooks = alternate.hooks
-		fiber.key = alternate.key
-		// fiber.parent = alternate.parent
-		fiber.props = alternate.props
-		fiber.triggerUpdate = alternate.triggerUpdate
-		fiber.type = alternate.type
-		fiber.__chm = alternate.__chm
-		fiber.__dchm = alternate.__dchm
-		if (fiber.alternate) {
-			fiber.alternate.alternate = null
-		}
-		//@ts-ignore
-		fiber.__aa = 1
-	}
-}
+import { TUseStateHookStruct } from '../types/hooks.types'
 
 export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNode>): void {
 	/**
@@ -65,11 +45,6 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 		}
 		const sameType: boolean = !!(oldChildFiberOfNowWIPFiber && childVDomItem.type == oldChildFiberOfNowWIPFiber.type)
 		const triggerUpdate: boolean = !!(oldChildFiberOfNowWIPFiber && oldChildFiberOfNowWIPFiber.triggerUpdate)
-		// if (oldChildFiberOfNowWIPFiber) {
-		// 	if (!__RTP__.updateRangeStartFiber && wipFiber.triggerUpdate) {
-		// 		__RTP__.updateRangeStartFiber = wipFiber
-		// 	}
-		// }
 		if (sameType) {
 			/**
 			 * 之前存在的节点, 需要更新
@@ -84,8 +59,6 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 				alternate: oldChildFiberOfNowWIPFiber,
 				effectTag: ENUM_EFFECT_TAG.UPDATE,
 				triggerUpdate,
-				/* 需要将 hooks 置空 */
-				hooks: [],
 			})
 		} else {
 			/**

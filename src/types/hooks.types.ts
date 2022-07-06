@@ -1,7 +1,11 @@
+import { TFiberNode } from './fiber.types'
+
 export type TUseStateHook = [any, (action: any) => void]
 export type TUseStateHookStruct = {
 	useState: boolean
 	state: any
+	rootFiber: TFiberNode
+	nowFiber: TFiberNode
 	queue: Array<any>
 }
 
