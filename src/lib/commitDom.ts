@@ -5,6 +5,7 @@ import { TFiberNode } from '../types/fiber.types'
 import { TExtendHTMLDOMElment } from 'src/types/dom.types'
 import { isFunctionComponent } from '../utils/utils'
 import { ENUM_COMMIT_DOM_ACTION } from '../config/commitDom.enum'
+import { TUseEffectHookStruct } from '../types/hooks.types'
 
 function handleDom(fiber: TFiberNode, tag: any): void {
 	if (!fiber.stateNode) {
@@ -69,6 +70,12 @@ function cacheFunctionComponentUseEffectHooks(fiber: TFiberNode, action: string)
 	 * 缓存其 useEffect hooks
 	 */
 	if (action === ENUM_COMMIT_DOM_ACTION.DELETION && !fiber.__dchm) {
+		for (let i: number = 0; i < fiber.hooks.length; i++) {
+			const hookItem: TUseEffectHookStruct = fiber.hooks[i] as TUseEffectHookStruct
+			if (hookItem.useEffect) {
+				__RTP__.unmountedHooksCache.push(fiber.hooks[i])
+			}
+		}
 		fiber.hooks.forEach((item: any): void => {
 			if (item.useEffect) {
 				__RTP__.unmountedHooksCache.push(item)
@@ -82,11 +89,12 @@ function cacheFunctionComponentUseEffectHooks(fiber: TFiberNode, action: string)
 	 * 缓存其 useEffect hooks
 	 */
 	if (!fiber.__chm) {
-		fiber.hooks.forEach((item: any): void => {
-			if (item.useEffect && item.isupdated) {
-				__RTP__.mountedHooksCache.push(item)
+		for (let i: number = 0; i < fiber.hooks.length; i++) {
+			const hookItem: TUseEffectHookStruct = fiber.hooks[i] as TUseEffectHookStruct
+			if (hookItem.useEffect && hookItem.isupdated) {
+				__RTP__.mountedHooksCache.push(fiber.hooks[i])
 			}
-		})
+		}
 		fiber.__chm = true
 	}
 }

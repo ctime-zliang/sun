@@ -6,28 +6,24 @@ import { getHookItem } from './hook'
 import { initSyncWorkLoop } from '../lib/scheduler'
 
 export function useState(initValue: any): TUseStateHook {
-	/**
-	 * 获取当前 hook(s) 所在的函数组件对应的 fiber 节点
-	 */
-	const componentFiber: TFiberNode = __RTCP__.wipFiberOfNowFunctionCompt as TFiberNode
-	const rootFiber: TFiberNode = getRootFiber(componentFiber as TFiberNode)
 	const oldHookOfCompt: TUseStateHookStruct = getHookItem(__RTCP__.hookIndexOfNowFunctionCompt) as TUseStateHookStruct
 	const hook: TUseStateHookStruct = {
+		rootFiber: getRootFiber(__RTCP__.wipFiberOfNowFunctionCompt as TFiberNode),
+		nowFiber: __RTCP__.wipFiberOfNowFunctionCompt as TFiberNode,
+		/* ... */
 		useState: true,
-		rootFiber: rootFiber,
-		nowFiber: componentFiber,
 		state: oldHookOfCompt ? oldHookOfCompt.state : initValue,
 		queue: [],
 	}
-	const actions: Array<() => void> = oldHookOfCompt ? oldHookOfCompt.queue : []
+	const actions: Array<(a?: any) => void> = oldHookOfCompt ? oldHookOfCompt.queue : []
 
-	actions.forEach((item: Function): void => {
-		if (item instanceof Function) {
-			hook.state = item(hook.state)
-			return
+	for (let i: number = 0; i < actions.length; i++) {
+		if (actions[i] instanceof Function) {
+			hook.state = actions[i](hook.state)
+			continue
 		}
-		hook.state = item
-	})
+		hook.state = actions[i]
+	}
 
 	const setState: (action: any) => void = (action: any): void => {
 		hook.queue.push(action)

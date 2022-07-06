@@ -4,12 +4,10 @@ import { __RTP__, __RTCP__ } from '../core/runtime'
 import { getHookItem, setHookUpdate } from './hook'
 
 export function useMemo(callback: () => any, dependences: Array<any> | undefined = undefined): any {
-	/**
-	 * 获取当前 hook(s) 所在的函数组件对应的 fiber 节点
-	 */
-	const componentFiber: TFiberNode = __RTCP__.wipFiberOfNowFunctionCompt as TFiberNode
 	const oldHookOfCompt: TUseMemoHookStruct = getHookItem(__RTCP__.hookIndexOfNowFunctionCompt) as TUseMemoHookStruct
 	const hook: TUseMemoHookStruct = {
+		nowFiber: __RTCP__.wipFiberOfNowFunctionCompt as TFiberNode,
+		/* ... */
 		useMemo: true,
 		isupdated: false,
 		dependences: undefined,
@@ -29,7 +27,7 @@ export function useMemo(callback: () => any, dependences: Array<any> | undefined
 		hook.returnValue = hook.callback()
 	}
 
-	componentFiber.hooks.push(hook)
+	hook.nowFiber.hooks.push(hook)
 	__RTCP__.hookIndexOfNowFunctionCompt++
 
 	return hook.returnValue
