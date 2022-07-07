@@ -1,8 +1,8 @@
-import { TUseStateHookStruct, TUseEffectHookStruct, TUseMemoHookStruct } from '../types/hooks.types'
+import { TUseEffectHookStruct, TUseMemoHookStruct, TAllHooksStruct } from '../types/hooks.types'
 import { __RTCP__ } from '../core/runtime'
 import { TFiberNode } from '../types/fiber.types'
 
-export function getHookItem(index: number): TUseStateHookStruct | TUseEffectHookStruct | TUseMemoHookStruct | undefined {
+export function getHookItem(index: number): TAllHooksStruct | undefined {
 	if (!__RTCP__.wipFiberOfNowFunctionCompt) {
 		return
 	}
@@ -19,11 +19,11 @@ export function setHookUpdate(hook: TUseEffectHookStruct | TUseMemoHookStruct, o
 	 * 浅层比较
 	 */
 	if (hook.dependences instanceof Array && outerDependences instanceof Array) {
-		hook.dependences.forEach((item: any, index: number): void => {
-			if (!Object.is(item, outerDependences[index])) {
+		for (let i: number = 0; i < hook.dependences.length; i++) {
+			if (!Object.is(hook.dependences[i], outerDependences[i])) {
 				hook.isupdated = true
 			}
-		})
+		}
 	} else {
 		hook.isupdated = true
 	}

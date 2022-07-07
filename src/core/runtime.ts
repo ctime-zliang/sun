@@ -1,4 +1,4 @@
-import { TUseEffectHookStruct, TUseMemoHookStruct, TUseStateHookStruct } from '../types/hooks.types'
+import { TAllHooksStruct } from '../types/hooks.types'
 import { TFiberNode } from '../types/fiber.types'
 
 type T__RTP__ = {
@@ -6,8 +6,8 @@ type T__RTP__ = {
 	rootFiberList: Array<TFiberNode>
 	profileList: Array<{ [key: string]: any }>
 	nextWorkUnitFiber: TFiberNode
-	mountedHooksCache: Array<TUseStateHookStruct | TUseEffectHookStruct | TUseMemoHookStruct>
-	unmountedHooksCache: Array<TUseStateHookStruct | TUseEffectHookStruct | TUseMemoHookStruct>
+	mountedHooksCache: Array<TAllHooksStruct>
+	unmountedHooksCache: Array<TAllHooksStruct>
 	updateRangeStartFiber: TFiberNode | null
 }
 export const __RTP__: T__RTP__ = Object.create({

@@ -1,3 +1,7 @@
+/**
+ * 该试验库依据"Build Your React"拓展改编
+ */
+
 import { __RTP__, __RTCP__ } from './core/runtime'
 import { initAsyncWorkLoop, initSyncWorkLoop } from './lib/scheduler'
 import { generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData } from './utils/utils'
@@ -28,9 +32,9 @@ __RTP__.globalFiberRoot = generateRootFiberStructData() as TFiberNode
 export function createElement(type: string, props: { [key: string]: any }, ...children: Array<any>): TVDom {
 	/**
 	 * Array.flat(Infinity) 性能问题
+	 * 这可能不是一个好的实现方式
 	 */
-	//@ts-ignore
-	const flatChildren: Array<any> = children.flat(Infinity) // or children.flat(1)
+	const flatChildren: Array<any> = (children as any).flat(Infinity) // or children.flat(1)
 	const elementVDom: TVDom = generateInitialVDOMStructData(type, {
 		...props,
 		children: flatChildren.map((child: any): void => {
@@ -75,8 +79,6 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 			children: [element],
 		},
 		stateNode: container,
-		// elementType: nodeName,
-		alternate: null,
 		dirty: true,
 		/**
 		 * 当前 fiber 的索引编号, 保证值与该 fiber 在 rootFiberList 中的位置索引一致
@@ -86,10 +88,8 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 	})
 	rootFiber.triggerUpdate = true
 	__RTP__.profileList.push({ ...renderProfile, ...profile })
-	/**
-	 * 存在多个 render 实例时, 需要记录每个 <App /> 对应的 fiber 树(根节点)
-	 */
 	__RTP__.rootFiberList.push(rootFiber)
+
 	if (__RTP__.globalFiberRoot && !__RTP__.globalFiberRoot.current) {
 		/**
 		 * 首次 render 时将全局顶层的 globalFiberRoot 指向当前需要渲染的 <App /> 根 fiber 节点
@@ -97,6 +97,10 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 		 */
 		__RTP__.globalFiberRoot.current = rootFiber as TFiberNode
 		__RTP__.nextWorkUnitFiber = rootFiber as TFiberNode
+
+		/**
+		 * 依据渲染参数设置为异步调度或同步调度
+		 */
 		if (__RTP__.profileList[rootFiber.index as number].async) {
 			window.requestIdleCallback(initAsyncWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
 		} else {

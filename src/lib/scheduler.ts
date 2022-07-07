@@ -8,20 +8,17 @@ import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
 import { ENUM_COMMIT_DOM_ACTION } from '../config/commitDom.enum'
-import { TUseEffectHookStruct, TUseStateHookStruct } from '../types/hooks.types'
+import { TAllHooksStruct, TUseEffectHookStruct, TUseMemoHookStruct, TUseStateHookStruct } from '../types/hooks.types'
 
 export function initSyncWorkLoop(): () => void {
 	let deletions: Array<TFiberNode> = []
 	let currentRootFiber: TFiberNode
-
-	console.time('syncWorkLoop')
 
 	function workLoop(): void {
 		while (__RTP__.nextWorkUnitFiber) {
 			__RTP__.nextWorkUnitFiber = performUnitWork(__RTP__.nextWorkUnitFiber, deletions) as TFiberNode
 		}
 		if (!__RTP__.nextWorkUnitFiber && __RTP__.globalFiberRoot.current) {
-			console.timeEnd('syncWorkLoop')
 			workEnd(deletions, currentRootFiber)
 			return
 		}
@@ -74,10 +71,10 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 	currentRootFiber.dirty = false
 	deletions.length = 0
 
-	const useEffectHooks: Array<any> = [...__RTP__.unmountedHooksCache, ...__RTP__.mountedHooksCache]
+	const useEffectHooks: Array<TUseEffectHookStruct> = [...__RTP__.unmountedHooksCache, ...__RTP__.mountedHooksCache] as Array<TUseEffectHookStruct>
 	for (let i: number = 0; i < useEffectHooks.length; i++) {
 		if (useEffectHooks[i].returnCallback instanceof Function) {
-			useEffectHooks[i].returnCallback.call(undefined)
+			;(useEffectHooks[i].returnCallback as Function).call(undefined)
 		}
 	}
 	__RTP__.unmountedHooksCache.length = 0
@@ -106,11 +103,34 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 	}
 }
 
+function updateHookFiberReference(fiber: TFiberNode) {
+	const hooks: Array<TAllHooksStruct> = fiber.hooks as Array<TAllHooksStruct>
+	for (let i: number = 0; i < hooks.length; i++) {
+		if ((hooks[i] as TUseStateHookStruct).useState) {
+			const hookItem: TUseStateHookStruct = hooks[i] as TUseStateHookStruct
+			hookItem.rootFiber = __RTP__.globalFiberRoot.current as TFiberNode
+		}
+		if ((hooks[i] as TUseEffectHookStruct).useEffect) {
+			const hookItem: TUseEffectHookStruct = hooks[i] as TUseEffectHookStruct
+			hookItem.isupdated = false
+		}
+		if ((hooks[i] as TUseMemoHookStruct).useMemo) {
+			const hookItem: TUseMemoHookStruct = hooks[i] as TUseMemoHookStruct
+			hookItem.isupdated = false
+		}
+		hooks[i].nowFiber = fiber
+	}
+}
+
 export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode | undefined {
 	if (!fiber.type) {
 		return
 	}
 
+	/**
+	 * 调度遍历 fiber 树的过程中, 记录触发状态更新的根 fiber 节点, 则其下的 fiber 节点都属于更新范围
+	 * 需要标记该 fiber 节点
+	 */
 	if (!__RTP__.updateRangeStartFiber && fiber.triggerUpdate) {
 		__RTP__.updateRangeStartFiber = fiber
 	}
@@ -132,22 +152,20 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 			fiber.props.children = childrenVDomItems
 		} else {
 			if (fiber.alternate) {
+				/**
+				 * 函数组件
+				 * 		对于更新范围之外的函数组件, 需要跳过函数执行
+				 * 		在跳过函数的执行后
+				 * 		由于函数组件本身未被执行, 故将上一轮更新后的 fiber 节点复用至当前 work fiber 节点
+				 * 			需要更新 vDom
+				 * 			需要更新 hooks 中关于 fiber 的引用存储
+				 * 			需要清除上上一轮的 fiber 节点引用
+				 */
 				const alternate: TFiberNode = fiber.alternate as TFiberNode
 				fiber.hooks = alternate.hooks
 				fiber.props.children = alternate.props.children
 				fiber.alternate.alternate = null
-				const hooks: Array<TUseStateHookStruct | TUseEffectHookStruct> = fiber.hooks as Array<TUseStateHookStruct | TUseEffectHookStruct>
-				for (let i: number = 0; i < hooks.length; i++) {
-					if ((hooks[i] as TUseStateHookStruct).useState) {
-						const hookItem: TUseStateHookStruct = hooks[i] as TUseStateHookStruct
-						hookItem.rootFiber = __RTP__.globalFiberRoot.current as TFiberNode
-						hookItem.nowFiber = fiber
-					}
-					if ((hooks[i] as TUseEffectHookStruct).useEffect) {
-						const hookItem: TUseEffectHookStruct = hooks[i] as TUseEffectHookStruct
-						hookItem.isupdated = false
-					}
-				}
+				updateHookFiberReference(fiber)
 			}
 		}
 		reconcileChilren(fiber, deletions)
@@ -168,6 +186,9 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 		if (fiber.sibling) {
 			return fiber.sibling
 		}
+		/**
+		 * 当重新回到标记根 fiber 节点时, 代表更新范围内的 fiber 树已遍历处理完毕
+		 */
 		if (__RTP__.updateRangeStartFiber === fiber) {
 			__RTP__.updateRangeStartFiber = null
 		}
