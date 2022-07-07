@@ -6,13 +6,12 @@ import { updateInnerContentMain } from './modules/updateElementInnerContent'
 import { syncBlock } from './utils/utils'
 /* ... */
 import Sun, { render, useState, useEffect, useMemo } from '../../src/index'
+/* ... */
 import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
 import { TraverseFiberTree } from './component/traverseFiberTree'
-import { UsestateHookIndex, UsestateHookTest } from './component/usestateTest'
-import { Outer, Child1 } from './component/propsTest'
 import { UseEffectExecSequentialWrapper } from './component/useEffectExecSequential'
 
-const App = () => {
+function App() {
 	console.log(`Component: App`)
 
 	const [count1, setCount1] = useState(0)
@@ -32,7 +31,7 @@ const App = () => {
 	})
 
 	const number = useMemo(() => {
-		syncBlock()
+		// syncBlock()
 		return count1 * 2
 	}, [])
 
@@ -45,7 +44,20 @@ const App = () => {
 	)
 }
 
-render(<UseEffectExecSequentialWrapper />, document.querySelector(`#app`), { async: true })
+// function IntervalUpdateChild() {
+// 	console.log(`IntervalUpdateChild`)
+// 	const [count, setCount] = useState(0)
+// 	useEffect(() => {
+// 		window.setInterval(() => {
+// 			setCount(Math.random())
+// 		}, 1000)
+// 	}, [])
+// 	return (
+// 		<div>{count}</div>
+// 	)
+// }
+
+render(<App />, document.querySelector(`#app`), { async: true })
 // render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
