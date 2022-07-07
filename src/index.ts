@@ -15,7 +15,7 @@ Sun.useState = useStateHook as (initValue: any) => TUseStateHook
 Sun.useEffect = useEffectHook as (callback: () => any, dependences: Array<any> | undefined) => void
 Sun.useMemo = useMemoHook as (callback: () => any, dependences: Array<any> | undefined) => any
 
-export const render: (element: any, containe: HTMLElement) => void = _render
+export const render: (element: any, container: HTMLElement) => void = _render
 export const useState: (initValue: any) => TUseStateHook = useStateHook
 export const useEffect: (callback: () => any, dependences: Array<any> | undefined) => void = useEffectHook
 export const useMemo: (callback: () => any, dependences: Array<any> | undefined) => any = useMemoHook
