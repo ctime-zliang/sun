@@ -39,23 +39,21 @@ function App() {
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
 			<div>{count1}</div>
 			<div>{number}</div>
-			<ClickAddLi />
+			<IntervalUpdateChild />
 		</div>
 	)
 }
 
-// function IntervalUpdateChild() {
-// 	console.log(`IntervalUpdateChild`)
-// 	const [count, setCount] = useState(0)
-// 	useEffect(() => {
-// 		window.setInterval(() => {
-// 			setCount(Math.random())
-// 		}, 1000)
-// 	}, [])
-// 	return (
-// 		<div>{count}</div>
-// 	)
-// }
+function IntervalUpdateChild() {
+	console.log(`IntervalUpdateChild`)
+	const [count, setCount] = useState(0)
+	useEffect(() => {
+		// window.setInterval(() => {
+		// 	setCount(Math.random())
+		// }, 1000)
+	}, [])
+	return <div>{count}</div>
+}
 
 render(<App />, document.querySelector(`#app`), { async: true })
 // render(<App />, document.querySelector(`#app2`))
