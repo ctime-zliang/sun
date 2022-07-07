@@ -76,11 +76,6 @@ function cacheFunctionComponentUseEffectHooks(fiber: TFiberNode, action: string)
 				__RTP__.unmountedHooksCache.push(fiber.hooks[i])
 			}
 		}
-		fiber.hooks.forEach((item: any): void => {
-			if (item.useEffect) {
-				__RTP__.unmountedHooksCache.push(item)
-			}
-		})
 		fiber.__dchm = true
 		return
 	}

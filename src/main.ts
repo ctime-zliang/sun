@@ -87,9 +87,9 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 		root: true,
 	})
 	rootFiber.triggerUpdate = true
+
 	__RTP__.profileList.push({ ...renderProfile, ...profile })
 	__RTP__.rootFiberList.push(rootFiber)
-
 	if (__RTP__.globalFiberRoot && !__RTP__.globalFiberRoot.current) {
 		/**
 		 * 首次 render 时将全局顶层的 globalFiberRoot 指向当前需要渲染的 <App /> 根 fiber 节点

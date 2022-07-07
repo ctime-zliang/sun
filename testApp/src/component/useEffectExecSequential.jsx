@@ -84,17 +84,17 @@ function C31(props) {
 	const { count } = props
 	const [number, setNumber] = useState(0)
 
-	useEffect(() => {
-		let timer = window.setInterval(() => {
-			console.log(`==>>> C31: useEffect setInterval update.`)
-			// setNumber((value) => {
-			// 	return value + 1
-			// })
-		}, 500)
-		return () => {
-			window.clearInterval(timer)
-		}
-	}, [])
+	// useEffect(() => {
+	// 	let timer = window.setInterval(() => {
+	// 		console.log(`==>>> C31: useEffect setInterval update.`)
+	// 		// setNumber((value) => {
+	// 		// 	return value + 1
+	// 		// })
+	// 	}, 500)
+	// 	return () => {
+	// 		window.clearInterval(timer)
+	// 	}
+	// }, [])
 
 	useEffect(() => {
 		console.log(`Component C31 useEffect.`)

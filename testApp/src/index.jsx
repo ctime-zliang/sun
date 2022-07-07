@@ -32,20 +32,20 @@ const App = () => {
 	})
 
 	const number = useMemo(() => {
-		// syncBlock()
+		syncBlock()
 		return count1 * 2
 	}, [])
 
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
 			<div>{count1}</div>
-			{/* <div>{number}</div> */}
+			<div>{number}</div>
 			<ClickAddLi />
 		</div>
 	)
 }
 
-render(<App />, document.querySelector(`#app`), { async: true })
+render(<UseEffectExecSequentialWrapper />, document.querySelector(`#app`), { async: true })
 // render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
