@@ -22,6 +22,7 @@ export function setHookUpdate(hook: TUseEffectHookStruct | TUseMemoHookStruct, o
 		for (let i: number = 0; i < hook.dependences.length; i++) {
 			if (!Object.is(hook.dependences[i], outerDependences[i])) {
 				hook.isupdated = true
+				break
 			}
 		}
 	} else {
