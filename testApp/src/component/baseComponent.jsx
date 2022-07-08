@@ -33,6 +33,8 @@ export function Parent() {
 	)
 }
 
+let timer = null
+let COUNT = 0
 export function Child() {
 	console.log('Child')
 	const [number, setNumber] = useState(0)
@@ -41,6 +43,16 @@ export function Child() {
 			return count + 1
 		})
 	}
+	useEffect(() => {
+		timer = window.setInterval(() => {
+			setNumber(count => {
+				return count + 1
+			})
+			if (++COUNT >= 1000) {
+				window.clearInterval(timer)
+			}
+		})
+	}, [])
 	return (
 		<article data-tagitem="child">
 			<button onClick={btnClickAtion}>Set Number</button>
