@@ -10,6 +10,7 @@ import Sun, { render, useState, useEffect, useMemo } from '../../src/index'
 import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
 import { TraverseFiberTree } from './component/traverseFiberTree'
 import { UseEffectExecSequentialWrapper } from './component/useEffectExecSequential'
+import { BaseComponent, Parent } from './component/baseComponent'
 
 function App() {
 	console.log(`Component: App`)
@@ -44,18 +45,23 @@ function App() {
 	)
 }
 
+let timer = null
+let COUNT = 0
 function IntervalUpdateChild() {
 	console.log(`IntervalUpdateChild`)
 	const [count, setCount] = useState(0)
 	useEffect(() => {
-		// window.setInterval(() => {
-		// 	setCount(Math.random())
-		// }, 1000)
+		timer = window.setInterval(() => {
+			setCount(Math.random())
+			if (++COUNT >= 1000) {
+				window.clearInterval(timer)
+			}
+		})
 	}, [])
 	return <div>{count}</div>
 }
 
-render(<App />, document.querySelector(`#app`), { async: true })
+render(<Parent />, document.querySelector(`#app`), { async: false })
 // render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
