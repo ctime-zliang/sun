@@ -1,4 +1,4 @@
-import { isProperty, isOld, isNewly, isSystemEvent } from '../utils/utils'
+import { isProperty, isOld, isNewly, isSystemEvent, hasProperty } from '../utils/utils'
 import { ENUM_NODE_TYPE } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TExtendHTMLDOMElment } from '../types/dom.types'
@@ -59,13 +59,19 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 	const systemEventOfNewProps = Object.keys(newProps).filter(isSystemEvent)
 	const commPropsOfOldProps = Object.keys(oldProps).filter(isProperty)
 	const commPropsOfNewProps = Object.keys(newProps).filter(isProperty)
+	/* ... */
+	const isNewlyHandlerNewProps: (key: string) => boolean = isNewly(oldProps, newProps)
+
+	if (dom.nodeName.toLocaleLowerCase() === 'button') {
+		console.log(1)
+	}
 
 	/**
 	 * 移除系统事件
 	 */
 	for (let i: number = 0; i < systemEventOfOldProps.length; i++) {
 		const item: string = systemEventOfOldProps[i]
-		if (!(item in newProps) || isNewly(oldProps, newProps)(item)) {
+		if (!hasProperty(newProps, item) || isNewlyHandlerNewProps(item)) {
 			const eventType: string = item.toLowerCase().substring(2)
 			dom.removeEventListener(eventType, oldProps[item])
 		}
@@ -87,7 +93,7 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 	 */
 	for (let i: number = 0; i < commPropsOfNewProps.length; i++) {
 		const item: string = commPropsOfNewProps[i]
-		if (isNewly(oldProps, newProps)(item)) {
+		if (isNewlyHandlerNewProps(item)) {
 			switch (item) {
 				case 'style': {
 					if (Object.prototype.toString.call(newProps[item]).toLowerCase() === '[object object]') {
@@ -121,13 +127,13 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 	 */
 	for (let i: number = 0; i < systemEventOfNewProps.length; i++) {
 		const item: string = systemEventOfNewProps[i]
-		if (isNewly(oldProps, newProps)(item)) {
+		if (isNewlyHandlerNewProps(item)) {
 			const eventType: string = item.toLowerCase().substring(2)
-			const fn: () => void = newProps[item].bind(undefined)
-			newProps[item] = function (e: Event): void {
-				e.stopPropagation()
-				fn.call(e.target)
-			}
+			// const fn: () => void = newProps[item].bind(undefined)
+			// newProps[item] = function (e: Event): void {
+			// 	e.stopPropagation()
+			// 	fn.call(e.target)
+			// }
 			dom.addEventListener(eventType, newProps[item])
 		}
 	}

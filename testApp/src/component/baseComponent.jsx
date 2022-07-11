@@ -16,47 +16,59 @@ export function BaseComponent() {
 	)
 }
 
+let parentTimer = null
+let parentTimerTick = 0
 export function Parent() {
 	console.log('Parent')
-	const [count, setCount] = useState(0)
+	const [parentCount, setParentCount] = useState(0)
 	const btnClickAtion = () => {
-		setCount(count => {
+		setParentCount(count => {
 			return count + 1
 		})
 	}
+	useEffect(() => {
+		// parentTimer = window.setInterval(() => {
+		// 	setParentCount(count => {
+		// 		return count + 1
+		// 	})
+		// 	if (++parentTimerTick >= 1000) {
+		// 		window.clearInterval(parentTimer)
+		// 	}
+		// })
+	}, [])
 	return (
 		<article data-tagitem="parent">
 			<button onClick={btnClickAtion}>Set Count</button>
-			<div>{count}</div>
+			<div>{parentCount}</div>
 			<Child />
 		</article>
 	)
 }
 
-let timer = null
-let COUNT = 0
+let childTimer = null
+let childTimerTick = 0
 export function Child() {
 	console.log('Child')
-	const [number, setNumber] = useState(0)
+	const [childCount, setChildCount] = useState(0)
 	const btnClickAtion = () => {
-		setNumber(count => {
+		setChildCount(count => {
 			return count + 1
 		})
 	}
 	useEffect(() => {
-		timer = window.setInterval(() => {
-			setNumber(count => {
+		childTimer = window.setInterval(() => {
+			setChildCount(count => {
 				return count + 1
 			})
-			if (++COUNT >= 1000) {
-				window.clearInterval(timer)
+			if (++childTimerTick >= 10) {
+				window.clearInterval(childTimer)
 			}
 		})
 	}, [])
 	return (
 		<article data-tagitem="child">
 			<button onClick={btnClickAtion}>Set Number</button>
-			<div>{number}</div>
+			<div>{childCount}</div>
 		</article>
 	)
 }

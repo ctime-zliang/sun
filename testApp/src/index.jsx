@@ -10,7 +10,7 @@ import Sun, { render, useState, useEffect, useMemo } from '../../src/index'
 import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
 import { TraverseFiberTree } from './component/traverseFiberTree'
 import { UseEffectExecSequentialWrapper } from './component/useEffectExecSequential'
-import { BaseComponent, Parent } from './component/baseComponent'
+import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild } from './component/baseComponent'
 
 function App() {
 	console.log(`Component: App`)
@@ -61,7 +61,7 @@ function IntervalUpdateChild() {
 	return <div>{count}</div>
 }
 
-render(<Parent />, document.querySelector(`#app`), { async: false })
+render(<BaseComponentChild />, document.querySelector(`#app`), { async: false })
 // render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {

@@ -111,7 +111,7 @@ export function getRootFiber(fiber: TFiberNode): TFiberNode {
 }
 
 /**
- * @description 判断是否是需要新建的节点
+ * @description 判断是否是新的属性
  * @function isNewly
  * @param {any} oldObj 旧节点属性
  * @param {any} newObj 新节点属性
@@ -124,7 +124,7 @@ export function isNewly(oldObj: { [key: string]: any }, newObj: { [key: string]:
 }
 
 /**
- * @description 判断是否是已存在可复用的节点
+ * @description 判断是否是旧的属性
  * @function isOld
  * @param {any} oldObj 旧节点属性
  * @param {any} newObj 新节点属性
@@ -134,6 +134,17 @@ export function isOld(oldObj: { [key: string]: any }, newObj: { [key: string]: a
 	return (key: string): boolean => {
 		return !(key in newObj)
 	}
+}
+
+/**
+ * @description 判断是否存在属性
+ * @function hasProperty
+ * @param {any} obj 查询对
+ * @param {string} key 查询键
+ * @return {function}
+ */
+export function hasProperty(obj: { [key: string]: any }, key: string): boolean {
+	return key in obj
 }
 
 /**
