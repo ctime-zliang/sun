@@ -20,7 +20,7 @@ let parentTimer = null
 let parentTimerTick = 0
 export function Parent() {
 	console.log('Parent')
-	const [parentCount, setParentCount] = useState(0)
+	const [parentCount, setParentCount] = useState(1)
 	const btnClickAtion = () => {
 		setParentCount(count => {
 			return count + 1
@@ -49,7 +49,7 @@ let childTimer = null
 let childTimerTick = 0
 export function Child() {
 	console.log('Child')
-	const [childCount, setChildCount] = useState(0)
+	const [childCount, setChildCount] = useState(1)
 	const btnClickAtion = () => {
 		setChildCount(count => {
 			return count + 1

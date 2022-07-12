@@ -10,6 +10,9 @@ import { ENUM_NODE_TYPE } from './config/effect.enum'
 import { TFiberNode } from './types/fiber.types'
 import { globalConfig, renderProfile } from './config/config'
 
+window.__RTP__ = __RTP__
+window.__RTCP__ = __RTCP__
+
 /**
  * 创建一个全局顶层 fiber: globalFiberRoot
  *
@@ -107,7 +110,4 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 			initSyncWorkLoop()()
 		}
 	}
-
-	window.__RTP__ = __RTP__
-	window.__RTCP__ = __RTCP__
 }

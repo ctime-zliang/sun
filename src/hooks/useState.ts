@@ -7,8 +7,9 @@ import { initSyncWorkLoop } from '../lib/scheduler'
 
 export function useState(initValue: any): TUseStateHook {
 	const oldHookOfCompt: TUseStateHookStruct = getHookItem(__RTCP__.hookIndexOfNowFunctionCompt) as TUseStateHookStruct
+	const thisRootFiber = getRootFiber(__RTCP__.wipFiberOfNowFunctionCompt as TFiberNode)
 	const hook: TUseStateHookStruct = {
-		rootFiber: getRootFiber(__RTCP__.wipFiberOfNowFunctionCompt as TFiberNode),
+		rootFiber: oldHookOfCompt ? oldHookOfCompt.rootFiber : thisRootFiber,
 		nowFiber: __RTCP__.wipFiberOfNowFunctionCompt as TFiberNode,
 		/* ... */
 		useState: true,
