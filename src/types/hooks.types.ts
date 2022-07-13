@@ -9,6 +9,7 @@ export type TUseStateHookStruct = {
 	useState: boolean
 	state: any
 	queue: Array<any>
+	// setState: (a: any) => any
 }
 
 export type TUseEffectHookStruct = {

@@ -7,9 +7,9 @@ import { initSyncWorkLoop } from '../lib/scheduler'
 
 export function useState(initValue: any): TUseStateHook {
 	const oldHookOfCompt: TUseStateHookStruct = getHookItem(__RTCP__.hookIndexOfNowFunctionCompt) as TUseStateHookStruct
-	const thisRootFiber = getRootFiber(__RTCP__.wipFiberOfNowFunctionCompt as TFiberNode)
+	const rootFiber: TFiberNode = getRootFiber(__RTCP__.wipFiberOfNowFunctionCompt as TFiberNode)
 	const hook: TUseStateHookStruct = {
-		rootFiber: oldHookOfCompt ? oldHookOfCompt.rootFiber : thisRootFiber,
+		rootFiber,
 		nowFiber: __RTCP__.wipFiberOfNowFunctionCompt as TFiberNode,
 		/* ... */
 		useState: true,
@@ -29,22 +29,28 @@ export function useState(initValue: any): TUseStateHook {
 	const setState: (action: any) => void = (action: any): void => {
 		hook.queue.push(action)
 		hook.nowFiber.triggerUpdate = true
+		// let rootFiberIndex: number = hook.rootFiber.index as number
+		// let rootFiber: TFiberNode = hook.rootFiber
+		// if (__RTP__.rootFiberList[rootFiberIndex].alternate) {
+		// 	rootFiber = __RTP__.rootFiberList[rootFiberIndex].alternate as TFiberNode
+		// 	hook.rootFiber = rootFiber
+		// }
 		/**
 		 * 重新创建 <App /> 应用的根 fiber 节点
 		 */
 		const newRootFiber: TFiberNode = generateFiberStructData({
-			stateNode: hook.rootFiber.stateNode,
-			type: hook.rootFiber.type,
-			props: hook.rootFiber.props,
-			alternate: hook.rootFiber,
+			stateNode: rootFiber.stateNode,
+			type: rootFiber.type,
+			props: rootFiber.props,
+			alternate: rootFiber,
 			dirty: true,
 			/**
 			 * 保留索引值
 			 */
-			index: hook.rootFiber.index,
+			index: rootFiber.index,
 			root: true,
 		})
-		__RTP__.rootFiberList.splice(hook.rootFiber.index as number, 1, newRootFiber)
+		__RTP__.rootFiberList.splice(rootFiber.index as number, 1, newRootFiber)
 		/**
 		 * 将重建的 <App /> 应用的根 fiber 节点标记引用
 		 * 在下一次执行 window.requestIdleCallback 回调时将重新从根 fiber 节点处理需要更新的应用

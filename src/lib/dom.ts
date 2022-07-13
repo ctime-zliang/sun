@@ -63,7 +63,7 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 	const isNewlyHandlerNewProps: (key: string) => boolean = isNewly(oldProps, newProps)
 
 	if (dom.nodeName.toLocaleLowerCase() === 'button') {
-		console.log(1)
+		const a = 1 + 1
 	}
 
 	/**
