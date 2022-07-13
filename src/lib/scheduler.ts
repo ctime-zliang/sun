@@ -67,6 +67,7 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 	})
 	commit(currentRootFiber.child as TFiberNode, ENUM_COMMIT_DOM_ACTION.NORMAL)
 	console.timeEnd('commit')
+	console.log('%c===>>> App Task Finished', 'color: #ff0000;')
 
 	currentRootFiber.dirty = false
 	deletions.length = 0

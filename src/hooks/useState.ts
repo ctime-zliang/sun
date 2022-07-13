@@ -29,7 +29,8 @@ export function useState(initValue: any): TUseStateHook {
 	const setState: (action: any) => void = (action: any): void => {
 		hook.queue.push(action)
 		hook.nowFiber.triggerUpdate = true
-		// let rootFiberIndex: number = hook.rootFiber.index as number
+		let rootFiberIndex: number = hook.rootFiber.index as number
+		console.log(__RTP__.rootFiberList[rootFiberIndex].alternate, __RTP__.rootFiberList[rootFiberIndex].alternate === hook.rootFiber)
 		// let rootFiber: TFiberNode = hook.rootFiber
 		// if (__RTP__.rootFiberList[rootFiberIndex].alternate) {
 		// 	rootFiber = __RTP__.rootFiberList[rootFiberIndex].alternate as TFiberNode
