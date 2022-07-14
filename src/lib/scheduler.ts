@@ -110,6 +110,7 @@ function updateHookFiberReference(fiber: TFiberNode) {
 		if ((hooks[i] as TUseStateHookStruct).useState) {
 			const hookItem: TUseStateHookStruct = hooks[i] as TUseStateHookStruct
 			hookItem.rootFiber = __RTP__.globalFiberRoot.current as TFiberNode
+			hookItem.nowFiber = fiber
 		}
 		if ((hooks[i] as TUseEffectHookStruct).useEffect) {
 			const hookItem: TUseEffectHookStruct = hooks[i] as TUseEffectHookStruct

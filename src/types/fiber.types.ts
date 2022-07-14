@@ -24,4 +24,5 @@ export type TFiberNode = {
 	current?: TFiberNode | null
 	__chm: boolean
 	__dchm: boolean
+	[key: string]: any
 }

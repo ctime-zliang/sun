@@ -88,6 +88,7 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 		 */
 		index: ++renderIndex,
 		root: true,
+		__$tag: 1 + '_' + Math.random(),
 	})
 	rootFiber.triggerUpdate = true
 

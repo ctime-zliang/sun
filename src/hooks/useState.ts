@@ -15,6 +15,7 @@ export function useState(initValue: any): TUseStateHook {
 		useState: true,
 		state: oldHookOfCompt ? oldHookOfCompt.state : initValue,
 		queue: [],
+		__$tag: Math.random(),
 	}
 	const actions: Array<(a?: any) => void> = oldHookOfCompt ? oldHookOfCompt.queue : []
 
@@ -30,12 +31,11 @@ export function useState(initValue: any): TUseStateHook {
 		hook.queue.push(action)
 		hook.nowFiber.triggerUpdate = true
 		let rootFiberIndex: number = hook.rootFiber.index as number
-		console.log(__RTP__.rootFiberList[rootFiberIndex].alternate, __RTP__.rootFiberList[rootFiberIndex].alternate === hook.rootFiber)
 		// let rootFiber: TFiberNode = hook.rootFiber
-		// if (__RTP__.rootFiberList[rootFiberIndex].alternate) {
-		// 	rootFiber = __RTP__.rootFiberList[rootFiberIndex].alternate as TFiberNode
-		// 	hook.rootFiber = rootFiber
-		// }
+		if (__RTP__.rootFiberList[rootFiberIndex].alternate) {
+			// rootFiber = __RTP__.rootFiberList[rootFiberIndex] as TFiberNode
+			// hook.rootFiber = rootFiber
+		}
 		/**
 		 * 重新创建 <App /> 应用的根 fiber 节点
 		 */
@@ -50,6 +50,7 @@ export function useState(initValue: any): TUseStateHook {
 			 */
 			index: rootFiber.index,
 			root: true,
+			__$tag: +rootFiber.__$tag.match(/(\d+)_(.*)/)[1] + 1 + '_' + Math.random(),
 		})
 		__RTP__.rootFiberList.splice(rootFiber.index as number, 1, newRootFiber)
 		/**
