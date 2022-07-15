@@ -2,13 +2,42 @@ import { __RTP__, __RTCP__ } from '../core/runtime'
 import { commit } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
-import { isFunctionComponent } from '../utils/utils'
+import { generateFiberStructData, isFunctionComponent } from '../utils/utils'
 import { TFiberNode } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
 import { ENUM_COMMIT_DOM_ACTION } from '../config/commitDom.enum'
 import { TAllHooksStruct, TUseEffectHookStruct, TUseMemoHookStruct, TUseStateHookStruct } from '../types/hooks.types'
+
+export function initStartRootFiber(rootFiber: TFiberNode): void {
+	/**
+	 * 重新创建 <App /> 应用的根 fiber 节点
+	 */
+	const newRootFiber: TFiberNode = generateFiberStructData({
+		stateNode: rootFiber.stateNode,
+		type: rootFiber.type,
+		props: rootFiber.props,
+		alternate: rootFiber,
+		dirty: true,
+		/**
+		 * 保留索引值
+		 */
+		index: rootFiber.index,
+		root: true,
+		queueUp: rootFiber.queueUp,
+	})
+	__RTP__.rootFiberList.splice(rootFiber.index as number, 1, newRootFiber)
+	/**
+	 * 将重建的 <App /> 应用的根 fiber 节点标记引用
+	 * 在下一次执行 window.requestIdleCallback 回调时将重新从根 fiber 节点处理需要更新的应用
+	 */
+	__RTP__.globalFiberRoot.current = newRootFiber
+	__RTP__.nextWorkUnitFiber = newRootFiber
+	if (!__RTP__.profileList[newRootFiber.index as number].async) {
+		initSyncWorkLoop()()
+	}
+}
 
 export function initSyncWorkLoop(): () => void {
 	let deletions: Array<TFiberNode> = []
@@ -70,6 +99,7 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 	console.log('%c===>>> App Task Finished', 'color: #ff0000;')
 
 	currentRootFiber.dirty = false
+	currentRootFiber.queueUp = false
 	deletions.length = 0
 
 	const useEffectHooks: Array<TUseEffectHookStruct> = [...__RTP__.unmountedHooksCache, ...__RTP__.mountedHooksCache] as Array<TUseEffectHookStruct>

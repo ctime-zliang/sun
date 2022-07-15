@@ -1,9 +1,9 @@
 import { TFiberNode } from '../types/fiber.types'
 import { TUseStateHookStruct, TUseStateHook } from '../types/hooks.types'
 import { __RTP__, __RTCP__ } from '../core/runtime'
-import { generateFiberStructData, getRootFiber } from '../utils/utils'
+import { getRootFiber } from '../utils/utils'
 import { getHookItem } from './hook'
-import { initSyncWorkLoop } from '../lib/scheduler'
+import { initStartRootFiber } from '../lib/scheduler'
 
 export function useState(initValue: any): TUseStateHook {
 	const oldHookOfCompt: TUseStateHookStruct = getHookItem(__RTCP__.hookIndexOfNowFunctionCompt) as TUseStateHookStruct
@@ -14,58 +14,28 @@ export function useState(initValue: any): TUseStateHook {
 		/* ... */
 		useState: true,
 		state: oldHookOfCompt ? oldHookOfCompt.state : initValue,
-		queue: [],
-		__$tag: Math.random(),
-	}
-	const actions: Array<(a?: any) => void> = oldHookOfCompt ? oldHookOfCompt.queue : []
-
-	for (let i: number = 0; i < actions.length; i++) {
-		if (actions[i] instanceof Function) {
-			hook.state = actions[i](hook.state)
-			continue
-		}
-		hook.state = actions[i]
-	}
-
-	const setState: (action: any) => void = (action: any): void => {
-		hook.queue.push(action)
-		hook.nowFiber.triggerUpdate = true
-		let rootFiberIndex: number = hook.rootFiber.index as number
-		// let rootFiber: TFiberNode = hook.rootFiber
-		if (__RTP__.rootFiberList[rootFiberIndex].alternate) {
-			// rootFiber = __RTP__.rootFiberList[rootFiberIndex] as TFiberNode
-			// hook.rootFiber = rootFiber
-		}
-		/**
-		 * 重新创建 <App /> 应用的根 fiber 节点
-		 */
-		const newRootFiber: TFiberNode = generateFiberStructData({
-			stateNode: rootFiber.stateNode,
-			type: rootFiber.type,
-			props: rootFiber.props,
-			alternate: rootFiber,
-			dirty: true,
-			/**
-			 * 保留索引值
-			 */
-			index: rootFiber.index,
-			root: true,
-			__$tag: +rootFiber.__$tag.match(/(\d+)_(.*)/)[1] + 1 + '_' + Math.random(),
-		})
-		__RTP__.rootFiberList.splice(rootFiber.index as number, 1, newRootFiber)
-		/**
-		 * 将重建的 <App /> 应用的根 fiber 节点标记引用
-		 * 在下一次执行 window.requestIdleCallback 回调时将重新从根 fiber 节点处理需要更新的应用
-		 */
-		__RTP__.globalFiberRoot.current = newRootFiber
-		__RTP__.nextWorkUnitFiber = newRootFiber
-		if (!__RTP__.profileList[newRootFiber.index as number].async) {
-			initSyncWorkLoop()()
-		}
+		queue: oldHookOfCompt ? oldHookOfCompt.queue : [],
 	}
 
 	hook.nowFiber.hooks.push(hook)
 	__RTCP__.hookIndexOfNowFunctionCompt++
+
+	const setState: (action: any) => void = (action: any): void => {
+		if (action instanceof Function) {
+			hook.state = action.call(undefined, hook.state)
+		} else {
+			hook.state = action
+		}
+		hook.nowFiber.triggerUpdate = true
+		// const rootFiberIndex: number = rootFiber.index as number
+		// rootFiber.queueUp = __RTP__.rootFiberList[rootFiberIndex].queueUp
+		if (!rootFiber.queueUp) {
+			rootFiber.queueUp = true
+			Promise.resolve().then(() => {
+				initStartRootFiber(rootFiber)
+			})
+		}
+	}
 
 	return [hook.state, setState]
 }

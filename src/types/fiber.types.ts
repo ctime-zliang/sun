@@ -19,10 +19,12 @@ export type TFiberNode = {
 	dirty: boolean
 	triggerUpdate: boolean
 	hooks: Array<TAllHooksStruct>
+	/* ... */
 	root?: boolean
 	index?: number
 	current?: TFiberNode | null
+	queueUp?: boolean
+	/* ... */
 	__chm: boolean
 	__dchm: boolean
-	[key: string]: any
 }
