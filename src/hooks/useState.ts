@@ -33,6 +33,16 @@ export function useState(initValue: any): TUseStateHook {
 				hookItem.state = action
 			}
 			hookItem.nowFiber.triggerUpdate = true
+			/**
+			 * 将每次 setState 的执行保存到队列中
+			 *
+			 * 在性能较好的高刷设备中, 某些情况下尽管可以尽快地连续执行 setState(例如快速点击按执行 setState)
+			 * 但仍存在浏览器往这些连续执行的 setState 之间穿插进若干 microtask 的情况
+			 *
+			 * 因此, 在通过一次 microtask 开启一轮 Reconciliation 且还未结束时, 需要保存在此期间被执行的 setState
+			 * 在每一轮 Reconciliation 结束后, 检查并以此提取队列中的 setState 调用
+			 * 并在该队列清空后执行 commit 操作, 以保证视图显示与状态更新同步(防止"状态撕裂")
+			 */
 			__RTP__.taskQueue.push({
 				fiber: hookItem.rootFiber,
 				task: (rootFiber: TFiberNode): void => {
@@ -41,7 +51,7 @@ export function useState(initValue: any): TUseStateHook {
 			})
 			if (!hookItem.rootFiber.queueUp) {
 				hookItem.rootFiber.queueUp = true
-				window.setTimeout(() => {
+				Promise.resolve().then(() => {
 					const lastTaskItem: T_TASKQUEUE_ITEM = __RTP__.taskQueue.shift() as T_TASKQUEUE_ITEM
 					lastTaskItem.task(lastTaskItem.fiber)
 				})

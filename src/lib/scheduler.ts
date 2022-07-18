@@ -77,6 +77,11 @@ export function initAsyncWorkLoop(): (deadline: TRequestIdleCallbackParams) => v
 }
 
 function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): void {
+	if (__RTP__.taskQueue.length && __RTP__.globalFiberRoot.current?.alternate) {
+		const lastTaskItem: T_TASKQUEUE_ITEM = __RTP__.taskQueue.shift() as T_TASKQUEUE_ITEM
+		lastTaskItem.task(__RTP__.globalFiberRoot.current.alternate as TFiberNode)
+		return
+	}
 	/**
 	 * 暂存当前活动的应用的顶层 fiber(rootFiber)
 	 * 清除全局 globalFiberRoot 对该活动应用的 rootFiber 的引用
@@ -121,12 +126,6 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 		}
 		__RTP__.mountedHooksCache.length = 0
 	})
-
-	if (__RTP__.taskQueue.length) {
-		const lastTaskItem: T_TASKQUEUE_ITEM = __RTP__.taskQueue.shift() as T_TASKQUEUE_ITEM
-		lastTaskItem.task(currentRootFiber)
-		return
-	}
 
 	/**
 	 * 检查并尝试执行下一个实例
