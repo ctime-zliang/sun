@@ -20,8 +20,7 @@ export function useMemo(callback: () => any, dependences: Array<any> | undefined
 	if (!oldHookOfCompt) {
 		nowFiber.hooks.push(createHookItem(callback))
 	}
-	const hooksLen: number = nowFiber.hooks.length
-	const hookItem: TUseMemoHookStruct = nowFiber.hooks[hooksLen - 1] as TUseMemoHookStruct
+	const hookItem: TUseMemoHookStruct = nowFiber.hooks[__RTCP__.hookIndexOfNowFunctionCompt] as TUseMemoHookStruct
 	if (!oldHookOfCompt) {
 		hookItem.isupdated = true
 		hookItem.dependences = dependences instanceof Array ? Array.from(dependences) : undefined

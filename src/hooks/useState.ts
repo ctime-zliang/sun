@@ -25,8 +25,7 @@ export function useState(initValue: any): TUseStateHook {
 	if (!oldHookOfCompt) {
 		nowFiber.hooks.push(createHookItem(rootFiber, __RTCP__.wipFiberOfNowFunctionCompt as TFiberNode, initValue))
 	}
-	const hooksLen: number = nowFiber.hooks.length
-	const hookItem: TUseStateHookStruct = nowFiber.hooks[hooksLen - 1] as TUseStateHookStruct
+	const hookItem: TUseStateHookStruct = nowFiber.hooks[__RTCP__.hookIndexOfNowFunctionCompt] as TUseStateHookStruct
 	if (!oldHookOfCompt) {
 		hookItem.setState = (action: any): void => {
 			if (action instanceof Function) {

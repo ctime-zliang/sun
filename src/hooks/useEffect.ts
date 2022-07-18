@@ -20,8 +20,7 @@ export function useEffect(callback: () => any, dependences: Array<any> | undefin
 	if (!oldHookOfCompt) {
 		nowFiber.hooks.push(createHookItem(callback))
 	}
-	const hooksLen: number = nowFiber.hooks.length
-	const hookItem: TUseEffectHookStruct = nowFiber.hooks[hooksLen - 1] as TUseEffectHookStruct
+	const hookItem: TUseEffectHookStruct = nowFiber.hooks[__RTCP__.hookIndexOfNowFunctionCompt] as TUseEffectHookStruct
 	if (!oldHookOfCompt) {
 		hookItem.isupdated = true
 		hookItem.dependences = dependences instanceof Array ? Array.from(dependences) : undefined
