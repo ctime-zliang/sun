@@ -3,32 +3,39 @@ import { TUseMemoHookStruct } from '../types/hooks.types'
 import { __RTP__, __RTCP__ } from '../core/runtime'
 import { getHookItem, setHookUpdate } from './hook'
 
-export function useMemo(callback: () => any, dependences: Array<any> | undefined = undefined): any {
-	const oldHookOfCompt: TUseMemoHookStruct = getHookItem(__RTCP__.hookIndexOfNowFunctionCompt) as TUseMemoHookStruct
-	const hook: TUseMemoHookStruct = {
-		nowFiber: __RTCP__.wipFiberOfNowFunctionCompt as TFiberNode,
-		/* ... */
+function createHookItem(callback: () => any): TUseMemoHookStruct {
+	const hookItem: TUseMemoHookStruct = {
 		useMemo: true,
 		isupdated: false,
 		dependences: undefined,
 		callback,
 		returnValue: undefined,
 	}
+	return hookItem
+}
+
+export function useMemo(callback: () => any, dependences: Array<any> | undefined = undefined): any {
+	const oldHookOfCompt: TUseMemoHookStruct = getHookItem(__RTCP__.hookIndexOfNowFunctionCompt) as TUseMemoHookStruct
+	const nowFiber: TFiberNode = __RTCP__.wipFiberOfNowFunctionCompt as TFiberNode
 	if (!oldHookOfCompt) {
-		hook.isupdated = true
-		hook.dependences = dependences instanceof Array ? Array.from(dependences) : undefined
+		nowFiber.hooks.push(createHookItem(callback))
+	}
+	const hooksLen: number = nowFiber.hooks.length
+	const hookItem: TUseMemoHookStruct = nowFiber.hooks[hooksLen - 1] as TUseMemoHookStruct
+	if (!oldHookOfCompt) {
+		hookItem.isupdated = true
+		hookItem.dependences = dependences instanceof Array ? Array.from(dependences) : undefined
 	} else {
-		hook.returnValue = oldHookOfCompt.returnValue
-		hook.dependences = oldHookOfCompt.dependences
+		hookItem.returnValue = oldHookOfCompt.returnValue
+		hookItem.dependences = oldHookOfCompt.dependences
 	}
-	setHookUpdate(hook, dependences)
+	setHookUpdate(hookItem, dependences)
 
-	if (hook.isupdated && hook.callback) {
-		hook.returnValue = hook.callback()
+	if (hookItem.isupdated && hookItem.callback) {
+		hookItem.returnValue = hookItem.callback()
 	}
 
-	hook.nowFiber.hooks.push(hook)
 	__RTCP__.hookIndexOfNowFunctionCompt++
 
-	return hook.returnValue
+	return hookItem.returnValue
 }

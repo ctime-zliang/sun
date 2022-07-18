@@ -8,11 +8,11 @@ export type TUseStateHookStruct = {
 	nowFiber: TFiberNode
 	useState: boolean
 	state: any
+	setState: (a: any) => void
 	queue: Array<any>
 }
 
 export type TUseEffectHookStruct = {
-	nowFiber: TFiberNode
 	useEffect: boolean
 	isupdated: boolean
 	dependences: Array<any> | undefined
@@ -21,7 +21,6 @@ export type TUseEffectHookStruct = {
 }
 
 export type TUseMemoHookStruct = {
-	nowFiber: TFiberNode
 	useMemo: boolean
 	isupdated: boolean
 	dependences: Array<any> | undefined

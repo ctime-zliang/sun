@@ -150,7 +150,6 @@ function updateHookFiberReference(fiber: TFiberNode) {
 			const hookItem: TUseMemoHookStruct = hooks[i] as TUseMemoHookStruct
 			hookItem.isupdated = false
 		}
-		hooks[i].nowFiber = fiber
 	}
 }
 

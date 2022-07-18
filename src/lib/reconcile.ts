@@ -58,8 +58,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 				alternate: oldChildFiberOfNowWIPFiber,
 				effectTag: ENUM_EFFECT_TAG.UPDATE,
 				triggerUpdate,
-				/* 需要将 hooks 置空 */
-				hooks: [],
+				hooks: (oldChildFiberOfNowWIPFiber as TFiberNode).hooks,
 			})
 		} else {
 			/**

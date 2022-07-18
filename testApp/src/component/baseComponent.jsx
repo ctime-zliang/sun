@@ -56,23 +56,24 @@ export function Child() {
 		})
 	}
 	useEffect(() => {
-		childTimer = window.setInterval(() => {
-			setChildCount(count => {
-				return count + 1
-			})
-			if (++childTimerTick >= 10) {
-				window.clearInterval(childTimer)
-			}
-		}, 500)
+		// childTimer = window.setInterval(() => {
+		// 	setChildCount(count => {
+		// 		return count + 1
+		// 	})
+		// 	if (++childTimerTick >= 10) {
+		// 		window.clearInterval(childTimer)
+		// 	}
+		// }, 500)
+		setChildCount(val => {
+			return val + 1
+		})
 		// setChildCount(val => {
 		// 	return val + 1
 		// })
 		// setChildCount(val => {
 		// 	return val + 1
 		// })
-		// setChildCount(val => {
-		// 	return val + 1
-		// })
+		console.log(`useEffect.`)
 	}, [])
 	return (
 		<article data-tagitem="child">
