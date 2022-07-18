@@ -3,7 +3,7 @@ import { commit } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 import { generateFiberStructData, isFunctionComponent } from '../utils/utils'
-import { TFiberNode } from '../types/fiber.types'
+import { TFiberNode, T_TASKQUEUE_ITEM } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
@@ -122,7 +122,11 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 		__RTP__.mountedHooksCache.length = 0
 	})
 
-	// console.log(__RTP__)
+	if (__RTP__.taskQueue.length) {
+		const lastTaskItem: T_TASKQUEUE_ITEM = __RTP__.taskQueue.shift() as T_TASKQUEUE_ITEM
+		lastTaskItem.task(currentRootFiber)
+		return
+	}
 
 	/**
 	 * 检查并尝试执行下一个实例

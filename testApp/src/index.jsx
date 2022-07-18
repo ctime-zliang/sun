@@ -45,23 +45,7 @@ function App() {
 	)
 }
 
-let timer = null
-let COUNT = 0
-function IntervalUpdateChild() {
-	console.log(`IntervalUpdateChild`)
-	const [count, setCount] = useState(0)
-	useEffect(() => {
-		timer = window.setInterval(() => {
-			setCount(Math.random())
-			if (++COUNT >= 1000) {
-				window.clearInterval(timer)
-			}
-		})
-	}, [])
-	return <div>{count}</div>
-}
-
-render(<BaseComponentParent />, document.querySelector(`#app`), { async: false })
+render(<BaseComponentChild />, document.querySelector(`#app`), { async: true })
 // render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {

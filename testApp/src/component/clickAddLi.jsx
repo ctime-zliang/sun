@@ -46,9 +46,10 @@ export function ClickAddLongChild() {
 		const array = []
 		const random = Math.random() + ''
 		++count
-		for (let i = 0; i < 10000; i++) {
+		for (let i = 0; i < 20000; i++) {
 			array.push(random)
 		}
+		// console.log('modifyList - count: ', count)
 		setList(array)
 	}
 	return (

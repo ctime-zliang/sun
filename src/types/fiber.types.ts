@@ -2,6 +2,11 @@ import { TExtendHTMLDOMElment } from './dom.types'
 import { TAllHooksStruct } from './hooks.types'
 import { TVDom } from './vdom.types'
 
+export type T_TASKQUEUE_ITEM = {
+	fiber: TFiberNode
+	task: (a: TFiberNode) => void
+}
+
 export type TFiberNode = {
 	// FunctionComponent: Function
 	// ClassComponent: Function,

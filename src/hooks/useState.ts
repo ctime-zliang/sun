@@ -1,4 +1,4 @@
-import { TFiberNode } from '../types/fiber.types'
+import { TFiberNode, T_TASKQUEUE_ITEM } from '../types/fiber.types'
 import { TUseStateHookStruct, TUseStateHook } from '../types/hooks.types'
 import { __RTP__, __RTCP__ } from '../core/runtime'
 import { getRootFiber } from '../utils/utils'
@@ -12,7 +12,6 @@ function createHookItem(rootFiber: TFiberNode, nowFiber: TFiberNode, initValue: 
 		/* ... */
 		useState: true,
 		state: initValue,
-		queue: [],
 		setState: () => undefined,
 	}
 	return hookItem
@@ -34,10 +33,17 @@ export function useState(initValue: any): TUseStateHook {
 				hookItem.state = action
 			}
 			hookItem.nowFiber.triggerUpdate = true
+			__RTP__.taskQueue.push({
+				fiber: hookItem.rootFiber,
+				task: (rootFiber: TFiberNode): void => {
+					initStartRootFiber(rootFiber)
+				},
+			})
 			if (!hookItem.rootFiber.queueUp) {
 				hookItem.rootFiber.queueUp = true
-				Promise.resolve().then(() => {
-					initStartRootFiber(hookItem.rootFiber)
+				window.setTimeout(() => {
+					const lastTaskItem: T_TASKQUEUE_ITEM = __RTP__.taskQueue.shift() as T_TASKQUEUE_ITEM
+					lastTaskItem.task(lastTaskItem.fiber)
 				})
 			}
 		}

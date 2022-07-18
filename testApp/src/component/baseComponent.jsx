@@ -67,14 +67,14 @@ export function Child() {
 		})
 	}
 	useEffect(() => {
-		// childTimer = window.setInterval(() => {
-		// 	setChildCount(count => {
-		// 		return count + 1
-		// 	})
-		// 	if (++childTimerTick >= childMaxCount - 1) {
-		// 		window.clearInterval(childTimer)
-		// 	}
-		// }, 500)
+		childTimer = window.setInterval(() => {
+			setChildCount(count => {
+				return count + 1
+			})
+			if (++childTimerTick >= childMaxCount - 1) {
+				window.clearInterval(childTimer)
+			}
+		}, 500)
 		// setChildCount(val => {
 		// 	return val + 1
 		// })

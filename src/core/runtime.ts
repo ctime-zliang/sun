@@ -1,10 +1,11 @@
 import { TAllHooksStruct } from '../types/hooks.types'
-import { TFiberNode } from '../types/fiber.types'
+import { TFiberNode, T_TASKQUEUE_ITEM } from '../types/fiber.types'
 
 type T__RTP__ = {
 	globalFiberRoot: TFiberNode
 	rootFiberList: Array<TFiberNode>
 	profileList: Array<{ [key: string]: any }>
+	taskQueue: Array<T_TASKQUEUE_ITEM>
 	nextWorkUnitFiber: TFiberNode
 	mountedHooksCache: Array<TAllHooksStruct>
 	unmountedHooksCache: Array<TAllHooksStruct>
@@ -14,6 +15,7 @@ export const __RTP__: T__RTP__ = Object.create({
 	globalFiberRoot: null,
 	rootFiberList: [],
 	profileList: [],
+	taskQueue: [],
 	nextWorkUnitFiber: null,
 	mountedHooksCache: [],
 	unmountedHooksCache: [],
