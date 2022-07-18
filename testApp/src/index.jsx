@@ -61,7 +61,7 @@ function IntervalUpdateChild() {
 	return <div>{count}</div>
 }
 
-render(<BaseComponentChild />, document.querySelector(`#app`), { async: false })
+render(<BaseComponentParent />, document.querySelector(`#app`), { async: false })
 // render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {

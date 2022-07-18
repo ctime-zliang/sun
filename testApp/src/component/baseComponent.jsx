@@ -18,6 +18,7 @@ export function BaseComponent() {
 
 let parentTimer = null
 let parentTimerTick = 0
+let parentMaxCount = 10
 export function Parent() {
 	console.log('Parent')
 	const [parentCount, setParentCount] = useState(1)
@@ -31,9 +32,18 @@ export function Parent() {
 		// 	setParentCount(count => {
 		// 		return count + 1
 		// 	})
-		// 	if (++parentTimerTick >= 1000) {
+		// 	if (++parentTimerTick >= parentMaxCount - 1) {
 		// 		window.clearInterval(parentTimer)
 		// 	}
+		// }, 500)
+		// setParentCount(val => {
+		// 	return val + 1
+		// })
+		// setParentCount(val => {
+		// 	return val + 1
+		// })
+		// setParentCount(val => {
+		// 	return val + 1
 		// })
 	}, [])
 	return (
@@ -47,6 +57,7 @@ export function Parent() {
 
 let childTimer = null
 let childTimerTick = 0
+let childMaxCount = 10
 export function Child() {
 	console.log('Child')
 	const [childCount, setChildCount] = useState(1)
@@ -60,20 +71,19 @@ export function Child() {
 		// 	setChildCount(count => {
 		// 		return count + 1
 		// 	})
-		// 	if (++childTimerTick >= 10) {
+		// 	if (++childTimerTick >= childMaxCount - 1) {
 		// 		window.clearInterval(childTimer)
 		// 	}
 		// }, 500)
-		setChildCount(val => {
-			return val + 1
-		})
 		// setChildCount(val => {
 		// 	return val + 1
 		// })
 		// setChildCount(val => {
 		// 	return val + 1
 		// })
-		console.log(`useEffect.`)
+		// setChildCount(val => {
+		// 	return val + 1
+		// })
 	}, [])
 	return (
 		<article data-tagitem="child">
