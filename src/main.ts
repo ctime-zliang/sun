@@ -72,9 +72,9 @@ let renderIndex: number = -1
 export function render(element: TVDom, container: HTMLElement, profile: { [key: string]: any } = {}): void {
 	const nodeName: string = container.nodeName.toLowerCase()
 	/**
-	 * 创建当前渲染应用的根 fiber 节点
+	 * 创建当前渲染应用对应的 fiber 树的根 fiber 节点
 	 * 		该 fiber 节点将对应 container DOM 节点
-	 * 		其第一个子节点为 <App /> 返回的 VDom 对象
+	 * 		其第一个子节点为 <App /> 函数对应的 fiber 节点
 	 */
 	const rootFiber: TFiberNode = generateFiberStructData({
 		type: nodeName,
@@ -95,15 +95,11 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 	__RTP__.profileList.push({ ...renderProfile, ...profile })
 	__RTP__.rootFiberList.push(rootFiber)
 	if (__RTP__.globalFiberRoot && !__RTP__.globalFiberRoot.current) {
-		/**
-		 * 首次 render 时将全局顶层的 globalFiberRoot 指向当前需要渲染的 <App /> 根 fiber 节点
-		 * 并将该 <App /> 对应的 fiber 树标记为 work fiber 节点树
-		 */
 		__RTP__.globalFiberRoot.current = rootFiber as TFiberNode
 		__RTP__.nextWorkUnitFiber = rootFiber as TFiberNode
 
 		/**
-		 * 依据渲染参数设置为异步调度或同步调度
+		 * 以异步调度或同步调度方式执行
 		 */
 		if (__RTP__.profileList[rootFiber.index as number].async) {
 			window.requestIdleCallback(initAsyncWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })

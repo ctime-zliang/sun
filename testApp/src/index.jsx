@@ -23,16 +23,16 @@ function App() {
 	}
 	useEffect(() => {
 		console.log(`************************* App.useEffect 1`)
-		// setCount1(state => {
-		// 	return state + 1
-		// })
+		setCount1(state => {
+			return state + 1
+		})
 	}, [])
 	useEffect(() => {
 		console.log(`************************* App.useEffect 2`)
 	})
 
 	const number = useMemo(() => {
-		// syncBlock()
+		syncBlock()
 		return count1 * 2
 	}, [])
 

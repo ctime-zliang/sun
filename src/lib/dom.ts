@@ -129,11 +129,11 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 		const item: string = systemEventOfNewProps[i]
 		if (isNewlyHandlerNewProps(item)) {
 			const eventType: string = item.toLowerCase().substring(2)
-			// const fn: () => void = newProps[item].bind(undefined)
-			// newProps[item] = function (e: Event): void {
-			// 	e.stopPropagation()
-			// 	fn.call(e.target)
-			// }
+			const fn: () => void = newProps[item].bind(undefined)
+			newProps[item] = function (e: Event): void {
+				e.stopPropagation()
+				fn.call(e.target)
+			}
 			dom.addEventListener(eventType, newProps[item])
 		}
 	}

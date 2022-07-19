@@ -25,6 +25,7 @@ export function useMemo(callback: () => any, dependences: Array<any> | undefined
 		hookItem.isupdated = true
 		hookItem.dependences = dependences instanceof Array ? Array.from(dependences) : undefined
 	} else {
+		hookItem.isupdated = false
 		hookItem.returnValue = oldHookOfCompt.returnValue
 		hookItem.dependences = oldHookOfCompt.dependences
 	}

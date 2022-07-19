@@ -3,7 +3,7 @@ import { commit } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 import { generateFiberStructData, isFunctionComponent } from '../utils/utils'
-import { TFiberNode, T_TASKQUEUE_ITEM } from '../types/fiber.types'
+import { TFiberNode, TTASKQUEUE_ITEM } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
@@ -28,10 +28,6 @@ export function initStartRootFiber(rootFiber: TFiberNode): void {
 		queueUp: rootFiber.queueUp,
 	})
 	__RTP__.rootFiberList.splice(rootFiber.index as number, 1, newRootFiber)
-	/**
-	 * 将重建的 <App /> 应用的根 fiber 节点标记引用
-	 * 在下一次执行 window.requestIdleCallback 回调时将重新从根 fiber 节点处理需要更新的应用
-	 */
 	__RTP__.globalFiberRoot.current = newRootFiber
 	__RTP__.nextWorkUnitFiber = newRootFiber
 	if (!__RTP__.profileList[newRootFiber.index as number].async) {
@@ -77,15 +73,19 @@ export function initAsyncWorkLoop(): (deadline: TRequestIdleCallbackParams) => v
 }
 
 function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): void {
+	/**
+	 * 在 Reconciliation 阶段如果执行调用了 setState, 会将任务暂存到任务队列中
+	 * 在每一轮 Reconciliation 结束后尝试调用队列中最后一个被暂存的任务并执行之
+	 */
 	if (__RTP__.taskQueue.length && __RTP__.globalFiberRoot.current?.alternate) {
-		const lastTaskItem: T_TASKQUEUE_ITEM = __RTP__.taskQueue.pop() as T_TASKQUEUE_ITEM
+		const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskQueue.pop() as TTASKQUEUE_ITEM
 		__RTP__.taskQueue.length = 0
 		lastTaskItem.task(__RTP__.globalFiberRoot.current.alternate as TFiberNode)
 		return
 	}
 	/**
 	 * 暂存当前活动的应用的顶层 fiber(rootFiber)
-	 * 清除全局 globalFiberRoot 对该活动应用的 rootFiber 的引用
+	 * 清除全局 globalFiberRoot 对该活动的应用的 rootFiber 的引用
 	 */
 	currentRootFiber = __RTP__.globalFiberRoot.current as TFiberNode
 	/**
@@ -96,6 +96,9 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 	__RTCP__.hookIndexOfNowFunctionCompt = -1
 	__RTCP__.wipFiberOfNowFunctionCompt = null
 
+	/**
+	 * 提交 DOM 操作
+	 */
 	console.time('commit')
 	deletions.forEach((item: TFiberNode): void => {
 		commit(item, ENUM_COMMIT_DOM_ACTION.DELETION)

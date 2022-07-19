@@ -2,7 +2,7 @@ import { TExtendHTMLDOMElment } from './dom.types'
 import { TAllHooksStruct } from './hooks.types'
 import { TVDom } from './vdom.types'
 
-export type T_TASKQUEUE_ITEM = {
+export type TTASKQUEUE_ITEM = {
 	fiber: TFiberNode
 	task: (a: TFiberNode) => void
 }

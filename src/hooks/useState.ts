@@ -1,4 +1,4 @@
-import { TFiberNode, T_TASKQUEUE_ITEM } from '../types/fiber.types'
+import { TFiberNode, TTASKQUEUE_ITEM } from '../types/fiber.types'
 import { TUseStateHookStruct, TUseStateHook } from '../types/hooks.types'
 import { __RTP__, __RTCP__ } from '../core/runtime'
 import { getRootFiber } from '../utils/utils'
@@ -52,7 +52,7 @@ export function useState(initValue: any): TUseStateHook {
 			if (!hookItem.rootFiber.queueUp) {
 				hookItem.rootFiber.queueUp = true
 				Promise.resolve().then(() => {
-					const lastTaskItem: T_TASKQUEUE_ITEM = __RTP__.taskQueue.pop() as T_TASKQUEUE_ITEM
+					const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskQueue.pop() as TTASKQUEUE_ITEM
 					lastTaskItem.task(lastTaskItem.fiber)
 				})
 			}
