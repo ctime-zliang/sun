@@ -40,7 +40,7 @@ export function useState(initValue: any): TUseStateHook {
 			 * 但仍存在浏览器往这些连续执行的 setState 之间穿插进若干 microtask 的情况
 			 *
 			 * 因此, 在通过一次 microtask 开启一轮 Reconciliation 且还未结束时, 需要保存在此期间被执行的 setState
-			 * 在每一轮 Reconciliation 结束后, 检查并以此提取队列中的 setState 调用
+			 * 在每一轮 Reconciliation 结束后, 会尝试调用执行队列(不为空时)的最后一个 setState 调用
 			 * 并在该队列清空后执行 commit 操作, 以保证视图显示与状态更新同步(防止"状态撕裂")
 			 */
 			__RTP__.taskQueue.push({
@@ -52,7 +52,7 @@ export function useState(initValue: any): TUseStateHook {
 			if (!hookItem.rootFiber.queueUp) {
 				hookItem.rootFiber.queueUp = true
 				Promise.resolve().then(() => {
-					const lastTaskItem: T_TASKQUEUE_ITEM = __RTP__.taskQueue.shift() as T_TASKQUEUE_ITEM
+					const lastTaskItem: T_TASKQUEUE_ITEM = __RTP__.taskQueue.pop() as T_TASKQUEUE_ITEM
 					lastTaskItem.task(lastTaskItem.fiber)
 				})
 			}

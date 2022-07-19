@@ -78,7 +78,8 @@ export function initAsyncWorkLoop(): (deadline: TRequestIdleCallbackParams) => v
 
 function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): void {
 	if (__RTP__.taskQueue.length && __RTP__.globalFiberRoot.current?.alternate) {
-		const lastTaskItem: T_TASKQUEUE_ITEM = __RTP__.taskQueue.shift() as T_TASKQUEUE_ITEM
+		const lastTaskItem: T_TASKQUEUE_ITEM = __RTP__.taskQueue.pop() as T_TASKQUEUE_ITEM
+		__RTP__.taskQueue.length = 0
 		lastTaskItem.task(__RTP__.globalFiberRoot.current.alternate as TFiberNode)
 		return
 	}
