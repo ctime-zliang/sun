@@ -10,7 +10,7 @@ import Sun, { render, useState, useEffect, useMemo } from '../../src/index'
 import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
 import { TraverseFiberTree } from './component/traverseFiberTree'
 import { UseEffectExecSequentialWrapper } from './component/useEffectExecSequential'
-import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild } from './component/baseComponent'
+import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild, Clock } from './component/baseComponent'
 
 function App() {
 	console.log(`Component: App`)
@@ -44,7 +44,7 @@ function App() {
 	)
 }
 
-render(<App />, document.querySelector(`#app`), { async: true })
+render(<Clock />, document.querySelector(`#app`), { async: true })
 // render(<App />, document.querySelector(`#app2`))
 
 window.addEventListener('DOMContentLoaded', function (e) {

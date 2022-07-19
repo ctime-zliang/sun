@@ -1,4 +1,5 @@
 import Sun, { useState, useEffect } from '@/'
+import { formatDates } from '../utils/utils'
 
 export function BaseComponent() {
 	console.log('BaseComponent')
@@ -57,7 +58,7 @@ export function Parent() {
 
 let childTimer = null
 let childTimerTick = 0
-let childMaxCount = 10
+let childMaxCount = 10 ** 5
 export function Child() {
 	console.log('Child')
 	const [childCount, setChildCount] = useState(1)
@@ -67,14 +68,14 @@ export function Child() {
 		})
 	}
 	useEffect(() => {
-		childTimer = window.setInterval(() => {
-			setChildCount(count => {
-				return count + 1
-			})
-			if (++childTimerTick >= childMaxCount - 1) {
-				window.clearInterval(childTimer)
-			}
-		}, 500)
+		// childTimer = window.setInterval(() => {
+		// 	setChildCount(count => {
+		// 		return count + 1
+		// 	})
+		// 	if (++childTimerTick >= childMaxCount - 1) {
+		// 		window.clearInterval(childTimer)
+		// 	}
+		// }, 1000)
 		// setChildCount(val => {
 		// 	return val + 1
 		// })
@@ -89,6 +90,35 @@ export function Child() {
 		<article data-tagitem="child">
 			<button onClick={btnClickAtion}>Set Number</button>
 			<div>{childCount}</div>
+		</article>
+	)
+}
+
+let clockTimer = null
+let clockTimerTick = 0
+let clockMaxCount = 10 ** 5
+export function Clock() {
+	console.log('Clock')
+	const [clockCount, setClockCount] = useState(formatDates())
+	const btnClickAtion = () => {
+		setClockCount(() => {
+			return formatDates()
+		})
+	}
+	useEffect(() => {
+		clockTimer = window.setInterval(() => {
+			setClockCount(() => {
+				return formatDates()
+			})
+			if (++clockTimerTick >= clockMaxCount - 1) {
+				window.clearInterval(clockTimer)
+			}
+		}, 1000)
+	}, [])
+	return (
+		<article data-tagitem="clock">
+			<button onClick={btnClickAtion}>Update Clock</button>
+			<div>{clockCount}</div>
 		</article>
 	)
 }
