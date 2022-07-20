@@ -95,8 +95,6 @@ export function Child() {
 }
 
 let clockTimer = null
-let clockTimerTick = 0
-let clockMaxCount = 10 ** 5
 export function Clock() {
 	console.log('Clock')
 	const [clockCount, setClockCount] = useState(formatDates())
@@ -110,10 +108,7 @@ export function Clock() {
 			setClockCount(() => {
 				return formatDates()
 			})
-			if (++clockTimerTick >= clockMaxCount - 1) {
-				window.clearInterval(clockTimer)
-			}
-		}, 1000)
+		})
 	}, [])
 	return (
 		<article data-tagitem="clock">

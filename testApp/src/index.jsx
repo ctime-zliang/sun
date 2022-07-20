@@ -32,7 +32,7 @@ function App() {
 	})
 
 	const number = useMemo(() => {
-		syncBlock()
+		// syncBlock()
 		return count1 * 2
 	}, [])
 
@@ -45,7 +45,7 @@ function App() {
 }
 
 render(<Clock />, document.querySelector(`#app`), { async: true })
-// render(<App />, document.querySelector(`#app2`))
+// render(<App />, document.querySelector(`#app2`), { async: true })
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()

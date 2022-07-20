@@ -74,16 +74,6 @@ export function initAsyncWorkLoop(): (deadline: TRequestIdleCallbackParams) => v
 
 function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): void {
 	/**
-	 * 在 Reconciliation 阶段如果执行调用了 setState, 会将任务暂存到任务队列中
-	 * 在每一轮 Reconciliation 结束后尝试调用队列中最后一个被暂存的任务并执行之
-	 */
-	if (__RTP__.taskQueue.length && __RTP__.globalFiberRoot.current?.alternate) {
-		const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskQueue.pop() as TTASKQUEUE_ITEM
-		__RTP__.taskQueue.length = 0
-		lastTaskItem.task(__RTP__.globalFiberRoot.current.alternate as TFiberNode)
-		return
-	}
-	/**
 	 * 暂存当前活动的应用的顶层 fiber(rootFiber)
 	 * 清除全局 globalFiberRoot 对该活动的应用的 rootFiber 的引用
 	 */
@@ -139,6 +129,12 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 		__RTP__.nextWorkUnitFiber = nextRootFiber
 		__RTP__.globalFiberRoot.current = nextRootFiber
 	}
+
+	// if (__RTP__.taskQueue.length && currentRootFiber) {
+	// 	const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskQueue.shift() as TTASKQUEUE_ITEM
+	// 	__RTP__.taskQueue.length = 0
+	// 	lastTaskItem.task(currentRootFiber as TFiberNode)
+	// }
 }
 
 function updateHookFiberReference(fiber: TFiberNode) {

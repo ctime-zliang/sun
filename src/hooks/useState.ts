@@ -39,9 +39,8 @@ export function useState(initValue: any): TUseStateHook {
 			 * 在性能较好的高刷设备中, 某些情况下尽管可以尽快地连续执行 setState(例如快速点击按执行 setState)
 			 * 但仍存在浏览器往这些连续执行的 setState 之间穿插进若干 microtask 的情况
 			 *
-			 * 因此, 在通过一次 microtask 开启一轮 Reconciliation 且还未结束时, 需要保存在此期间被执行的 setState
-			 * 在每一轮 Reconciliation 结束后, 会尝试调用执行队列(不为空时)的最后一个 setState 调用
-			 * 并在该队列清空后执行 commit 操作, 以保证视图显示与状态更新同步(防止"状态撕裂")
+			 * 因此, 在通过一次 microtask 开启一轮 Reconciliation + Commit 且还未结束时, 需要保存在此期间被执行的 setState
+			 * 在每一轮 Reconciliation + Commit 结束后, 会尝试调用逐一执行队列(不为空时)中的 setState 调用
 			 */
 			__RTP__.taskQueue.push({
 				fiber: hookItem.rootFiber,
@@ -52,7 +51,7 @@ export function useState(initValue: any): TUseStateHook {
 			if (!hookItem.rootFiber.queueUp) {
 				hookItem.rootFiber.queueUp = true
 				Promise.resolve().then(() => {
-					const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskQueue.pop() as TTASKQUEUE_ITEM
+					const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskQueue.shift() as TTASKQUEUE_ITEM
 					lastTaskItem.task(lastTaskItem.fiber)
 				})
 			}
