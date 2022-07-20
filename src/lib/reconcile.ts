@@ -60,6 +60,9 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 				triggerUpdate,
 				hooks: (oldChildFiberOfNowWIPFiber as TFiberNode).hooks,
 			})
+			if (newChildFiber.alternate && !newChildFiber.alternate.child) {
+				console.log(newChildFiber)
+			}
 		} else {
 			/**
 			 * 之前不存在的节点, 需要新建并插入

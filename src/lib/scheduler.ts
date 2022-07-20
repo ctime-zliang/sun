@@ -89,13 +89,13 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 	/**
 	 * 提交 DOM 操作
 	 */
-	console.time('commit')
+	// console.time('commit')
 	deletions.forEach((item: TFiberNode): void => {
 		commit(item, ENUM_COMMIT_DOM_ACTION.DELETION)
 	})
 	commit(currentRootFiber.child as TFiberNode, ENUM_COMMIT_DOM_ACTION.NORMAL)
-	console.timeEnd('commit')
-	console.log('%c===>>> App Task Finished', 'color: #ff0000;')
+	// console.timeEnd('commit')
+	// console.log('%c===>>> App Task Finished', 'color: #ff0000;')
 
 	currentRootFiber.dirty = false
 	currentRootFiber.queueUp = false
@@ -128,13 +128,16 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 	if (nextRootFiber && nextRootFiber.dirty) {
 		__RTP__.nextWorkUnitFiber = nextRootFiber
 		__RTP__.globalFiberRoot.current = nextRootFiber
+		return
 	}
 
-	// if (__RTP__.taskQueue.length && currentRootFiber) {
-	// 	const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskQueue.shift() as TTASKQUEUE_ITEM
-	// 	__RTP__.taskQueue.length = 0
-	// 	lastTaskItem.task(currentRootFiber as TFiberNode)
-	// }
+	// console.log(__RTP__.taskQueue.length)
+	// __RTP__.taskQueue.length = 0
+	if (__RTP__.taskQueue.length && currentRootFiber) {
+		const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskQueue.pop() as TTASKQUEUE_ITEM
+		__RTP__.taskQueue.length = 0
+		lastTaskItem.task(currentRootFiber as TFiberNode)
+	}
 }
 
 function updateHookFiberReference(fiber: TFiberNode) {

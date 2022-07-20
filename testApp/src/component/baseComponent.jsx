@@ -2,7 +2,7 @@ import Sun, { useState, useEffect } from '@/'
 import { formatDates } from '../utils/utils'
 
 export function BaseComponent() {
-	console.log('BaseComponent')
+	console.log('Component: BaseComponent')
 	const [count, setCount] = useState(0)
 	const btnClickAtion = () => {
 		setCount(count => {
@@ -21,7 +21,7 @@ let parentTimer = null
 let parentTimerTick = 0
 let parentMaxCount = 10
 export function Parent() {
-	console.log('Parent')
+	console.log('Component: Parent')
 	const [parentCount, setParentCount] = useState(1)
 	const btnClickAtion = () => {
 		setParentCount(count => {
@@ -60,7 +60,7 @@ let childTimer = null
 let childTimerTick = 0
 let childMaxCount = 10 ** 5
 export function Child() {
-	console.log('Child')
+	console.log('Component: Child')
 	const [childCount, setChildCount] = useState(1)
 	const btnClickAtion = () => {
 		setChildCount(count => {
@@ -96,7 +96,7 @@ export function Child() {
 
 let clockTimer = null
 export function Clock() {
-	console.log('Clock')
+	console.log('Component: Clock')
 	const [clockCount, setClockCount] = useState(formatDates())
 	const btnClickAtion = () => {
 		setClockCount(() => {

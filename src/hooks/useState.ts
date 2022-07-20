@@ -13,6 +13,7 @@ function createHookItem(rootFiber: TFiberNode, nowFiber: TFiberNode, initValue: 
 		useState: true,
 		state: initValue,
 		setState: () => undefined,
+		queue: [],
 	}
 	return hookItem
 }
@@ -27,6 +28,7 @@ export function useState(initValue: any): TUseStateHook {
 	const hookItem: TUseStateHookStruct = nowFiber.hooks[__RTCP__.hookIndexOfNowFunctionCompt] as TUseStateHookStruct
 	if (!oldHookOfCompt) {
 		hookItem.setState = (action: any): void => {
+			hookItem.queue.push(action)
 			if (action instanceof Function) {
 				hookItem.state = action.call(undefined, hookItem.state)
 			} else {
@@ -52,7 +54,7 @@ export function useState(initValue: any): TUseStateHook {
 				hookItem.rootFiber.queueUp = true
 				Promise.resolve().then(() => {
 					const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskQueue.shift() as TTASKQUEUE_ITEM
-					lastTaskItem.task(lastTaskItem.fiber)
+					lastTaskItem.task(hookItem.rootFiber)
 				})
 			}
 		}
