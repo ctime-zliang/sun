@@ -5,7 +5,8 @@ type T__RTP__ = {
 	globalFiberRoot: TFiberNode
 	rootFiberList: Array<TFiberNode>
 	profileList: Array<{ [key: string]: any }>
-	taskQueue: Array<TTASKQUEUE_ITEM>
+	taskGroupQueue: Array<Array<TTASKQUEUE_ITEM>>
+	taskGroupIndex: number
 	nextWorkUnitFiber: TFiberNode
 	mountedHooksCache: Array<TAllHooksStruct>
 	unmountedHooksCache: Array<TAllHooksStruct>
@@ -15,7 +16,8 @@ export const __RTP__: T__RTP__ = Object.create({
 	globalFiberRoot: null,
 	rootFiberList: [],
 	profileList: [],
-	taskQueue: [],
+	taskGroupQueue: [],
+	taskGroupIndex: -1,
 	nextWorkUnitFiber: null,
 	mountedHooksCache: [],
 	unmountedHooksCache: [],

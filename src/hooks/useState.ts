@@ -44,17 +44,18 @@ export function useState(initValue: any): TUseStateHook {
 			 * 因此, 在通过一次 microtask 开启一轮 Reconciliation + Commit 且还未结束时, 需要保存在此期间被执行的 setState
 			 * 在每一轮 Reconciliation + Commit 结束后, 会尝试调用逐一执行队列(不为空时)中的 setState 调用
 			 */
-			__RTP__.taskQueue.push({
+			__RTP__.taskGroupQueue[hookItem.rootFiber.index as number].push({
 				fiber: hookItem.rootFiber,
 				task: (rootFiber: TFiberNode): void => {
 					initStartRootFiber(rootFiber)
 				},
 			})
-			if (!hookItem.rootFiber.queueUp) {
+			__RTP__.taskGroupQueue.push()
+			if (!hookItem.rootFiber.queueUp && !__RTP__.nextWorkUnitFiber) {
 				hookItem.rootFiber.queueUp = true
 				Promise.resolve().then(() => {
-					const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskQueue.shift() as TTASKQUEUE_ITEM
-					lastTaskItem.task(hookItem.rootFiber)
+					const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskGroupQueue[hookItem.rootFiber.index as number].shift() as TTASKQUEUE_ITEM
+					lastTaskItem.task(lastTaskItem.fiber)
 				})
 			}
 		}

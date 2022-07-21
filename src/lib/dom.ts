@@ -131,6 +131,9 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 			const eventType: string = item.toLowerCase().substring(2)
 			const fn: () => void = newProps[item].bind(undefined)
 			newProps[item] = function (e: Event): void {
+				if (!e) {
+					return
+				}
 				e.stopPropagation()
 				fn.call(e.target)
 			}

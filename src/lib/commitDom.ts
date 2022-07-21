@@ -129,6 +129,7 @@ export function commit(fiber: TFiberNode, action: string): void {
 			continue
 		}
 		if (current === root) {
+			cacheFunctionComponentUseEffectHooks(current, action)
 			console.warn(`===>>> current === root <<<===`)
 			return
 		}

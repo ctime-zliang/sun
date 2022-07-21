@@ -94,6 +94,7 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 
 	__RTP__.profileList.push({ ...renderProfile, ...profile })
 	__RTP__.rootFiberList.push(rootFiber)
+	__RTP__.taskGroupQueue[rootFiber.index as number] = []
 	if (__RTP__.globalFiberRoot && !__RTP__.globalFiberRoot.current) {
 		__RTP__.globalFiberRoot.current = rootFiber as TFiberNode
 		__RTP__.nextWorkUnitFiber = rootFiber as TFiberNode

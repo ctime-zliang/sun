@@ -44,7 +44,7 @@ export function initSyncWorkLoop(): () => void {
 			__RTP__.nextWorkUnitFiber = performUnitWork(__RTP__.nextWorkUnitFiber, deletions) as TFiberNode
 		}
 		if (!__RTP__.nextWorkUnitFiber && __RTP__.globalFiberRoot.current) {
-			workEnd(deletions, currentRootFiber)
+			workEnd(deletions)
 			return
 		}
 		workLoop()
@@ -64,7 +64,7 @@ export function initAsyncWorkLoop(): (deadline: TRequestIdleCallbackParams) => v
 			shouldYield = deadline.timeRemaining() < 1
 		}
 		if (!__RTP__.nextWorkUnitFiber && __RTP__.globalFiberRoot.current) {
-			workEnd(deletions, currentRootFiber)
+			workEnd(deletions)
 		}
 		window.requestIdleCallback(worLoop, { timeout: globalConfig.requestIdleCallbackTimeout })
 	}
@@ -72,12 +72,12 @@ export function initAsyncWorkLoop(): (deadline: TRequestIdleCallbackParams) => v
 	return worLoop
 }
 
-function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): void {
+function workEnd(deletions: Array<TFiberNode>): void {
 	/**
 	 * 暂存当前活动的应用的顶层 fiber(rootFiber)
 	 * 清除全局 globalFiberRoot 对该活动的应用的 rootFiber 的引用
 	 */
-	currentRootFiber = __RTP__.globalFiberRoot.current as TFiberNode
+	const currentRootFiber = __RTP__.globalFiberRoot.current as TFiberNode
 	/**
 	 * 复位
 	 */
@@ -123,6 +123,7 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 
 	/**
 	 * 检查并尝试执行下一个实例
+	 * 		该段处理只会在首次 render 时执行
 	 */
 	const nextRootFiber: TFiberNode = __RTP__.rootFiberList[(currentRootFiber.index as number) + 1] || undefined
 	if (nextRootFiber && nextRootFiber.dirty) {
@@ -131,12 +132,13 @@ function workEnd(deletions: Array<TFiberNode>, currentRootFiber: TFiberNode): vo
 		return
 	}
 
-	// console.log(__RTP__.taskQueue.length)
-	// __RTP__.taskQueue.length = 0
-	if (__RTP__.taskQueue.length && currentRootFiber) {
-		const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskQueue.pop() as TTASKQUEUE_ITEM
-		__RTP__.taskQueue.length = 0
-		lastTaskItem.task(currentRootFiber as TFiberNode)
+	__RTP__.taskGroupIndex = (__RTP__.taskGroupIndex++, __RTP__.taskGroupIndex) > __RTP__.taskGroupQueue.length - 1 ? 0 : __RTP__.taskGroupIndex
+	const taskGroup: Array<TTASKQUEUE_ITEM> = __RTP__.taskGroupQueue[__RTP__.taskGroupIndex]
+	if (taskGroup.length && !__RTP__.nextWorkUnitFiber) {
+		const lastTaskItem: TTASKQUEUE_ITEM = taskGroup.pop() as TTASKQUEUE_ITEM
+		taskGroup.length = 0
+		lastTaskItem.fiber.queueUp = true
+		initStartRootFiber(__RTP__.rootFiberList[__RTP__.taskGroupIndex])
 	}
 }
 
