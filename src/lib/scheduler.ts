@@ -123,7 +123,7 @@ function workEnd(deletions: Array<TFiberNode>): void {
 
 	/**
 	 * 检查并尝试执行下一个实例
-	 * 		该段处理只会在首次 render 时执行
+	 * 该段处理只会在首次 render 时执行
 	 */
 	const nextRootFiber: TFiberNode = __RTP__.rootFiberList[(currentRootFiber.index as number) + 1] || undefined
 	if (nextRootFiber && nextRootFiber.dirty) {
@@ -132,12 +132,16 @@ function workEnd(deletions: Array<TFiberNode>): void {
 		return
 	}
 
+	/**
+	 * 需要在每一轮更新结束后检查 setState 任务队列
+	 * 队列不为空时, 在空闲状态下开启新一轮更新过程
+	 */
 	__RTP__.taskGroupIndex = (__RTP__.taskGroupIndex++, __RTP__.taskGroupIndex) > __RTP__.taskGroupQueue.length - 1 ? 0 : __RTP__.taskGroupIndex
 	const taskGroup: Array<TTASKQUEUE_ITEM> = __RTP__.taskGroupQueue[__RTP__.taskGroupIndex]
 	if (taskGroup.length && !__RTP__.nextWorkUnitFiber) {
-		const lastTaskItem: TTASKQUEUE_ITEM = taskGroup.pop() as TTASKQUEUE_ITEM
 		taskGroup.length = 0
-		lastTaskItem.fiber.queueUp = true
+		const rootFiber: TFiberNode = __RTP__.rootFiberList[__RTP__.taskGroupIndex]
+		rootFiber.queueUp = true
 		initStartRootFiber(__RTP__.rootFiberList[__RTP__.taskGroupIndex])
 	}
 }

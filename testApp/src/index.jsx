@@ -54,7 +54,8 @@ function App() {
 }
 
 render(<Clock />, document.querySelector(`#app`), { async: true })
-// render(<BaseComponentParent />, document.querySelector(`#app2`), { async: true })
+render(<BaseComponentParent />, document.querySelector(`#app2`), { async: true })
+render(<Clock />, document.querySelector(`#app3`), { async: true })
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()

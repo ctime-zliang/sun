@@ -38,24 +38,26 @@ export function useState(initValue: any): TUseStateHook {
 			/**
 			 * 将每次 setState 的执行保存到队列中
 			 *
-			 * 在性能较好的高刷设备中, 某些情况下尽管可以尽快地连续执行 setState(例如快速点击按执行 setState)
-			 * 但仍存在浏览器往这些连续执行的 setState 之间穿插进若干 microtask 的情况
-			 *
-			 * 因此, 在通过一次 microtask 开启一轮 Reconciliation + Commit 且还未结束时, 需要保存在此期间被执行的 setState
-			 * 在每一轮 Reconciliation + Commit 结束后, 会尝试调用逐一执行队列(不为空时)中的 setState 调用
+			 * 在 Reconciliation + Commit 执行期间被执行的 setState 将插入到队列中
+			 * 在每轮 Reconciliation + Commit 执行结束后, 会尝试调用逐一执行队列(不为空时)中的 setState 调用
 			 */
-			__RTP__.taskGroupQueue[hookItem.rootFiber.index as number].push({
-				fiber: hookItem.rootFiber,
+			const rootFiberIndex: number = hookItem.rootFiber.index || 0
+			const taskGroup: Array<TTASKQUEUE_ITEM> = __RTP__.taskGroupQueue[rootFiberIndex]
+			taskGroup.push({
 				task: (rootFiber: TFiberNode): void => {
 					initStartRootFiber(rootFiber)
 				},
 			})
-			__RTP__.taskGroupQueue.push()
+			/**
+			 * 仅在空闲状态下开启一轮 Reconciliation + Commit 更新过程
+			 * 		同时满足:
+			 * 			1. 任意 <App /> 顶层组件没有被加入到 Reconciliation 过程中
+			 * 			2. 没有正在处理的 Reconciliation + Commit 过程
+			 */
 			if (!hookItem.rootFiber.queueUp && !__RTP__.nextWorkUnitFiber) {
 				hookItem.rootFiber.queueUp = true
 				Promise.resolve().then(() => {
-					const lastTaskItem: TTASKQUEUE_ITEM = __RTP__.taskGroupQueue[hookItem.rootFiber.index as number].shift() as TTASKQUEUE_ITEM
-					lastTaskItem.task(lastTaskItem.fiber)
+					initStartRootFiber(hookItem.rootFiber)
 				})
 			}
 		}
