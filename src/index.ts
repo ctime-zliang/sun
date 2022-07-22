@@ -8,6 +8,8 @@ import { TVDom } from './types/vdom.types'
 
 const Sun = Object.create(null)
 
+window.__SUN__ = Sun
+
 Sun.createElement = createElement as (type: string, props: { [key: string]: any }, ...children: any[]) => TVDom
 Sun.createTextElement = createTextElement as (text: string) => TVDom
 Sun.render = _render as (element: any, containe: HTMLElement) => void
