@@ -4,7 +4,7 @@
 
 import { __RTP__, __RTCP__ } from './core/runtime'
 import { initAsyncWorkLoop, initSyncWorkLoop } from './lib/scheduler'
-import { flatArray, generateFiberStructData, generateInitialFiberStructData, generateInitialVDOMStructData } from './utils/utils'
+import { flatArray, generateFiberStructData, generateInitialVDOMStructData } from './utils/utils'
 import { TVDom } from './types/vdom.types'
 import { ENUM_NODE_TYPE } from './config/effect.enum'
 import { TFiberNode } from './types/fiber.types'

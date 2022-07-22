@@ -53,7 +53,7 @@ function App() {
 }
 
 render(<Clock />, document.querySelector(`#app`), { async: true })
-render(<Clock />, document.querySelector(`#app2`))
+render(<App />, document.querySelector(`#app2`))
 // render(<Clock />, document.querySelector(`#app3`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
