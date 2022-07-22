@@ -95,6 +95,12 @@ export function Child() {
 }
 
 let clockTimer = null
+let clockContainerStyle = {
+	padding: '10px 0',
+	margin: '20px 0',
+	borderTop: '1px dashed #000000',
+	borderBottom: '1px dashed #000000',
+}
 export function Clock() {
 	console.log('Component: Clock')
 	const [clockCount, setClockCount] = useState('xxxx-xx-xx --:--:--')
@@ -115,7 +121,7 @@ export function Clock() {
 		})
 	}, [])
 	return (
-		<article data-tagitem="clock">
+		<article data-tagitem="clock" style={clockContainerStyle}>
 			<div>{clockCount}</div>
 			<button onClick={btnClickAtion}>Set Tag(s)</button>
 			<ul>

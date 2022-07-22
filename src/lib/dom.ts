@@ -125,14 +125,14 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 		const item: string = systemEventOfNewProps[i]
 		if (isNewlyHandlerNewProps(item)) {
 			const eventType: string = item.toLowerCase().substring(2)
-			const fn: () => void = newProps[item].bind(undefined)
+			const fn: (e: Event) => void = newProps[item].bind(undefined)
 			newProps[item] = function (e: Event): void {
 				if (!e) {
 					console.warn(`DOM Event Handler Error.`)
 					return
 				}
 				e.stopPropagation()
-				fn.call(e.target)
+				fn.call(e.target, e)
 			}
 			dom.addEventListener(eventType, newProps[item])
 		}

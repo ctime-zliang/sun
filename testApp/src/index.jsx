@@ -11,6 +11,7 @@ import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
 import { TraverseFiberTree } from './component/traverseFiberTree'
 import { UseEffectExecSequentialWrapper } from './component/useEffectExecSequential'
 import { TimeoutInteractive, IntervalSetCount } from './component/closure'
+import { BaseInput } from './component/form'
 import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild, Clock } from './component/baseComponent'
 
 function App() {
@@ -53,8 +54,8 @@ function App() {
 	)
 }
 
-render(<Clock />, document.querySelector(`#app`), { async: true })
-render(<App />, document.querySelector(`#app2`))
+render(<BaseInput />, document.querySelector(`#app`), { async: true })
+render(<Clock />, document.querySelector(`#app2`))
 // render(<Clock />, document.querySelector(`#app3`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
