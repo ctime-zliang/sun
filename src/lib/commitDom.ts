@@ -7,7 +7,7 @@ import { isFunctionComponent } from '../utils/utils'
 import { ENUM_COMMIT_DOM_ACTION } from '../config/commitDom.enum'
 import { TUseEffectHookStruct } from '../types/hooks.types'
 
-function handleDom(fiber: TFiberNode, tag: any): void {
+function handleDom(fiber: TFiberNode): void {
 	if (!fiber.stateNode) {
 		/**
 		 * 函数组件做特殊处理
@@ -103,7 +103,7 @@ export function commit(fiber: TFiberNode, action: string): void {
 
 	while (current) {
 		if (current.dirty) {
-			handleDom(current, '1')
+			handleDom(current)
 			current.dirty = false
 		}
 		if (current.child) {
@@ -123,7 +123,7 @@ export function commit(fiber: TFiberNode, action: string): void {
 				cacheFunctionComponentUseEffectHooks(nowFunctionParentFiber, action)
 			}
 			if (current.dirty) {
-				handleDom(current, '2')
+				handleDom(current)
 				current.dirty = false
 			}
 			continue

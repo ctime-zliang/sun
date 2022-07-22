@@ -13,7 +13,6 @@ function createHookItem(rootFiber: TFiberNode, nowFiber: TFiberNode, initValue: 
 		useState: true,
 		state: initValue,
 		setState: () => undefined,
-		queue: [],
 	}
 	return hookItem
 }
@@ -28,7 +27,6 @@ export function useState(initValue: any): TUseStateHook {
 	const hookItem: TUseStateHookStruct = nowFiber.hooks[__RTCP__.hookIndexOfNowFunctionCompt] as TUseStateHookStruct
 	if (!oldHookOfCompt) {
 		hookItem.setState = (action: any): void => {
-			hookItem.queue.push(action)
 			if (action instanceof Function) {
 				hookItem.state = action.call(undefined, hookItem.state)
 			} else {
@@ -50,14 +48,20 @@ export function useState(initValue: any): TUseStateHook {
 			})
 			/**
 			 * 仅在空闲状态下开启一轮 Reconciliation + Commit 更新过程
-			 * 		同时满足:
-			 * 			1. 任意 <App /> 顶层组件没有被加入到 Reconciliation 过程中
+			 * 		定义"空闲状态"即:
+			 * 			1. 没有任何 <App /> 对应的 fiber 根节点被加入到 Reconciliation 过程中
 			 * 			2. 没有正在处理的 Reconciliation + Commit 过程
 			 */
 			if (!hookItem.rootFiber.queueUp && !__RTP__.nextWorkUnitFiber) {
 				hookItem.rootFiber.queueUp = true
 				Promise.resolve().then(() => {
-					taskGroup.shift()
+					/**
+					 * 在所有同步任务结束后插入一个 microtask, 并在该 microtask 中开启更新过程
+					 * 此处的 microtask 将同时起到"防抖"功能, 因此在开启更新过程时可以清空被暂存的 task
+					 * 在更新过程进行中时若执行 setState, 将继续暂存到被清空的队列中
+					 * Reconciliation + Commit 更新过程结束后检查 setState 队列是否为空, 必要时将继续下一轮更新过程
+					 */
+					taskGroup.length = 0
 					initStartRootFiber(hookItem.rootFiber)
 				})
 			}

@@ -15,7 +15,7 @@ import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChi
 function App() {
 	console.log(`Component: App`)
 
-	const [count1, setCount1] = useState(0)
+	const [count1, setCount1] = useState(1)
 	const setCountAction1 = () => {
 		setCount1(state => {
 			return state + 1
@@ -40,7 +40,7 @@ function App() {
 	}, [])
 
 	const number = useMemo(() => {
-		// syncBlock()
+		syncBlock()
 		return count1 * 2
 	}, [])
 
@@ -54,8 +54,8 @@ function App() {
 }
 
 render(<Clock />, document.querySelector(`#app`), { async: true })
-// render(<BaseComponentParent />, document.querySelector(`#app2`), { async: true })
-// render(<Clock />, document.querySelector(`#app3`), { async: true })
+render(<App />, document.querySelector(`#app2`))
+// render(<Clock />, document.querySelector(`#app3`))
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()

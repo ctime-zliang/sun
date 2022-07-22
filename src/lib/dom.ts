@@ -132,6 +132,7 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 			const fn: () => void = newProps[item].bind(undefined)
 			newProps[item] = function (e: Event): void {
 				if (!e) {
+					console.warn(`DOM Event Handler Error.`)
 					return
 				}
 				e.stopPropagation()

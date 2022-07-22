@@ -30,6 +30,7 @@ export function useEffect(callback: () => any, dependences: Array<any> | undefin
 		hookItem.returnCallback = oldHookOfCompt.returnCallback
 		hookItem.dependences = oldHookOfCompt.dependences
 	}
+
 	setHookUpdate(hookItem, dependences)
 
 	__RTCP__.hookIndexOfNowFunctionCompt++

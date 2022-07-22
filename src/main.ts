@@ -92,17 +92,19 @@ export function render(element: TVDom, container: HTMLElement, profile: { [key: 
 	})
 	rootFiber.triggerUpdate = true
 
+	const rootFiberIndex: number = rootFiber.index as number
+
 	__RTP__.profileList.push({ ...renderProfile, ...profile })
 	__RTP__.rootFiberList.push(rootFiber)
-	__RTP__.taskGroupQueue[rootFiber.index as number] = []
+	__RTP__.taskGroupQueue[rootFiberIndex] = []
 	if (__RTP__.globalFiberRoot && !__RTP__.globalFiberRoot.current) {
-		__RTP__.globalFiberRoot.current = rootFiber as TFiberNode
-		__RTP__.nextWorkUnitFiber = rootFiber as TFiberNode
+		__RTP__.globalFiberRoot.current = rootFiber
+		__RTP__.nextWorkUnitFiber = rootFiber
 
 		/**
 		 * 以异步调度或同步调度方式执行
 		 */
-		if (__RTP__.profileList[rootFiber.index as number].async) {
+		if (__RTP__.profileList[rootFiberIndex].async) {
 			window.requestIdleCallback(initAsyncWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
 		} else {
 			initSyncWorkLoop()()

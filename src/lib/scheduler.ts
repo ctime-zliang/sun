@@ -27,17 +27,18 @@ export function initStartRootFiber(rootFiber: TFiberNode): void {
 		root: true,
 		queueUp: rootFiber.queueUp,
 	})
-	__RTP__.rootFiberList.splice(rootFiber.index as number, 1, newRootFiber)
+	const rootFiberIndex: number = newRootFiber.index as number
+
+	__RTP__.rootFiberList.splice(rootFiberIndex, 1, newRootFiber)
 	__RTP__.globalFiberRoot.current = newRootFiber
 	__RTP__.nextWorkUnitFiber = newRootFiber
-	if (!__RTP__.profileList[newRootFiber.index as number].async) {
+	if (!__RTP__.profileList[rootFiberIndex].async) {
 		initSyncWorkLoop()()
 	}
 }
 
 export function initSyncWorkLoop(): () => void {
 	let deletions: Array<TFiberNode> = []
-	let currentRootFiber: TFiberNode
 
 	function workLoop(): void {
 		while (__RTP__.nextWorkUnitFiber) {
@@ -55,7 +56,6 @@ export function initSyncWorkLoop(): () => void {
 
 export function initAsyncWorkLoop(): (deadline: TRequestIdleCallbackParams) => void {
 	let deletions: Array<TFiberNode> = []
-	let currentRootFiber: TFiberNode
 
 	function worLoop(deadline: TRequestIdleCallbackParams): void {
 		let shouldYield: boolean = false
@@ -124,6 +124,8 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	/**
 	 * 检查并尝试执行下一个实例
 	 * 该段处理只会在首次 render 时执行
+	 *
+	 * 需要在检查 setState 任务队列之前执行, 即需要保证尽快渲染出下一个 <App /> 应用
 	 */
 	const nextRootFiber: TFiberNode = __RTP__.rootFiberList[(currentRootFiber.index as number) + 1] || undefined
 	if (nextRootFiber && nextRootFiber.dirty) {
