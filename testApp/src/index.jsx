@@ -10,6 +10,7 @@ import Sun, { render, useState, useEffect, useMemo } from '../../src/index'
 import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
 import { TraverseFiberTree } from './component/traverseFiberTree'
 import { UseEffectExecSequentialWrapper } from './component/useEffectExecSequential'
+import { TimeoutInteractive, IntervalSetCount } from './component/closure'
 import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild, Clock } from './component/baseComponent'
 
 function App() {

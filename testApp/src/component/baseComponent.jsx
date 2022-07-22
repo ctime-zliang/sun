@@ -23,7 +23,7 @@ let parentMaxCount = 10
 export function Parent() {
 	console.log('Component: Parent')
 	const [parentCount, setParentCount] = useState(1)
-	const btnClickAtion = () => {
+	const btnClickAction = () => {
 		setParentCount(count => {
 			return count + 1
 		})
@@ -49,7 +49,7 @@ export function Parent() {
 	}, [])
 	return (
 		<article data-tagitem="parent">
-			<button onClick={btnClickAtion}>Set Count</button>
+			<button onClick={btnClickAction}>Set Count</button>
 			<div>{parentCount}</div>
 			<Child />
 		</article>
@@ -62,7 +62,7 @@ let childMaxCount = 10 ** 5
 export function Child() {
 	console.log('Component: Child')
 	const [childCount, setChildCount] = useState(1)
-	const btnClickAtion = () => {
+	const btnClickAction = () => {
 		setChildCount(count => {
 			return count + 1
 		})
@@ -88,7 +88,7 @@ export function Child() {
 	}, [])
 	return (
 		<article data-tagitem="child">
-			<button onClick={btnClickAtion}>Set Number</button>
+			<button onClick={btnClickAction}>Set Number</button>
 			<div>{childCount}</div>
 		</article>
 	)
