@@ -200,3 +200,22 @@ export function syncBlock(delay: number = 1000): void {
 		++i
 	}
 }
+
+/**
+ * @description 数组扁平化
+ * @function flatArray
+ * @param {array} arr 需要扁平化的数组(通常是嵌套数组)
+ * @return {array}
+ */
+export function flatArray(arr: Array<any>, res: Array<any> = []): Array<any> {
+	res = res || []
+	for (let i: number = 0; i < arr.length; i++) {
+		const a: any = arr[i]
+		if (Array.isArray(a)) {
+			flatArray(a, res)
+			continue
+		}
+		res.push(a)
+	}
+	return res
+}

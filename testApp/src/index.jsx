@@ -48,13 +48,12 @@ function App() {
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
 			<div>{count1}</div>
 			<div>{number}</div>
-			<Clock />
 		</div>
 	)
 }
 
 render(<Clock />, document.querySelector(`#app`), { async: true })
-render(<App />, document.querySelector(`#app2`))
+// render(<Clock />, document.querySelector(`#app2`))
 // render(<Clock />, document.querySelector(`#app3`))
 
 window.addEventListener('DOMContentLoaded', function (e) {

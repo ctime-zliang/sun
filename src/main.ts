@@ -4,7 +4,7 @@
 
 import { __RTP__, __RTCP__ } from './core/runtime'
 import { initAsyncWorkLoop, initSyncWorkLoop } from './lib/scheduler'
-import { generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData } from './utils/utils'
+import { flatArray, generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData } from './utils/utils'
 import { TVDom } from './types/vdom.types'
 import { ENUM_NODE_TYPE } from './config/effect.enum'
 import { TFiberNode } from './types/fiber.types'
@@ -37,7 +37,8 @@ export function createElement(type: string, props: { [key: string]: any }, ...ch
 	 * Array.flat(Infinity) 性能问题
 	 * 这可能不是一个好的实现方式
 	 */
-	const flatChildren: Array<any> = (children as any).flat(Infinity) // or children.flat(1)
+	// const flatChildren: Array<any> = (children as any).flat(Infinity) // or children.flat(1)
+	const flatChildren = flatArray(children)
 	const elementVDom: TVDom = generateInitialVDOMStructData(type, {
 		...props,
 		children: flatChildren.map((child: any): void => {
