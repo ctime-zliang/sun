@@ -6,6 +6,10 @@ export type TTASKQUEUE_ITEM = {
 	task: (a: TFiberNode) => void
 }
 
+export type TFiberRootNode = {
+	current: TFiberNode | null | undefined
+}
+
 export type TFiberNode = {
 	// FunctionComponent: Function
 	// ClassComponent: Function,
@@ -23,12 +27,11 @@ export type TFiberNode = {
 	dirty: boolean
 	triggerUpdate: boolean
 	hooks: Array<TAllHooksStruct>
+	effectCachedMounted: boolean
+	effectCachedUnmounted: boolean
 	/* ... */
 	root?: boolean
 	index?: number
 	current?: TFiberNode | null
 	queueUp?: boolean
-	/* ... */
-	__chm: boolean
-	__dchm: boolean
 }

@@ -61,10 +61,10 @@ export function generateInitialFiberStructData(): TFiberNode {
 		triggerUpdate: false,
 		/* 特殊标记位 */
 		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
-		__chm: false,
+		effectCachedMounted: false,
 		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
 		// 针对需要删除的 fiber 节点
-		__dchm: false,
+		effectCachedUnmounted: false,
 	}
 }
 
@@ -79,20 +79,6 @@ export function generateFiberStructData(args: any = {}): TFiberNode {
 	return {
 		...defaults,
 		...args,
-	}
-}
-
-/**
- * @description 创建适用非根节点的 Fiber 结构体数据
- * @function generateRootFiberStructData
- * @return {TFiberNode}
- */
-export function generateRootFiberStructData(): TFiberNode {
-	return {
-		...generateInitialFiberStructData(),
-		current: null,
-		root: true,
-		index: -1,
 	}
 }
 

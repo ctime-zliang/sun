@@ -114,7 +114,7 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	window.setTimeout(() => {
 		for (let i: number = 0; i < __RTP__.mountedHooksCache.length; i++) {
 			const hookItem: TUseEffectHookStruct = __RTP__.mountedHooksCache[i] as TUseEffectHookStruct
-			if (hookItem.isupdated && hookItem.callback instanceof Function) {
+			if (hookItem.isUpdated && hookItem.callback instanceof Function) {
 				hookItem.returnCallback = hookItem.callback.call(undefined)
 			}
 		}
@@ -143,8 +143,7 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	if (taskGroup.length && !__RTP__.nextWorkUnitFiber) {
 		taskGroup.length = 0
 		const rootFiber: TFiberNode = __RTP__.rootFiberList[__RTP__.taskGroupIndex]
-		rootFiber.queueUp = true
-		initStartRootFiber(__RTP__.rootFiberList[__RTP__.taskGroupIndex])
+		initStartRootFiber(((rootFiber.queueUp = true), rootFiber))
 	}
 }
 
@@ -158,11 +157,11 @@ function updateHookFiberReference(fiber: TFiberNode) {
 		}
 		if ((hooks[i] as TUseEffectHookStruct).useEffect) {
 			const hookItem: TUseEffectHookStruct = hooks[i] as TUseEffectHookStruct
-			hookItem.isupdated = false
+			hookItem.isUpdated = false
 		}
 		if ((hooks[i] as TUseMemoHookStruct).useMemo) {
 			const hookItem: TUseMemoHookStruct = hooks[i] as TUseMemoHookStruct
-			hookItem.isupdated = false
+			hookItem.isUpdated = false
 		}
 	}
 }

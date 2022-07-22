@@ -13,7 +13,7 @@ export type TUseStateHookStruct = {
 
 export type TUseEffectHookStruct = {
 	useEffect: boolean
-	isupdated: boolean
+	isUpdated: boolean
 	dependences: Array<any> | undefined
 	callback?: Function
 	returnCallback?: Function
@@ -21,7 +21,7 @@ export type TUseEffectHookStruct = {
 
 export type TUseMemoHookStruct = {
 	useMemo: boolean
-	isupdated: boolean
+	isUpdated: boolean
 	dependences: Array<any> | undefined
 	callback?: Function
 	returnValue?: any

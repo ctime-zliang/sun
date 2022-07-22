@@ -6,7 +6,7 @@ import { getHookItem, setHookUpdate } from './hook'
 function createHookItem(callback: () => any): TUseEffectHookStruct {
 	const hookItem: TUseEffectHookStruct = {
 		useEffect: true,
-		isupdated: false,
+		isUpdated: false,
 		dependences: undefined,
 		callback,
 		returnCallback: undefined,
@@ -22,10 +22,10 @@ export function useEffect(callback: () => any, dependences: Array<any> | undefin
 	}
 	const hookItem: TUseEffectHookStruct = nowFiber.hooks[__RTCP__.hookIndexOfNowFunctionCompt] as TUseEffectHookStruct
 	if (!oldHookOfCompt) {
-		hookItem.isupdated = true
+		hookItem.isUpdated = true
 		hookItem.dependences = dependences instanceof Array ? Array.from(dependences) : undefined
 	} else {
-		hookItem.isupdated = false
+		hookItem.isUpdated = false
 		hookItem.callback = oldHookOfCompt.callback
 		hookItem.returnCallback = oldHookOfCompt.returnCallback
 		hookItem.dependences = oldHookOfCompt.dependences

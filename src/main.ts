@@ -4,7 +4,7 @@
 
 import { __RTP__, __RTCP__ } from './core/runtime'
 import { initAsyncWorkLoop, initSyncWorkLoop } from './lib/scheduler'
-import { flatArray, generateFiberStructData, generateInitialVDOMStructData, generateRootFiberStructData } from './utils/utils'
+import { flatArray, generateFiberStructData, generateInitialFiberStructData, generateInitialVDOMStructData } from './utils/utils'
 import { TVDom } from './types/vdom.types'
 import { ENUM_NODE_TYPE } from './config/effect.enum'
 import { TFiberNode } from './types/fiber.types'
@@ -16,13 +16,12 @@ window.__RTCP__ = __RTCP__
 /**
  * 创建一个全局顶层 fiber: globalFiberRoot
  *
- * 		当需要 render 多个实例时
- * 		globalFiberRoot.current 将依次(按照 render 调用先后顺序)指向各个 <App /> 对应的 fiber 树
- *
- * 		当多个 <App /> 实例存在且某些实例发生更新时
- * 		globalFiberRoot.current 将依次指向这些需要更新的 <App /> 对应的 fiber 树
+ * 		当需要 render 多个实例时(仅指首次 render)
+ * 		globalFiberRoot.current 将依次(按照 render 调用先后顺序)指向各个 <App /> 对应的 fiber 树的根 fiber 节点
  */
-__RTP__.globalFiberRoot = generateRootFiberStructData() as TFiberNode
+__RTP__.globalFiberRoot = Object.create({
+	current: undefined,
+})
 
 /**
  * @description 创建元素 vDom
@@ -38,7 +37,7 @@ export function createElement(type: string, props: { [key: string]: any }, ...ch
 	 * 这可能不是一个好的实现方式
 	 */
 	// const flatChildren: Array<any> = (children as any).flat(Infinity) // or children.flat(1)
-	const flatChildren = flatArray(children)
+	const flatChildren: Array<any> = flatArray(children)
 	const elementVDom: TVDom = generateInitialVDOMStructData(type, {
 		...props,
 		children: flatChildren.map((child: any): void => {

@@ -6,7 +6,7 @@ import { getHookItem, setHookUpdate } from './hook'
 function createHookItem(callback: () => any): TUseMemoHookStruct {
 	const hookItem: TUseMemoHookStruct = {
 		useMemo: true,
-		isupdated: false,
+		isUpdated: false,
 		dependences: undefined,
 		callback,
 		returnValue: undefined,
@@ -22,16 +22,16 @@ export function useMemo(callback: () => any, dependences: Array<any> | undefined
 	}
 	const hookItem: TUseMemoHookStruct = nowFiber.hooks[__RTCP__.hookIndexOfNowFunctionCompt] as TUseMemoHookStruct
 	if (!oldHookOfCompt) {
-		hookItem.isupdated = true
+		hookItem.isUpdated = true
 		hookItem.dependences = dependences instanceof Array ? Array.from(dependences) : undefined
 	} else {
-		hookItem.isupdated = false
+		hookItem.isUpdated = false
 		hookItem.returnValue = oldHookOfCompt.returnValue
 		hookItem.dependences = oldHookOfCompt.dependences
 	}
 
 	setHookUpdate(hookItem, dependences)
-	if (hookItem.isupdated && hookItem.callback) {
+	if (hookItem.isUpdated && hookItem.callback) {
 		hookItem.returnValue = hookItem.callback()
 	}
 

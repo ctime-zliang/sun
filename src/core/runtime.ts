@@ -1,8 +1,8 @@
 import { TAllHooksStruct } from '../types/hooks.types'
-import { TFiberNode, TTASKQUEUE_ITEM } from '../types/fiber.types'
+import { TFiberNode, TFiberRootNode, TTASKQUEUE_ITEM } from '../types/fiber.types'
 
 type T__RTP__ = {
-	globalFiberRoot: TFiberNode
+	globalFiberRoot: TFiberRootNode
 	rootFiberList: Array<TFiberNode>
 	profileList: Array<{ [key: string]: any }>
 	taskGroupQueue: Array<Array<TTASKQUEUE_ITEM>>

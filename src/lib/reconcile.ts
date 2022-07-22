@@ -36,7 +36,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 			if (oldChildFiberOfNowWIPFiber) {
 				oldChildFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
 				oldChildFiberOfNowWIPFiber.dirty = true
-				oldChildFiberOfNowWIPFiber.__chm = false
+				oldChildFiberOfNowWIPFiber.effectCachedMounted = false
 				deletions.push(oldChildFiberOfNowWIPFiber)
 				oldChildFiberOfNowWIPFiber = oldChildFiberOfNowWIPFiber.sibling
 			}
@@ -79,7 +79,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 			if (oldChildFiberOfNowWIPFiber) {
 				oldChildFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION
 				oldChildFiberOfNowWIPFiber.dirty = true
-				oldChildFiberOfNowWIPFiber.__chm = false
+				oldChildFiberOfNowWIPFiber.effectCachedMounted = false
 				deletions.push(oldChildFiberOfNowWIPFiber)
 			}
 		}
@@ -96,7 +96,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 		 * 		now-fiber(wipFiber)
 		 *  	 /
 		 * 		/
-		 * newChildFiber -- nextNewChildFiber --
+		 * newChildFiber ———— nextNewChildFiber ————
 		 *
 		 * 且后续的 child fiber 节点将作为第一个 child fiber 节点的兄弟节点依次串联
 		 */

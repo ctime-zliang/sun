@@ -62,10 +62,6 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 	/* ... */
 	const isNewlyHandlerNewProps: (key: string) => boolean = isNewly(oldProps, newProps)
 
-	if (dom.nodeName.toLocaleLowerCase() === 'button') {
-		const a = 1 + 1
-	}
-
 	/**
 	 * 移除系统事件
 	 */
