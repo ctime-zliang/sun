@@ -57,6 +57,7 @@ export function useState(initValue: any): TUseStateHook {
 			if (!hookItem.rootFiber.queueUp && !__RTP__.nextWorkUnitFiber) {
 				hookItem.rootFiber.queueUp = true
 				Promise.resolve().then(() => {
+					taskGroup.shift()
 					initStartRootFiber(hookItem.rootFiber)
 				})
 			}

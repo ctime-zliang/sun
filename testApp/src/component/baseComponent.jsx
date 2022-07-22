@@ -97,23 +97,36 @@ export function Child() {
 let clockTimer = null
 export function Clock() {
 	console.log('Component: Clock')
-	const [clockCount, setClockCount] = useState(formatDates())
+	const [clockCount, setClockCount] = useState('xxxx-xx-xx --:--:--')
+	const [tagList, setTagList] = useState([])
 	const btnClickAtion = () => {
-		setClockCount(() => {
-			return formatDates()
+		setTagList(tagList => {
+			const allList = [...tagList, clockCount]
+			if (allList.length > 10) {
+				allList.length = 0
+				allList.push(clockCount)
+			}
+			return allList
 		})
 	}
 	useEffect(() => {
 		clockTimer = window.setInterval(() => {
-			setClockCount(() => {
-				return formatDates()
-			})
+			setClockCount(formatDates())
 		})
 	}, [])
 	return (
 		<article data-tagitem="clock">
-			<button onClick={btnClickAtion}>Update Clock</button>
 			<div>{clockCount}</div>
+			<button onClick={btnClickAtion}>Set Tag(s)</button>
+			<ul>
+				{tagList.map((item, index) => {
+					return (
+						<li>
+							{index} - {item}
+						</li>
+					)
+				})}
+			</ul>
 		</article>
 	)
 }
