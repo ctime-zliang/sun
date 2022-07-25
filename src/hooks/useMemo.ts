@@ -31,8 +31,8 @@ export function useMemo(callback: () => any, dependences: Array<any> | undefined
 	}
 
 	setHookUpdate(hookItem, dependences)
-	if (hookItem.isUpdated && hookItem.callback) {
-		hookItem.returnValue = hookItem.callback()
+	if (hookItem.isUpdated && hookItem.callback instanceof Function) {
+		hookItem.returnValue = hookItem.callback.call(undefined)
 	}
 
 	__RTCP__.hookIndexOfNowFunctionCompt++

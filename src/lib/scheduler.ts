@@ -12,7 +12,7 @@ import { TAllHooksStruct, TUseEffectHookStruct, TUseMemoHookStruct, TUseStateHoo
 
 export function initStartRootFiber(rootFiber: TFiberNode): void {
 	/**
-	 * 重新创建 <App /> 应用的根 fiber 节点
+	 * 重新创建 <App /> 应用对应的 fiber 树的根 fiber 节点
 	 */
 	const newRootFiber: TFiberNode = generateFiberStructData({
 		stateNode: rootFiber.stateNode,
@@ -79,7 +79,7 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	 */
 	const currentRootFiber = __RTP__.globalFiberRoot.current as TFiberNode
 	/**
-	 * 复位
+	 * 全局状态变量复位
 	 */
 	__RTP__.globalFiberRoot.current = undefined
 	__RTP__.updateRangeStartFiber = null
@@ -97,6 +97,9 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	// console.timeEnd('commit')
 	// console.log('%c===>>> App Task Finished', 'color: #ff0000;')
 
+	/**
+	 * fiber 树状态复位
+	 */
 	currentRootFiber.dirty = false
 	currentRootFiber.queueUp = false
 	deletions.length = 0
@@ -111,7 +114,7 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	/**
 	 * 在组件树全部挂载并视图渲染完毕后的下一个事件循环中执行 useEffect 的回调函数
 	 */
-	window.setTimeout(() => {
+	window.setTimeout((): void => {
 		for (let i: number = 0; i < __RTP__.mountedHooksCache.length; i++) {
 			const hookItem: TUseEffectHookStruct = __RTP__.mountedHooksCache[i] as TUseEffectHookStruct
 			if (hookItem.isUpdated && hookItem.callback instanceof Function) {
@@ -195,6 +198,12 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 			const childrenVDomItems: Array<TVDom> = [(fiber.type as Function).call(undefined, fiber.props)]
 			fiber.props.children = childrenVDomItems
 		} else {
+			/**
+			 * 对于由某个组件被执行 setState 而触发的 fiber 树更新行为
+			 * 当当前 fiber 节点为函数组件对应的 fiber 节点, 且不处于需要"更新"范围内时, 将进入此逻辑
+			 *
+			 * fiber.alternate 将在第一次 update 行为后始终存在
+			 */
 			if (fiber.alternate) {
 				/**
 				 * 函数组件

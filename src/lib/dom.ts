@@ -6,8 +6,8 @@ import { TExtendHTMLDOMElment } from '../types/dom.types'
 /**
  * @description 追加 DOM
  * @function appendChild
- * @param {HTMLElement | Text} childDom 被追加的子节点
- * @param {HTMLElement | Text | null} parentDom 目标父节点
+ * @param {TExtendHTMLDOMElment} childDom 被追加的子节点
+ * @param {TExtendHTMLDOMElment | null} parentDom 目标父节点
  * @return {undefined}
  */
 export function appendChild(childDom: TExtendHTMLDOMElment | null, parentDom: TExtendHTMLDOMElment | null): void {
@@ -20,8 +20,8 @@ export function appendChild(childDom: TExtendHTMLDOMElment | null, parentDom: TE
 /**
  * @description 移除 DOM
  * @function removeChild
- * @param {HTMLElement | Text} childDom 被追加的子节点
- * @param {HTMLElement | Text | null} parentDom 目标父节点
+ * @param {TExtendHTMLDOMElment} childDom 被追加的子节点
+ * @param {TExtendHTMLDOMElment | null} parentDom 目标父节点
  * @return {undefined}
  */
 export function removeChild(childDom: TExtendHTMLDOMElment | null, parentDom: TExtendHTMLDOMElment | null): void {
