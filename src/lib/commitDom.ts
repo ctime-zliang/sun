@@ -4,7 +4,7 @@ import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TExtendHTMLDOMElment } from 'src/types/dom.types'
 import { isFunctionComponent } from '../utils/utils'
-import { ENUM_COMMIT_DOM_ACTION } from '../config/commitDom.enum'
+import { ECOMMIT_DOM_ACTION } from '../config/commitDom.enum'
 import { TUseEffectHookStruct } from '../types/hooks.types'
 
 function handleDom(fiber: TFiberNode): void {
@@ -69,7 +69,7 @@ function cacheFunctionComponentUseEffectHooks(fiber: TFiberNode, action: string)
 	 * 对于需要删除的 fiber 节点
 	 * 缓存其 useEffect hooks
 	 */
-	if (action === ENUM_COMMIT_DOM_ACTION.DELETION && !fiber.effectCachedUnmounted) {
+	if (action === ECOMMIT_DOM_ACTION.DELETION && !fiber.effectCachedUnmounted) {
 		for (let i: number = 0; i < fiber.hooks.length; i++) {
 			const hookItem: TUseEffectHookStruct = fiber.hooks[i] as TUseEffectHookStruct
 			if (hookItem.useEffect) {

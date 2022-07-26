@@ -7,7 +7,7 @@ import { TFiberNode, TTASKQUEUE_ITEM } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
-import { ENUM_COMMIT_DOM_ACTION } from '../config/commitDom.enum'
+import { ECOMMIT_DOM_ACTION } from '../config/commitDom.enum'
 import { TAllHooksStruct, TUseEffectHookStruct, TUseMemoHookStruct, TUseStateHookStruct } from '../types/hooks.types'
 
 export function initStartRootFiber(rootFiber: TFiberNode): void {
@@ -91,9 +91,9 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	 */
 	// console.time('commit')
 	deletions.forEach((item: TFiberNode): void => {
-		commit(item, ENUM_COMMIT_DOM_ACTION.DELETION)
+		commit(item, ECOMMIT_DOM_ACTION.DELETION)
 	})
-	commit(currentRootFiber.child as TFiberNode, ENUM_COMMIT_DOM_ACTION.NORMAL)
+	commit(currentRootFiber.child as TFiberNode, ECOMMIT_DOM_ACTION.NORMAL)
 	// console.timeEnd('commit')
 	// console.log('%c===>>> App Task Finished', 'color: #ff0000;')
 

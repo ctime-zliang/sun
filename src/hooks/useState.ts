@@ -7,12 +7,12 @@ import { initStartRootFiber } from '../lib/scheduler'
 
 function createHookItem(rootFiber: TFiberNode, nowFiber: TFiberNode, initValue: any): TUseStateHookStruct {
 	const hookItem: TUseStateHookStruct = {
-		rootFiber,
-		nowFiber,
-		/* ... */
 		useState: true,
 		state: initValue,
 		setState: () => undefined,
+		/* ... */
+		rootFiber,
+		nowFiber,
 	}
 	return hookItem
 }

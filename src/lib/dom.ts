@@ -102,7 +102,7 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 					break
 				}
 				case 'className': {
-					dom[item] = newProps[item]
+					dom.className = newProps[item]
 					break
 				}
 				case 'nodeValue': {
