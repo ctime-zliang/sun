@@ -54,7 +54,7 @@ export function useState(initValue: any): TUseStateHook {
 			 */
 			if (!hookItem.rootFiber.queueUp && !__RTP__.nextWorkUnitFiber) {
 				hookItem.rootFiber.queueUp = true
-				Promise.resolve().then(() => {
+				Promise.resolve().then((): void => {
 					/**
 					 * 在所有同步任务结束后插入一个 microtask, 并在该 microtask 中开启更新过程
 					 * 此处的 microtask 将同时起到"防抖"功能, 因此在开启更新过程时可以清空被暂存的 task
