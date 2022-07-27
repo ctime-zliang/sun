@@ -2,6 +2,7 @@ import { createElement, createTextElement, render as _render } from './main'
 import { useState as useStateHook } from './hooks/useState'
 import { useEffect as useEffectHook } from './hooks/useEffect'
 import { useMemo as useMemoHook } from './hooks/useMemo'
+import { useCallback as useCallbackHook } from './hooks/useCallback'
 /* ... */
 import { TUseStateHook } from './types/hooks.types'
 import { TVDom } from './types/vdom.types'
@@ -21,5 +22,6 @@ export const render: (element: any, container: HTMLElement) => void = _render
 export const useState: (initValue: any) => TUseStateHook = useStateHook
 export const useEffect: (callback: () => any, dependences: Array<any> | undefined) => void = useEffectHook
 export const useMemo: (callback: () => any, dependences: Array<any> | undefined) => any = useMemoHook
+export const useCallback: (callback: () => any, dependences: Array<any> | undefined) => any = useCallbackHook
 
 export default Sun

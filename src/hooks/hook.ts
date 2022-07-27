@@ -1,4 +1,4 @@
-import { TUseEffectHookStruct, TUseMemoHookStruct, TAllHooksStruct } from '../types/hooks.types'
+import { TUseEffectHookStruct, TUseMemoHookStruct, TAllHooksStruct, TUseCallbackHookStruct } from '../types/hooks.types'
 import { __RTCP__ } from '../core/runtime'
 import { TFiberNode } from '../types/fiber.types'
 
@@ -13,7 +13,10 @@ export function getHookItem(index: number): TAllHooksStruct | undefined {
 	return alternate.hooks && alternate.hooks[index]
 }
 
-export function setHookUpdate(hook: TUseEffectHookStruct | TUseMemoHookStruct, outerDependences: Array<any> | undefined = undefined): void {
+export function setHookUpdate(
+	hook: TUseEffectHookStruct | TUseMemoHookStruct | TUseCallbackHookStruct,
+	outerDependences: Array<any> | undefined = undefined
+): void {
 	/**
 	 * 对比依赖的变更
 	 * 浅层比较

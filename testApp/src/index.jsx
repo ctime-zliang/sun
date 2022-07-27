@@ -12,6 +12,7 @@ import { TraverseFiberTree } from './component/traverseFiberTree'
 import { UseEffectExecSequentialWrapper } from './component/useEffectExecSequential'
 import { TimeoutInteractive, IntervalSetCount } from './component/closure'
 import { BaseInput } from './component/form'
+import { BaseUseCallback } from './component/useCallback'
 import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild, Clock } from './component/baseComponent'
 
 function App() {
