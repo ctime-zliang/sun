@@ -15,13 +15,13 @@ window.__SUN__ = Sun
 Sun.createElement = createElement as (type: string, props: { [key: string]: any }, ...children: any[]) => TVDom
 Sun.createTextElement = createTextElement as (text: string) => TVDom
 Sun.render = _render as (element: any, containe: HTMLElement) => void
-Sun.useState = useStateHook as (initValue: any) => TUseStateHook
+Sun.useState = useStateHook as (initialValue: any) => TUseStateHook
 Sun.useEffect = useEffectHook as (callback: () => any, dependences: Array<any> | undefined) => void
 Sun.useMemo = useMemoHook as (callback: () => any, dependences: Array<any> | undefined) => any
 Sun.useRef = useRefHook as (initialValue: any) => { current: any }
 
 export const render: (element: any, container: HTMLElement) => void = _render
-export const useState: (initValue: any) => TUseStateHook = useStateHook
+export const useState: (initialValue: any) => TUseStateHook = useStateHook
 export const useEffect: (callback: () => any, dependences: Array<any> | undefined) => void = useEffectHook
 export const useMemo: (callback: () => any, dependences: Array<any> | undefined) => any = useMemoHook
 export const useCallback: (callback: () => any, dependences: Array<any> | undefined) => any = useCallbackHook
