@@ -8,7 +8,7 @@ import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
 import { ECOMMIT_DOM_ACTION } from '../config/commitDom.enum'
-import { TAllHooksStruct, TUseEffectHookStruct, TUseMemoHookStruct, TUseStateHookStruct } from '../types/hooks.types'
+import { TAllHooksStruct, TUseCallbackHookStruct, TUseEffectHookStruct, TUseMemoHookStruct, TUseStateHookStruct } from '../types/hooks.types'
 
 export function initStartRootFiber(rootFiber: TFiberNode): void {
 	/**
@@ -164,6 +164,10 @@ function updateHookFiberReference(fiber: TFiberNode) {
 		}
 		if ((hooks[i] as TUseMemoHookStruct).useMemo) {
 			const hookItem: TUseMemoHookStruct = hooks[i] as TUseMemoHookStruct
+			hookItem.isUpdated = false
+		}
+		if ((hooks[i] as TUseCallbackHookStruct).useCallback) {
+			const hookItem: TUseCallbackHookStruct = hooks[i] as TUseCallbackHookStruct
 			hookItem.isUpdated = false
 		}
 	}

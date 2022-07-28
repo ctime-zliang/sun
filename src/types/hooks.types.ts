@@ -1,6 +1,6 @@
 import { TFiberNode } from './fiber.types'
 
-export type TAllHooksStruct = TUseStateHookStruct | TUseEffectHookStruct | TUseMemoHookStruct | TUseCallbackHookStruct
+export type TAllHooksStruct = TUseStateHookStruct | TUseEffectHookStruct | TUseMemoHookStruct | TUseCallbackHookStruct | TUseRefHookStruct
 
 export type TUseStateHook = [any, (action: any) => void]
 export type TUseStateHookStruct = {
@@ -33,4 +33,12 @@ export type TUseCallbackHookStruct = {
 	dependences: Array<any> | undefined
 	callback?: Function
 	returnCallback?: any
+}
+
+export type TUseRefHookStruct = {
+	useRef: boolean
+	initalValue: any
+	returnValue: {
+		current: any
+	}
 }

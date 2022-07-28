@@ -3,7 +3,11 @@ import Sun, { render, useState, useEffect, useMemo } from '@/'
 export function BaseInput() {
 	const [value, setValue] = useState('initial value')
 	const inputInputAction = e => {
-		setValue(e.target.value)
+		let inputValue = e.target.value
+		// if (inputValue.length >= 15) {
+		// 	inputValue = inputValue.substring(0, 15)
+		// }
+		setValue(inputValue)
 	}
 	return (
 		<section>

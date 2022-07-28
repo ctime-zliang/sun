@@ -31,7 +31,8 @@ export function useMemo(callback: () => any, dependences: Array<any> | undefined
 	}
 
 	setHookUpdate(hookItem, dependences)
-	if (hookItem.isUpdated && hookItem.callback instanceof Function) {
+	if (hookItem.isUpdated) {
+		hookItem.callback = callback
 		hookItem.returnValue = hookItem.callback.call(undefined)
 	}
 

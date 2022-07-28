@@ -9,7 +9,7 @@ function createHookItem(callback: () => any): TUseCallbackHookStruct {
 		isUpdated: false,
 		dependences: undefined,
 		callback,
-		returnCallback: callback.bind(undefined),
+		returnCallback: callback,
 	}
 	return hookItem
 }
@@ -32,7 +32,7 @@ export function useCallback(callback: () => any, dependences: Array<any> | undef
 
 	setHookUpdate(hookItem, dependences)
 	if (hookItem.isUpdated && hookItem.callback instanceof Function) {
-		hookItem.returnCallback = hookItem.callback.bind(undefined)
+		hookItem.returnCallback = hookItem.callback
 	}
 
 	__RTCP__.hookIndexOfNowFunctionCompt++

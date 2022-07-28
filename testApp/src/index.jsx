@@ -5,7 +5,7 @@ import { updateInnerContentMain } from './modules/updateElementInnerContent'
 /* ... */
 import { syncBlock } from './utils/utils'
 /* ... */
-import Sun, { render, useState, useEffect, useMemo } from '../../src/index'
+import Sun, { render, useState, useEffect } from '../../src/index'
 /* ... */
 import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
 import { TraverseFiberTree } from './component/traverseFiberTree'
@@ -13,6 +13,8 @@ import { UseEffectExecSequentialWrapper } from './component/useEffectExecSequent
 import { TimeoutInteractive, IntervalSetCount } from './component/closure'
 import { BaseInput } from './component/form'
 import { BaseUseCallback } from './component/useCallback'
+import { BaseUseMemo } from './component/useMemo'
+import { BaseUseRef } from './component/useRef'
 import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild, Clock } from './component/baseComponent'
 
 function App() {
@@ -42,11 +44,6 @@ function App() {
 		// })
 	}, [])
 
-	const number = useMemo(() => {
-		syncBlock()
-		return count1 * 2
-	}, [])
-
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
 			<div>{count1}</div>
@@ -55,7 +52,7 @@ function App() {
 	)
 }
 
-render(<BaseInput />, document.querySelector(`#app`), { async: true })
+render(<BaseComponentParent />, document.querySelector(`#app`), { async: true })
 render(<Clock />, document.querySelector(`#app2`))
 // render(<Clock />, document.querySelector(`#app3`))
 
