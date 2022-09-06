@@ -28,7 +28,7 @@ export function setHookUpdate(
 				break
 			}
 		}
-	} else {
-		hook.isUpdated = true
+		return
 	}
+	hook.isUpdated = true
 }

@@ -150,7 +150,7 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	}
 }
 
-function updateHookFiberReference(fiber: TFiberNode) {
+function updateHookFiberReference(fiber: TFiberNode): void {
 	const hooks: Array<TAllHooksStruct> = fiber.hooks as Array<TAllHooksStruct>
 	for (let i: number = 0; i < hooks.length; i++) {
 		if ((hooks[i] as TUseStateHookStruct).useState) {
@@ -173,7 +173,7 @@ function updateHookFiberReference(fiber: TFiberNode) {
 	}
 }
 
-export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode | undefined {
+export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>): TFiberNode | void {
 	if (!fiber.type) {
 		return
 	}
