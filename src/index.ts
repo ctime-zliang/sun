@@ -17,7 +17,7 @@ Sun.createElement = createElement as (type: string, props: { [key: string]: any 
 Sun.createTextElement = createTextElement as (text: string) => TVDom
 Sun.setSyncMode = setSyncMode as () => void
 Sun.render = _render as (element: TVDom, containe: HTMLElement) => void
-Sun.createRoot = _createRoot as (container: HTMLElement, profile: { [key: string]: any }) => RootFiberController
+Sun.createRoot = _createRoot as (container: HTMLElement) => RootFiberController
 Sun.memo = _memo as (element: TVDom) => TVDom
 Sun.useState = useStateHook as (initialValue: any) => TUseStateHook
 Sun.useEffect = useEffectHook as (callback: () => any, dependences: Array<any> | undefined) => void
@@ -25,7 +25,7 @@ Sun.useMemo = useMemoHook as (callback: () => any, dependences: Array<any> | und
 Sun.useRef = useRefHook as (initialValue: any) => { current: any }
 
 export const render: (element: TVDom, container: HTMLElement) => void = _render
-export const createRoot: (container: HTMLElement, profile: { [key: string]: any }) => RootFiberController = _createRoot
+export const createRoot: (container: HTMLElement) => RootFiberController = _createRoot
 export const memo: (element: TVDom) => TVDom = _memo
 export const useState: (initialValue: any) => TUseStateHook = useStateHook
 export const useEffect: (callback: () => any, dependences: Array<any> | undefined) => void = useEffectHook
