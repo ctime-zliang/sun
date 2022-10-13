@@ -32,7 +32,7 @@ export function initStartRootFiber(rootFiber: TFiberNode): void {
 	__RTP__.rootFiberList.splice(rootFiberIndex, 1, newRootFiber)
 	__RTP__.globalFiberRoot.current = newRootFiber
 	__RTP__.nextWorkUnitFiber = newRootFiber
-	if (!__RTP__.profileList[rootFiberIndex].async) {
+	if (!__RTP__.profile.async) {
 		initSyncWorkLoop()()
 	}
 }
@@ -132,6 +132,7 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	 */
 	const nextRootFiber: TFiberNode = __RTP__.rootFiberList[(currentRootFiber.index as number) + 1] || undefined
 	if (nextRootFiber && nextRootFiber.dirty) {
+		console.log(nextRootFiber.index)
 		__RTP__.nextWorkUnitFiber = nextRootFiber
 		__RTP__.globalFiberRoot.current = nextRootFiber
 		return

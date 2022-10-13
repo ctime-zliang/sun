@@ -1,10 +1,11 @@
 import { TAllHooksStruct } from '../types/hooks.types'
 import { TFiberNode, TFiberRootNode, TTASKQUEUE_ITEM } from '../types/fiber.types'
+import { renderProfile } from '../config/config'
 
 type T__RTP__ = {
 	globalFiberRoot: TFiberRootNode
 	rootFiberList: Array<TFiberNode>
-	profileList: Array<{ [key: string]: any }>
+	profile: { [key: string]: any }
 	taskGroupQueue: Array<Array<TTASKQUEUE_ITEM>>
 	taskGroupIndex: number
 	nextWorkUnitFiber: TFiberNode
@@ -15,7 +16,7 @@ type T__RTP__ = {
 export const __RTP__: T__RTP__ = Object.create({
 	globalFiberRoot: null,
 	rootFiberList: [],
-	profileList: [],
+	profile: {},
 	taskGroupQueue: [],
 	taskGroupIndex: -1,
 	nextWorkUnitFiber: null,

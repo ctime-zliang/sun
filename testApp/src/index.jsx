@@ -5,7 +5,7 @@ import { updateInnerContentMain } from './modules/updateElementInnerContent'
 /* ... */
 import { syncBlock } from './utils/utils'
 /* ... */
-import Sun, { render, useState, useEffect } from '../../src/index'
+import Sun, { render, useState, useEffect, createRoot } from '../../src/index'
 /* ... */
 import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
 import { TraverseFiberTree } from './component/traverseFiberTree'
@@ -52,9 +52,17 @@ function App() {
 	)
 }
 
-render(<BaseComponentParent />, document.querySelector(`#app`), { async: true })
-render(<Clock />, document.querySelector(`#app2`))
-// render(<Clock />, document.querySelector(`#app3`))
+render(<BaseComponentParent />, document.querySelector(`#app`))
+/* ... */
+const handler2 = createRoot(document.querySelector(`#app2`))
+window.setTimeout(() => {
+	handler2.render(<Clock />)
+}, 1000)
+/* ... */
+const handler3 = createRoot(document.querySelector(`#app3`))
+window.setTimeout(() => {
+	handler3.render(<Clock />)
+}, 2000)
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()
