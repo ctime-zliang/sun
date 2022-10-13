@@ -2,7 +2,7 @@
 
 一个用 JavaScript（TypeScript 版）写的类 React 视图库
 
-> 它只是一个玩具、一个试验性的脚本库，甚至你可以把它当做是一个拼凑自互联网各处角落的代码的集合。
+> 它只是一个玩具、一个试验性的脚本库，一些 JavaScript 代码
 >
 > 它没什么别的意义……
 
@@ -24,6 +24,7 @@
 | useMemo        | √    |                                                              | -        |
 | useCallback    | √    |                                                              | -        |
 | useRef         | √    |                                                              | -        |
+| createRoot     | ×    |                                                              | 预期实现 |
 | memo           | ×    | 性能优化，防止属性未变更的情况下，子组件跟随执行             | 预期实现 |
 | renderToString | ×    | 直接生成 html 字符串                                         | 预期实现 |
 
