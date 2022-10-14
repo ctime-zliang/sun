@@ -80,6 +80,13 @@ export function setSyncMode(): void {
  * @param {object} profile 配置项
  * @return {void}
  */
+/**
+ * 使用异步 Reconciliation 模式下, 对于多 <App /> 并存的情况下, 当存在密集型 setState 操作时(例如 window.setInterval), 某些 <App /> 的更新可能会存在不及时的情况
+ * 目前原因不详, 可能和 rIC 执行优先级有关
+ *
+ * 暂时只能通过设置 Reconciliation 过程为同步模式来解决此问题
+ * 		在所有 <App /> 的渲染前执行 Sun.setSyncMode() 即可
+ */
 export function render(element: TVDom, container: HTMLElement): void {
 	const rfcInstance: RootFiberController = createRoot(container)
 	rfcInstance.render(element)

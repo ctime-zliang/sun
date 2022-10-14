@@ -3,7 +3,7 @@ export type TGlobalConfig = {
 	[key: string]: any
 }
 export const globalConfig: TGlobalConfig = {
-	requestIdleCallbackTimeout: 1000,
+	requestIdleCallbackTimeout: 100,
 }
 
 export type TRenderProfile = {

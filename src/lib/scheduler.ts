@@ -10,7 +10,7 @@ import { globalConfig } from '../config/config'
 import { ECOMMIT_DOM_ACTION } from '../config/commitDom.enum'
 import { TAllHooksStruct, TUseCallbackHookStruct, TUseEffectHookStruct, TUseMemoHookStruct, TUseStateHookStruct } from '../types/hooks.types'
 
-export function initStartRootFiber(rootFiber: TFiberNode): void {
+export function startReconciliation(rootFiber: TFiberNode): void {
 	/**
 	 * 重新创建 <App /> 应用对应的 fiber 树的根 fiber 节点
 	 */
@@ -132,22 +132,24 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	 */
 	const nextRootFiber: TFiberNode = __RTP__.rootFiberList[(currentRootFiber.index as number) + 1] || undefined
 	if (nextRootFiber && nextRootFiber.dirty) {
-		console.log(nextRootFiber.index)
 		__RTP__.nextWorkUnitFiber = nextRootFiber
 		__RTP__.globalFiberRoot.current = nextRootFiber
 		return
 	}
 
 	/**
-	 * 需要在每一轮更新结束后检查 setState 任务队列
+	 * 需要在每一轮更新结束后检查 setState 次数标记队列
 	 * 队列不为空时, 在空闲状态下开启新一轮更新过程
 	 */
 	__RTP__.taskGroupIndex = (__RTP__.taskGroupIndex++, __RTP__.taskGroupIndex) > __RTP__.taskGroupQueue.length - 1 ? 0 : __RTP__.taskGroupIndex
-	const taskGroup: Array<TTASKQUEUE_ITEM> = __RTP__.taskGroupQueue[__RTP__.taskGroupIndex]
-	if (taskGroup.length && !__RTP__.nextWorkUnitFiber) {
-		taskGroup.length = 0
+	const taskItem: TTASKQUEUE_ITEM = __RTP__.taskGroupQueue[__RTP__.taskGroupIndex]
+	if (taskItem.count > 0 && !__RTP__.nextWorkUnitFiber) {
+		taskItem.count = 0
+		/**
+		 * 此处的 rootFiber 从 __RTP__.rootFiberList 中读取, 以保证执行 Reconciliation 阶段时起始的 rootFiber 为最新的根节点 fiber
+		 */
 		const rootFiber: TFiberNode = __RTP__.rootFiberList[__RTP__.taskGroupIndex]
-		initStartRootFiber(((rootFiber.queueUp = true), rootFiber))
+		startReconciliation(((rootFiber.queueUp = true), rootFiber))
 	}
 }
 

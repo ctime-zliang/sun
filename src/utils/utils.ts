@@ -59,7 +59,6 @@ export function generateInitialFiberStructData(): TFiberNode {
 		dirty: false,
 		// 触发更新的标记位
 		triggerUpdate: false,
-		/* 特殊标记位 */
 		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
 		effectCachedMounted: false,
 		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks

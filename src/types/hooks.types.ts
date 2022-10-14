@@ -4,9 +4,10 @@ export type TAllHooksStruct = TUseStateHookStruct | TUseEffectHookStruct | TUseM
 
 export type TUseStateHook = [any, (action: any) => void]
 export type TUseStateHookStruct = {
+	useState: boolean
 	rootFiber: TFiberNode
 	nowFiber: TFiberNode
-	useState: boolean
+	isChanged: boolean
 	state: any
 	setState: (a: any) => void
 }

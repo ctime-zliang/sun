@@ -15,7 +15,7 @@ import { BaseInput } from './component/form'
 import { BaseUseCallback } from './component/useCallback'
 import { BaseUseMemo } from './component/useMemo'
 import { BaseUseRef } from './component/useRef'
-import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild, Clock } from './component/baseComponent'
+import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild, Clock, Clock2 } from './component/baseComponent'
 
 function App() {
 	console.log(`Component: App`)
@@ -52,17 +52,26 @@ function App() {
 	)
 }
 
+// Sun.setSyncMode()
+
 render(<BaseComponentParent />, document.querySelector(`#app`))
+// render(<Clock2 />, document.querySelector(`#app2`))
+// render(<Clock2 />, document.querySelector(`#app3`))
 /* ... */
 const handler2 = createRoot(document.querySelector(`#app2`))
 window.setTimeout(() => {
 	handler2.render(<Clock />)
-}, 1000)
+}, 500)
 /* ... */
-const handler3 = createRoot(document.querySelector(`#app3`))
 window.setTimeout(() => {
-	handler3.render(<Clock />)
-}, 2000)
+	const handler3 = createRoot(document.querySelector(`#app3`))
+	handler3.render(<Clock2 />)
+}, 1000)
+// /* ... */
+// window.setTimeout(() => {
+// 	const handler4 = createRoot(document.querySelector(`#app4`))
+// 	handler4.render(<Clock2 />)
+// }, 1500)
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()

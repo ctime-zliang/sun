@@ -6,7 +6,7 @@ type T__RTP__ = {
 	globalFiberRoot: TFiberRootNode
 	rootFiberList: Array<TFiberNode>
 	profile: { [key: string]: any }
-	taskGroupQueue: Array<Array<TTASKQUEUE_ITEM>>
+	taskGroupQueue: Array<TTASKQUEUE_ITEM>
 	taskGroupIndex: number
 	nextWorkUnitFiber: TFiberNode
 	mountedHooksCache: Array<TAllHooksStruct>

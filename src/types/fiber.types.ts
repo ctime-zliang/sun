@@ -3,7 +3,7 @@ import { TAllHooksStruct } from './hooks.types'
 import { TVDom } from './vdom.types'
 
 export type TTASKQUEUE_ITEM = {
-	task: (a: TFiberNode) => void
+	count: number
 }
 
 export type TFiberRootNode = {

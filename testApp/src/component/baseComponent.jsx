@@ -94,6 +94,8 @@ export function Child() {
 	)
 }
 
+const intervalNumber = 1
+
 let clockTimer = null
 let clockContainerStyle = {
 	padding: '10px 0',
@@ -117,12 +119,13 @@ export function Clock() {
 	}
 	useEffect(() => {
 		clockTimer = window.setInterval(() => {
+			// console.log(`Update Clock`)
 			setClockCount(formatDates())
-		})
+		}, intervalNumber)
 	}, [])
 	return (
 		<article data-tagitem="clock" style={clockContainerStyle}>
-			<div>{clockCount}</div>
+			<div>{clockCount} - Clock</div>
 			<button onClick={btnClickAtion}>Set Tag(s)</button>
 			<ul>
 				{tagList.map((item, index) => {
@@ -133,6 +136,29 @@ export function Clock() {
 					)
 				})}
 			</ul>
+		</article>
+	)
+}
+
+let clockTimer2 = null
+let clockContainerStyle2 = {
+	padding: '10px 0',
+	margin: '20px 0',
+	borderTop: '1px dashed #000000',
+	borderBottom: '1px dashed #000000',
+}
+export function Clock2() {
+	console.log(`Component: Clock2`)
+	const [clockCount, setClockCount] = useState('xxxx-xx-xx --:--:--')
+	useEffect(() => {
+		clockTimer2 = window.setInterval(() => {
+			// console.log(`Update Clock2`)
+			setClockCount(formatDates())
+		}, intervalNumber)
+	}, [])
+	return (
+		<article data-tagitem="clock" style={clockContainerStyle2}>
+			{clockCount} - Clock2
 		</article>
 	)
 }

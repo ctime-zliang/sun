@@ -39,7 +39,7 @@ export class RootFiberController {
 		const rootFiberIndex: number = rootFiber.index as number
 
 		__RTP__.rootFiberList.push(rootFiber)
-		__RTP__.taskGroupQueue[rootFiberIndex] = []
+		__RTP__.taskGroupQueue[rootFiberIndex] = { count: 0 }
 
 		this._rootFiber = rootFiber
 	}
