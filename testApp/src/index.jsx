@@ -55,8 +55,6 @@ function App() {
 // Sun.setSyncMode()
 
 render(<BaseComponentParent />, document.querySelector(`#app`))
-// render(<Clock2 />, document.querySelector(`#app2`))
-// render(<Clock2 />, document.querySelector(`#app3`))
 /* ... */
 const handler2 = createRoot(document.querySelector(`#app2`))
 window.setTimeout(() => {
@@ -67,11 +65,6 @@ window.setTimeout(() => {
 	const handler3 = createRoot(document.querySelector(`#app3`))
 	handler3.render(<Clock2 />)
 }, 1000)
-// /* ... */
-// window.setTimeout(() => {
-// 	const handler4 = createRoot(document.querySelector(`#app4`))
-// 	handler4.render(<Clock2 />)
-// }, 1500)
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()
