@@ -1,8 +1,12 @@
-export default () => {
+;(() => {
 	const config = {
-		/* 帧率刷新间隔(ms) */
+		/**
+		 * 帧率刷新间隔(ms)
+		 */
 		interval: 100,
-		/* 帧率告警阈值边界 */
+		/**
+		 * 帧率告警阈值边界
+		 */
 		serious: [0, 19],
 		warning: [20, 29],
 	}
@@ -71,8 +75,8 @@ export default () => {
 	}
 
 	const initViewElement = () => {
-		const bodyElement = document.body
-		bodyElement.appendChild(document.createRange().createContextualFragment(createHtmlString()))
+		const rootElement = document.body || document.documentElement
+		rootElement.appendChild(document.createRange().createContextualFragment(createHtmlString()))
 	}
 
 	const initElementHandler = runtimeConfig => {
@@ -85,26 +89,9 @@ export default () => {
 
 	const initRAF = () => {
 		const vendors = ['webkit', 'moz']
-		let lastTime = 0
 		for (let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
 			window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
 			window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame']
-		}
-		if (!window.requestAnimationFrame) {
-			window.requestAnimationFrame = function (callback, element) {
-				const currTime = new Date().getTime()
-				const timeToCall = Math.max(0, 16 - (currTime - lastTime))
-				const id = window.setTimeout(function () {
-					callback(currTime + timeToCall)
-				}, timeToCall)
-				lastTime = currTime + timeToCall
-				return id
-			}
-		}
-		if (!window.cancelAnimationFrame) {
-			window.cancelAnimationFrame = function (id) {
-				window.clearTimeout(id)
-			}
 		}
 	}
 
@@ -184,10 +171,8 @@ export default () => {
 		initElementHandler(runtimeConfig)
 		initRAF()
 		window.requestAnimationFrame(countRAF)
-		if (window.requestIdleCallback) {
-			window.requestIdleCallback(countRIC)
-		}
+		window.requestIdleCallback(countRIC)
 	}
 
 	window.setTimeout(main)
-}
+})()

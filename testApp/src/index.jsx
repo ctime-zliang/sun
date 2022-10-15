@@ -2,6 +2,7 @@
 import frameCountPerSecond from './modules/frameCountPerSecond'
 import { setIntervalAnimateMain } from './modules/setIntervalAnimate'
 import { updateInnerContentMain } from './modules/updateElementInnerContent'
+import { setDocumentBackgroudColor } from './modules/setDocumentBackgroudColor'
 /* ... */
 import { syncBlock } from './utils/utils'
 /* ... */
@@ -54,20 +55,21 @@ function App() {
 
 // Sun.setSyncMode()
 
-render(<BaseComponentParent />, document.querySelector(`#app`))
-/* ... */
-const handler2 = createRoot(document.querySelector(`#app2`))
-window.setTimeout(() => {
-	handler2.render(<Clock />)
-}, 500)
-/* ... */
-window.setTimeout(() => {
-	const handler3 = createRoot(document.querySelector(`#app3`))
-	handler3.render(<Clock2 />)
-}, 1000)
+render(<BaseComponentParent rootId={Math.random()} />, document.querySelector(`#app`))
+// /* ... */
+// const handler2 = createRoot(document.querySelector(`#app2`))
+// window.setTimeout(() => {
+// 	handler2.render(<Clock />)
+// }, 500)
+// /* ... */
+// window.setTimeout(() => {
+// 	const handler3 = createRoot(document.querySelector(`#app3`))
+// 	handler3.render(<Clock2 />)
+// }, 1000)
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()
 	// frameCountPerSecond()
 	// updateInnerContentMain()
+	setDocumentBackgroudColor('darkgray')
 })

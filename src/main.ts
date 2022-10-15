@@ -8,6 +8,7 @@ import { TVDom } from './types/vdom.types'
 import { ENUM_NODE_TYPE } from './config/effect.enum'
 import { renderProfile } from './config/config'
 import { RootFiberController } from './lib/rootFiberController.class'
+import { TFunctionComponentFunction } from './types/fiber.types'
 
 window.__RTP__ = __RTP__
 window.__RTCP__ = __RTCP__
@@ -108,14 +109,14 @@ export function createRoot(container: HTMLElement): RootFiberController {
 }
 
 /**
- * 还没想好怎么实现, 先临时抛出原始参数
- *
  * @description 处理 JSX Element 元素
  * 		设置当 props 浅对比为 false 时跳过该 JSX Element 的执行
  * @function memo
  * @param {JSXElement} element JSX 节点
  * @return {JSXElement}
  */
-export function memo(element: TVDom): TVDom {
-	return element
+export function memo(element: TFunctionComponentFunction): TFunctionComponentFunction {
+	const typeFunction: TFunctionComponentFunction = element.bind(undefined)
+	typeFunction.isUseMemo = true
+	return typeFunction
 }

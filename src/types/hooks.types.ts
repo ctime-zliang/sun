@@ -9,6 +9,7 @@ export type TUseStateHookStruct = {
 	nowFiber: TFiberNode
 	isChanged: boolean
 	state: any
+	preState: any
 	setState: (a: any) => void
 }
 

@@ -3,7 +3,7 @@ const cache: any = {
 }
 
 function initView(): void {
-	const topContainer: HTMLElement = document.getElementById('area2')
+	const topContainer: HTMLElement = document.getElementById('area2') as HTMLElement
 	topContainer.innerHTML = `
         <div>
             <button id="batchBtn">Batch Update Btn</button>
@@ -13,14 +13,14 @@ function initView(): void {
 }
 
 function bindEvent(): void {
-	const btnElement: HTMLElement = document.getElementById('batchBtn')
+	const btnElement: HTMLElement = document.getElementById('batchBtn') as HTMLElement
 	btnElement.addEventListener('click', function (e) {
 		updateInnerContent()
 	})
 }
 
 function updateInnerContent(): void {
-	const ulistWrapperElement: HTMLElement = document.getElementById('ulistWrapper')
+	const ulistWrapperElement: HTMLElement = document.getElementById('ulistWrapper') as HTMLElement
 	const random: string = Math.random() + ''
 	if (cache.isAppend) {
 		let htmlString: string = ``

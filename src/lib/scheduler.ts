@@ -2,8 +2,8 @@ import { __RTP__, __RTCP__ } from '../core/runtime'
 import { commit } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
-import { generateFiberStructData, isFunctionComponent } from '../utils/utils'
-import { TFiberNode, TTASKQUEUE_ITEM } from '../types/fiber.types'
+import { checkComponentPropsChanged, generateFiberStructData, isFunctionComponent } from '../utils/utils'
+import { TFiberNode, TFunctionComponentFunction, TTASKQUEUE_ITEM } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
@@ -190,7 +190,11 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 	}
 
 	if (isFunctionComponent(fiber)) {
-		if (!!__RTP__.updateRangeStartFiber) {
+		let isRegardAsPropsChanged: boolean = true
+		if ((fiber.type as TFunctionComponentFunction).isUseMemo) {
+			isRegardAsPropsChanged = !fiber.triggerUpdate ? checkComponentPropsChanged(fiber) : true
+		}
+		if (isRegardAsPropsChanged && !!__RTP__.updateRangeStartFiber) {
 			/**
 			 * 对于函数组件, 当前的 fiber 节点即为函数本身
 			 */

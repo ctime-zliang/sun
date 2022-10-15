@@ -1,4 +1,4 @@
-import Sun, { useState, useEffect } from '@/'
+import Sun, { useState, useEffect, memo } from '@/'
 import { formatDates } from '../utils/utils'
 
 export function BaseComponent() {
@@ -17,50 +17,11 @@ export function BaseComponent() {
 	)
 }
 
-let parentTimer = null
-let parentTimerTick = 0
-let parentMaxCount = 10
-export function Parent() {
-	console.log('Component: Parent')
-	const [parentCount, setParentCount] = useState(1)
-	const btnClickAction = () => {
-		setParentCount(count => {
-			return count + 1
-		})
-	}
-	useEffect(() => {
-		// parentTimer = window.setInterval(() => {
-		// 	setParentCount(count => {
-		// 		return count + 1
-		// 	})
-		// 	if (++parentTimerTick >= parentMaxCount - 1) {
-		// 		window.clearInterval(parentTimer)
-		// 	}
-		// }, 500)
-		// setParentCount(val => {
-		// 	return val + 1
-		// })
-		// setParentCount(val => {
-		// 	return val + 1
-		// })
-		// setParentCount(val => {
-		// 	return val + 1
-		// })
-	}, [])
-	return (
-		<article data-tagitem="parent">
-			<button onClick={btnClickAction}>Set Count</button>
-			<div>{parentCount}</div>
-			<Child />
-		</article>
-	)
-}
-
 let childTimer = null
 let childTimerTick = 0
 let childMaxCount = 10 ** 5
-export function Child() {
-	console.log('Component: Child')
+export function Child(props) {
+	console.log('Component: Child', props)
 	const [childCount, setChildCount] = useState(1)
 	const btnClickAction = () => {
 		setChildCount(count => {
@@ -90,6 +51,47 @@ export function Child() {
 		<article data-tagitem="child">
 			<button onClick={btnClickAction}>Set Number</button>
 			<div>{childCount}</div>
+		</article>
+	)
+}
+export const ChildMemo = memo(Child)
+
+let parentTimer = null
+let parentTimerTick = 0
+let parentMaxCount = 10
+export function Parent(props) {
+	console.log('Component: Parent', props)
+	const [parentCount, setParentCount] = useState(1)
+	const btnClickAction = () => {
+		setParentCount(count => {
+			return count + 1
+		})
+	}
+	useEffect(() => {
+		// parentTimer = window.setInterval(() => {
+		// 	setParentCount(count => {
+		// 		return count + 1
+		// 	})
+		// 	if (++parentTimerTick >= parentMaxCount - 1) {
+		// 		window.clearInterval(parentTimer)
+		// 	}
+		// }, 500)
+		// setParentCount(val => {
+		// 	return val + 1
+		// })
+		// setParentCount(val => {
+		// 	return val + 1
+		// })
+		// setParentCount(val => {
+		// 	return val + 1
+		// })
+	}, [])
+	return (
+		<article data-tagitem="parent">
+			<button onClick={btnClickAction}>Set Count</button>
+			<div>{parentCount}</div>
+			<Child ofParent={1} />
+			<ChildMemo ofParent={2} />
 		</article>
 	)
 }

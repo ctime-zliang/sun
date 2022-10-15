@@ -9,6 +9,7 @@ function createHookItem(rootFiber: TFiberNode, nowFiber: TFiberNode, initValue: 
 	const hookItem: TUseStateHookStruct = {
 		useState: true,
 		state: initValue,
+		preState: initValue,
 		isChanged: false,
 		setState: () => undefined,
 		/* ... */
@@ -28,7 +29,7 @@ export function useState(initValue: any): TUseStateHook {
 	const hookItem: TUseStateHookStruct = nowFiber.hooks[__RTCP__.hookIndexOfNowFunctionCompt] as TUseStateHookStruct
 	if (!oldHookOfCompt) {
 		hookItem.setState = (action: any): void => {
-			const oldState: any = hookItem.state
+			hookItem.preState = hookItem.state
 			if (action instanceof Function) {
 				hookItem.state = action.call(undefined, hookItem.state)
 			} else {
@@ -49,7 +50,7 @@ export function useState(initValue: any): TUseStateHook {
 			 * 只有在 state 值被修改后才尝试开启 reconciliation 阶段任务
 			 * 		特别地, 当 state 是一个引用类型的值时, 需要返回一个新的引用地址才能正常更新组件
 			 */
-			if (hookItem.state === oldState) {
+			if (hookItem.state === hookItem.preState) {
 				return
 			}
 			hookItem.nowFiber.triggerUpdate = true

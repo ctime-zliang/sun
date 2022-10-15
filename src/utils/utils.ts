@@ -204,3 +204,32 @@ export function flatArray(arr: Array<any>, res: Array<any> = []): Array<any> {
 	}
 	return res
 }
+
+export function checkComponentPropsChanged(fiber: TFiberNode): boolean {
+	const alternate: TFiberNode = fiber.alternate as TFiberNode
+	if (!alternate) {
+		return true
+	}
+	const nowPropsKeys: Array<string> = Object.keys(fiber.props).filter((item: string): boolean => {
+		return item !== 'children'
+	})
+	const prePropsKeys: Array<string> = Object.keys(alternate.props).filter((item: string): boolean => {
+		return item !== 'children'
+	})
+	if (nowPropsKeys.length !== prePropsKeys.length) {
+		return true
+	}
+	let isChanged: boolean = false
+	for (let i: number = 0; i < nowPropsKeys.length; i++) {
+		const key: string = nowPropsKeys[i]
+		if (!alternate.props.hasOwnProperty(key)) {
+			isChanged = true
+			break
+		}
+		if (!isChanged && fiber.props[key] !== alternate.props[key]) {
+			isChanged = true
+			break
+		}
+	}
+	return isChanged
+}

@@ -35,3 +35,7 @@ export type TFiberNode = {
 	current?: TFiberNode | null
 	queueUp?: boolean
 }
+
+export type TFunctionComponentFunction = Function & {
+	isUseMemo: boolean
+}
