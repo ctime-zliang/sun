@@ -190,6 +190,9 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 	}
 
 	if (isFunctionComponent(fiber)) {
+		/**
+		 * 对于一个被 memo 处理过的函数组件, 其 fiber 节点的 type(该函数组件本身) 对象上将标记 isUseMemo
+		 */
 		let isRegardAsPropsChanged: boolean = true
 		if ((fiber.type as TFunctionComponentFunction).isUseMemo) {
 			isRegardAsPropsChanged = !fiber.triggerUpdate ? checkComponentPropsChanged(fiber) : true

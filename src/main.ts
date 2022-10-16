@@ -110,7 +110,7 @@ export function createRoot(container: HTMLElement): RootFiberController {
 
 /**
  * @description 处理 JSX Element 元素
- * 		设置当 props 浅对比为 false 时跳过该 JSX Element 的执行
+ * 		设置当 props 浅对比为 false 时跳过该 JSX Element 的本次执行
  * @function memo
  * @param {JSXElement} element JSX 节点
  * @return {JSXElement}

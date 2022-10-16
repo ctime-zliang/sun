@@ -90,8 +90,8 @@ export function Parent(props) {
 		<article data-tagitem="parent">
 			<button onClick={btnClickAction}>Set Count</button>
 			<div>{parentCount}</div>
-			<Child ofParent={1} />
-			<ChildMemo ofParent={2} />
+			<Child parent={1} />
+			<ChildMemo parent={2} />
 		</article>
 	)
 }

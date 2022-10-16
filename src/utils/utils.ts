@@ -205,6 +205,14 @@ export function flatArray(arr: Array<any>, res: Array<any> = []): Array<any> {
 	return res
 }
 
+/**
+ * @description 检测组件属性是否发生变更
+ * 		对于原始类型, 会对比其值变更
+ * 		对于引用类型, 会对比其引用地址
+ * @function checkComponentPropsChanged
+ * @param {TFiberNode} fiber 函数组件所对应的 fiber 节点
+ * @return {boolean}
+ */
 export function checkComponentPropsChanged(fiber: TFiberNode): boolean {
 	const alternate: TFiberNode = fiber.alternate as TFiberNode
 	if (!alternate) {

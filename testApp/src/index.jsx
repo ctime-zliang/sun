@@ -56,11 +56,11 @@ function App() {
 // Sun.setSyncMode()
 
 render(<BaseComponentParent rootId={Math.random()} />, document.querySelector(`#app`))
-// /* ... */
-// const handler2 = createRoot(document.querySelector(`#app2`))
-// window.setTimeout(() => {
-// 	handler2.render(<Clock />)
-// }, 500)
+/* ... */
+const handler2 = createRoot(document.querySelector(`#app2`))
+window.setTimeout(() => {
+	handler2.render(<Clock />)
+}, 500)
 // /* ... */
 // window.setTimeout(() => {
 // 	const handler3 = createRoot(document.querySelector(`#app3`))
