@@ -169,7 +169,17 @@ export function isApprovedComponent(fiber: TFiberNode): boolean {
  * @return {boolean}
  */
 export function isFunctionComponent(fiber: TFiberNode): boolean {
-	return !!(fiber.type && fiber.type instanceof Function)
+	return !!(fiber.type && fiber.type instanceof Function && typeof (fiber.type as any)['__@@INSIDE_FRAGMENT_ANCHOR'] === 'undefined')
+}
+
+/**
+ * @description 判断是否是内置的 Fragment 生成函数
+ * @function isFunctionComponent
+ * @param {TFiberNode} fiber fiber 节点
+ * @return {boolean}
+ */
+export function isInsideFragmentFunction(fiber: TFiberNode): boolean {
+	return !!(fiber.type && (fiber.type as any)['__@@INSIDE_FRAGMENT_ANCHOR'] === true)
 }
 
 /**

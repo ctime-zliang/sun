@@ -110,6 +110,11 @@ export function createRoot(container: HTMLElement): RootFiberController {
  */
 export function memo(element: TFunctionComponentFunction): TFunctionComponentFunction {
 	const typeFunction: TFunctionComponentFunction = element.bind(undefined)
-	typeFunction.isUseMemo = true
+	typeFunction['__@@IS_USE_MEMO_ANCHOR'] = true
 	return typeFunction
 }
+
+export function Fragment() {
+	return document.createDocumentFragment()
+}
+Fragment['__@@INSIDE_FRAGMENT_ANCHOR'] = true

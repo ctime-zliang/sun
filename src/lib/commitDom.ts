@@ -4,7 +4,7 @@ import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TExtendHTMLDOMElment } from 'src/types/dom.types'
 import { isFunctionComponent } from '../utils/utils'
-import { ECOMMIT_DOM_ACTION } from '../config/commitDom.enum'
+import { ECOMMIT_DOM_ACTION, HTMLELEMENT_NODETYPE } from '../config/commitDom.enum'
 import { TUseEffectHookStruct } from '../types/hooks.types'
 
 function handleDom(fiber: TFiberNode): void {
@@ -14,6 +14,7 @@ function handleDom(fiber: TFiberNode): void {
 		 */
 		if (isFunctionComponent(fiber)) {
 			if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
+				// const deletions: Array<TExtendHTMLDOMElment> = []
 				/**
 				 * 找出该函数组件对应的 fiber 节点的第一个具有真实 DOM 句柄(fiber.stateNode)的子 fiber 节点
 				 */
@@ -21,12 +22,18 @@ function handleDom(fiber: TFiberNode): void {
 				while (!childFiber.stateNode) {
 					childFiber = childFiber.child as TFiberNode
 				}
+				// if (typeof (childFiber.type as any)['__@@INSIDE_FRAGMENT_ANCHOR'] === 'undefined') {
+				// 	deletions.push(childFiber.stateNode)
+				// }
 				/**
 				 * 找出该函数组件对应的 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的父 fiber 节点
 				 */
 				let parentFiber: TFiberNode | null = fiber.parent
 				while (parentFiber && !parentFiber.stateNode) {
 					parentFiber = parentFiber.parent
+				}
+				if (childFiber.stateNode === (parentFiber as TFiberNode).stateNode) {
+					return
 				}
 				removeChild(childFiber.stateNode, (parentFiber as TFiberNode).stateNode)
 			}
@@ -43,6 +50,10 @@ function handleDom(fiber: TFiberNode): void {
 	}
 	if (parentFiber) {
 		const parentDom: TExtendHTMLDOMElment | null = parentFiber.stateNode
+		if (String(fiber.stateNode.nodeType) === HTMLELEMENT_NODETYPE.DOCUMENT_FRAGMENT_NODE && parentDom) {
+			fiber.stateNode = parentDom
+			return
+		}
 		switch (fiber.effectTag) {
 			case ENUM_EFFECT_TAG.PLACEMENT: {
 				appendChild(fiber.stateNode, parentDom)

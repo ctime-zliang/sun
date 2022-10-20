@@ -37,5 +37,5 @@ export type TFiberNode = {
 }
 
 export type TFunctionComponentFunction = Function & {
-	isUseMemo: boolean
+	['__@@IS_USE_MEMO_ANCHOR']: boolean
 }

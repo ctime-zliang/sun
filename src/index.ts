@@ -1,4 +1,4 @@
-import { createElement, createTextElement, setSyncMode, render as _render, createRoot as _createRoot, memo as _memo } from './main'
+import { createElement, createTextElement, setSyncMode, Fragment, render as _render, createRoot as _createRoot, memo as _memo } from './main'
 import { useState as useStateHook } from './hooks/useState'
 import { useEffect as useEffectHook } from './hooks/useEffect'
 import { useMemo as useMemoHook } from './hooks/useMemo'
@@ -14,6 +14,7 @@ const Sun = Object.create(null)
 
 window.__SUN__ = Sun
 
+Sun.Fragment = Fragment
 Sun.createElement = createElement as (type: string, props: { [key: string]: any }, ...children: any[]) => TVDom
 Sun.createTextElement = createTextElement as (text: string) => TVDom
 Sun.setSyncMode = setSyncMode as () => void

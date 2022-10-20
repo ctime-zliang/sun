@@ -17,6 +17,7 @@ import { UseRef1 } from './component/hookUseRef'
 import { UseEffectExecOnComponentTree } from './component/hookUseEffectExecOnComponentTree'
 import { ClockTag } from './component/clockTag'
 import { StandardClock } from './component/standardClock'
+import { FragmentElement1 } from './component/fragment'
 
 function App() {
 	console.log(`Component: App`)
@@ -47,7 +48,7 @@ render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockA
 /************************************************/
 /************************************************/
 
-createRoot(document.querySelector(`#app`)).render(<App />)
+createRoot(document.querySelector(`#app`)).render(<BaseComponentParent />)
 // createRoot(document.querySelector(`#app2`)).render(<App />)
 
 window.addEventListener('DOMContentLoaded', function (e) {
