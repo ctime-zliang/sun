@@ -39,34 +39,4 @@ module.exports = {
 			console.error(e)
 		}
 	},
-	clientOnly() {
-		return process.argv.includes('client-only=true')
-	},
-	puppeteerOnly() {
-		return process.argv.includes('--puppeteer=true')
-	},
-	puppeteerCustomOnly() {
-		return process.argv.includes('--puppeteer=true') && process.argv.includes('--user-custom=true')
-	},
-	jestCoverage() {
-		return process.argv.includes('--coverage')
-	},
-	createLoaderResult(string, isEsm = false) {
-		const prefix = isEsm ? 'export default ' : 'module.exports = '
-		return prefix + string
-	},
-	getStringExportContent(exportString) {
-		try {
-			if (/module.exports(.*)/gi.test(exportString)) {
-				return exportString.replace(/module.exports(\s+)=(\s+)/gi, '')
-			}
-			if (/export default(.*)/gi.test(exportString)) {
-				return exportString.replace(/export default(\s+)/gi, '')
-			}
-			return exportString
-		} catch (e) {
-			console.log(e)
-			return
-		}
-	},
 }

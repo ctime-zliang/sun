@@ -16,7 +16,8 @@ import { BaseInput } from './component/form'
 import { BaseUseCallback } from './component/useCallback'
 import { BaseUseMemo } from './component/useMemo'
 import { BaseUseRef } from './component/useRef'
-import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild, Clock, Clock2 } from './component/baseComponent'
+import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild, ClockTag } from './component/baseComponent'
+import { StandardClock } from './component/standardClock'
 
 function App() {
 	console.log(`Component: App`)
@@ -54,22 +55,22 @@ function App() {
 }
 
 // Sun.setSyncMode()
+/************************************************/
+/************************************************/
+/************************************************/
+render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockApp`))
+/************************************************/
+/************************************************/
+/************************************************/
 
-render(<BaseComponentParent rootId={Math.random()} />, document.querySelector(`#app`))
-/* ... */
-const handler2 = createRoot(document.querySelector(`#app2`))
+const handler = createRoot(document.querySelector(`#app`))
 window.setTimeout(() => {
-	handler2.render(<Clock />)
+	handler.render(<BaseComponentParent />)
 }, 500)
-// /* ... */
-// window.setTimeout(() => {
-// 	const handler3 = createRoot(document.querySelector(`#app3`))
-// 	handler3.render(<Clock2 />)
-// }, 1000)
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()
 	// frameCountPerSecond()
 	// updateInnerContentMain()
-	setDocumentBackgroudColor('darkgray')
+	setDocumentBackgroudColor('rgba(185, 185, 185, 0.5)')
 })

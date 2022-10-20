@@ -2,8 +2,8 @@
 	"name": "sun",
 	"version": "1.0.1",
 	"description": "",
-	"main": "dist/sun.js",
-	"types": "dist/sun.d.ts",
+	"main": "build/sun.js",
+	"types": "build/sun.d.ts",
 	"scripts": {
 		"prepare": "husky install",
 		"husky:install": "husky install",
