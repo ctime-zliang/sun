@@ -1,11 +1,14 @@
+/**
+ *	useCallback 测试
+ */
 import Sun, { useState, useEffect, useCallback } from '@/'
 
 const sourceCallback = () => {
 	console.log(`123456`)
 }
 let flagA = null
-export function BaseUseCallback() {
-	console.log('Component: BaseUseCallback')
+export function UseCallback1() {
+	console.log('Component: UseCallback1')
 	const [count, setCount] = useState(0)
 	const btnClickAction = () => {
 		setCount(count + 1)

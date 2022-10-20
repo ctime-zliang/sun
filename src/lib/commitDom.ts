@@ -69,7 +69,7 @@ function cacheFunctionComponentUseEffectHooks(fiber: TFiberNode, action: string)
 	 * 对于需要删除的 fiber 节点
 	 * 缓存其 useEffect hooks
 	 */
-	if (action === ECOMMIT_DOM_ACTION.DELETION && !fiber.effectCachedUnmounted) {
+	if (action === ECOMMIT_DOM_ACTION.DELETION && fiber.effectTag === ENUM_EFFECT_TAG.DELETION && !fiber.effectCachedUnmounted) {
 		for (let i: number = 0; i < fiber.hooks.length; i++) {
 			const hookItem: TUseEffectHookStruct = fiber.hooks[i] as TUseEffectHookStruct
 			if (hookItem.useEffect) {
@@ -131,6 +131,7 @@ export function commit(fiber: TFiberNode, action: string): void {
 		if (current === root) {
 			cacheFunctionComponentUseEffectHooks(current, action)
 			console.warn(`===>>> current === root <<<===`)
+			console.warn(`There may be problems with the fiber tree.`)
 			return
 		}
 		/**

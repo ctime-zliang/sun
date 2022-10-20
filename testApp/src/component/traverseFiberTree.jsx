@@ -1,3 +1,6 @@
+/**
+ *	Fiber 树遍历案例
+ */
 import Sun, { useState } from '@/'
 
 export function TraverseFiberTree() {

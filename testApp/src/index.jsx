@@ -4,52 +4,36 @@ import { setIntervalAnimateMain } from './modules/setIntervalAnimate'
 import { updateInnerContentMain } from './modules/updateElementInnerContent'
 import { setDocumentBackgroudColor } from './modules/setDocumentBackgroudColor'
 /* ... */
-import { syncBlock } from './utils/utils'
+import Sun, { render, createRoot } from '../../src/index'
 /* ... */
-import Sun, { render, useState, useEffect, createRoot } from '../../src/index'
-/* ... */
-import { ClickAddLi, ClickAddLongChild } from './component/clickAddLi'
+import { DynamicallyAddChilds1, DynamicallyAddChilds2 } from './component/addChilds'
+import { BaseComponentParent, BaseComponentChild, BaseComponentChildMemo } from './component/baseComponent'
 import { TraverseFiberTree } from './component/traverseFiberTree'
-import { UseEffectExecSequentialWrapper } from './component/useEffectExecSequential'
-import { TimeoutInteractive, IntervalSetCount } from './component/closure'
-import { BaseInput } from './component/form'
-import { BaseUseCallback } from './component/useCallback'
-import { BaseUseMemo } from './component/useMemo'
-import { BaseUseRef } from './component/useRef'
-import { BaseComponent, Parent as BaseComponentParent, Child as BaseComponentChild, ClockTag } from './component/baseComponent'
+import { TimeoutReadStateOnClosure, IntervalSetCountOnClosure } from './component/closure'
+import { FormInput1 } from './component/form'
+import { UseCallback1 } from './component/hookUseCallback'
+import { UseMemo1 } from './component/hookUseMemo'
+import { UseRef1 } from './component/hookUseRef'
+import { UseEffectExecOnComponentTree } from './component/hookUseEffectExecOnComponentTree'
+import { ClockTag } from './component/clockTag'
 import { StandardClock } from './component/standardClock'
 
 function App() {
 	console.log(`Component: App`)
-
-	const [count1, setCount1] = useState(1)
-	const setCountAction1 = () => {
-		setCount1(state => {
-			return state + 1
-		})
-	}
-	// useEffect(() => {
-	// 	console.log(`************************* App.useEffect 1`)
-	// 	setCount1(state => {
-	// 		return state + 1
-	// 	})
-	// }, [])
-	// useEffect(() => {
-	// 	console.log(`************************* App.useEffect 2`)
-	// })
-
-	useEffect(() => {
-		// window.setInterval(() => {
-		// 	setCount1(state => {
-		// 		return state + 1
-		// 	})
-		// })
-	}, [])
-
+	const [text] = Sun.useState('Hello Sun Application')
+	const [count, setCount] = Sun.useState(0)
 	return (
-		<div className="row-index" style={{ border: '1px solid red' }} onClick={setCountAction1}>
-			<div>{count1}</div>
-			<div>{number}</div>
+		<div className="row-index" style={{ border: '1px solid red' }}>
+			<div>
+				<button
+					onClick={() => {
+						setCount(count + 1)
+					}}
+				>
+					Set Count({count})
+				</button>
+			</div>
+			<div>{text}</div>
 		</div>
 	)
 }
@@ -63,10 +47,8 @@ render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockA
 /************************************************/
 /************************************************/
 
-const handler = createRoot(document.querySelector(`#app`))
-window.setTimeout(() => {
-	handler.render(<BaseComponentParent />)
-}, 500)
+createRoot(document.querySelector(`#app`)).render(<App />)
+// createRoot(document.querySelector(`#app2`)).render(<App />)
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()

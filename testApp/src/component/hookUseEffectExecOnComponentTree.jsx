@@ -1,3 +1,6 @@
+/**
+ *	组件树 useEffect 测试
+ */
 import Sun, { useState, useEffect } from '@/'
 
 function A1(props) {
@@ -150,7 +153,7 @@ function C32(props) {
         A1
  */
 
-export function UseEffectExecSequentialWrapper(props) {
+export function UseEffectExecOnComponentTree(props) {
 	const [count, setCount] = useState(0)
 	return (
 		<div data-tag="wrapper">

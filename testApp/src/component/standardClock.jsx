@@ -1,3 +1,6 @@
+/**
+ *	首屏案例: 经典时钟
+ */
 import Sun, { useState, useEffect, memo } from '@/'
 import { formatDates } from '../utils/utils'
 

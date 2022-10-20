@@ -1,8 +1,8 @@
 import Sun, { useState, useEffect, useMemo } from '@/'
 import { syncBlock } from '../utils/utils'
 
-export function BaseUseMemo() {
-	console.log(`Component: BaseUseMemo`)
+export function UseMemo1() {
+	console.log(`Component: UseMemo1`)
 
 	const [count1, setCount1] = useState(1)
 	const setCountAction1 = () => {
