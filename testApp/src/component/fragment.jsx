@@ -16,7 +16,7 @@ export function FragmentElement1() {
 			<button onClick={setNumberAction}>Set Number({number})</button>
 			<div>
 				{number < 3 ? <FragmentChild1 /> : <FragmentChild2 />}
-				<span>SPAN CONTENT</span>
+				<h3>AAA CONTENT</h3>
 			</div>
 		</>
 	)
@@ -28,7 +28,13 @@ function FragmentChild1() {
 		<>
 			<section>FragmentChild1 - 1</section>
 			<section>FragmentChild1 - 2</section>
-			<>FragmentChild1 - 3</>
+			<section>
+				<>FragmentChild1 - 3</>
+			</section>
+			<>
+				<section>FragmentChild1 - 4</section>
+			</>
+			<>FragmentChild1 - 5</>
 		</>
 	)
 }

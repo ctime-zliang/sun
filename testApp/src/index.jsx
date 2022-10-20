@@ -48,7 +48,7 @@ render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockA
 /************************************************/
 /************************************************/
 
-createRoot(document.querySelector(`#app`)).render(<BaseComponentParent />)
+createRoot(document.querySelector(`#app`)).render(<App />)
 // createRoot(document.querySelector(`#app2`)).render(<App />)
 
 window.addEventListener('DOMContentLoaded', function (e) {
