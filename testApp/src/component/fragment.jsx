@@ -12,13 +12,13 @@ export function FragmentElement1() {
 		})
 	}
 	return (
-		<>
+		<section>
 			<button onClick={setNumberAction}>Set Number({number})</button>
 			<div>
 				{number < 3 ? <FragmentChild1 /> : <FragmentChild2 />}
 				<h3>AAA CONTENT</h3>
 			</div>
-		</>
+		</section>
 	)
 }
 
@@ -47,4 +47,8 @@ function FragmentChild2() {
 			<article>FragmentChild2 - 2</article>
 		</>
 	)
+}
+
+function FunctionComponent() {
+	return <div>8888</div>
 }

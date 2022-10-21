@@ -3,71 +3,83 @@ import { updateDOM, appendChild, removeChild } from './dom'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TExtendHTMLDOMElment } from 'src/types/dom.types'
-import { isFunctionComponent } from '../utils/utils'
+import { isFunctionComponent, isInsideFragmentFunction } from '../utils/utils'
 import { ECOMMIT_DOM_ACTION, HTMLELEMENT_NODETYPE } from '../config/commitDom.enum'
 import { TUseEffectHookStruct } from '../types/hooks.types'
 
+function hhh(fiber: TFiberNode, topParentElement: TExtendHTMLDOMElment): void {
+	removeChild(fiber.stateNode, topParentElement)
+	while (fiber.sibling) {
+		fiber = fiber.sibling
+		if (isInsideFragmentFunction(fiber) && fiber.child) {
+			hhh(fiber.child, topParentElement)
+			continue
+		}
+		removeChild(fiber.stateNode, topParentElement)
+	}
+}
+
 function handleDom(fiber: TFiberNode): void {
-	if (!fiber.stateNode) {
-		/**
-		 * 函数组件做特殊处理
-		 */
-		if (isFunctionComponent(fiber)) {
-			if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
-				// const deletions: Array<TExtendHTMLDOMElment> = []
-				/**
-				 * 找出该函数组件对应的 fiber 节点的第一个具有真实 DOM 句柄(fiber.stateNode)的子 fiber 节点
-				 */
-				let childFiber: TFiberNode = fiber.child as TFiberNode
-				while (!childFiber.stateNode) {
-					childFiber = childFiber.child as TFiberNode
-				}
-				// if (typeof (childFiber.type as any)['__@@INSIDE_FRAGMENT_ANCHOR'] === 'undefined') {
-				// 	deletions.push(childFiber.stateNode)
-				// }
-				/**
-				 * 找出该函数组件对应的 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的父 fiber 节点
-				 */
-				let parentFiber: TFiberNode | null = fiber.parent
-				while (parentFiber && !parentFiber.stateNode) {
-					parentFiber = parentFiber.parent
-				}
-				if (childFiber.stateNode === (parentFiber as TFiberNode).stateNode) {
-					return
-				}
-				removeChild(childFiber.stateNode, (parentFiber as TFiberNode).stateNode)
-				if (childFiber.props.ref) {
-					childFiber.props.ref.current = null
-				}
+	if (isFunctionComponent(fiber)) {
+		if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
+			/**
+			 * 找出该函数组件对应的 fiber 节点的第一个具有真实 DOM 句柄(fiber.stateNode)的子 fiber 节点
+			 */
+			let childFiber: TFiberNode = fiber.child as TFiberNode
+			while (!childFiber.stateNode) {
+				childFiber = childFiber.child as TFiberNode
 			}
-			return
+			if (isInsideFragmentFunction(childFiber) && childFiber.child) {
+				hhh(childFiber.child, childFiber.stateNode)
+				return
+			}
+			/**
+			 * 找出该函数组件对应的 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的父 fiber 节点
+			 */
+			let parentFiber: TFiberNode | null = fiber.parent
+			while (parentFiber && !parentFiber.stateNode) {
+				parentFiber = parentFiber.parent
+			}
+			if (childFiber.stateNode === (parentFiber as TFiberNode).stateNode) {
+				return
+			}
+			removeChild(childFiber.stateNode, (parentFiber as TFiberNode).stateNode)
+			if (childFiber.props.ref) {
+				childFiber.props.ref.current = null
+			}
 		}
 		return
 	}
+	const nowStateNode: TExtendHTMLDOMElment = fiber.stateNode as TExtendHTMLDOMElment
+	if (isInsideFragmentFunction(fiber) && fiber.child) {
+		if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
+			hhh(fiber.child, nowStateNode)
+			return
+		}
+	}
 	/**
-	 * 找出该函数组件对应的 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的父 fiber 节点
+	 * 找出当前 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的父 fiber 节点
 	 */
 	let parentFiber: TFiberNode | null = fiber.parent
 	while (parentFiber && !parentFiber.stateNode) {
 		parentFiber = parentFiber.parent
 	}
-	if (parentFiber) {
-		const parentDom: TExtendHTMLDOMElment | null = parentFiber.stateNode
-		if (String(fiber.stateNode.nodeType) === HTMLELEMENT_NODETYPE.DOCUMENT_FRAGMENT_NODE && parentDom) {
-			fiber.stateNode = parentDom
+	if (parentFiber && parentFiber.stateNode) {
+		if (String(nowStateNode.nodeType) === HTMLELEMENT_NODETYPE.DOCUMENT_FRAGMENT_NODE) {
+			fiber.stateNode = parentFiber.stateNode
 			return
 		}
 		switch (fiber.effectTag) {
 			case ENUM_EFFECT_TAG.PLACEMENT: {
-				appendChild(fiber.stateNode, parentDom)
+				appendChild(fiber.stateNode, parentFiber.stateNode)
 				break
 			}
 			case ENUM_EFFECT_TAG.DELETION: {
-				removeChild(fiber.stateNode, parentDom)
+				removeChild(fiber.stateNode, parentFiber.stateNode)
 				break
 			}
 			case ENUM_EFFECT_TAG.UPDATE: {
-				updateDOM(fiber.stateNode, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
+				updateDOM(nowStateNode, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
 				break
 			}
 			default:
