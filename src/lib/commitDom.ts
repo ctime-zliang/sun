@@ -7,12 +7,12 @@ import { isFunctionComponent, isInsideFragmentFunction } from '../utils/utils'
 import { ECOMMIT_DOM_ACTION, HTMLELEMENT_NODETYPE } from '../config/commitDom.enum'
 import { TUseEffectHookStruct } from '../types/hooks.types'
 
-function hhh(fiber: TFiberNode, topParentElement: TExtendHTMLDOMElment): void {
+function handleFragmentDom(fiber: TFiberNode, topParentElement: TExtendHTMLDOMElment): void {
 	removeChild(fiber.stateNode, topParentElement)
 	while (fiber.sibling) {
 		fiber = fiber.sibling
 		if (isInsideFragmentFunction(fiber) && fiber.child) {
-			hhh(fiber.child, topParentElement)
+			handleFragmentDom(fiber.child, topParentElement)
 			continue
 		}
 		removeChild(fiber.stateNode, topParentElement)
@@ -23,18 +23,18 @@ function handleDom(fiber: TFiberNode): void {
 	if (isFunctionComponent(fiber)) {
 		if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
 			/**
-			 * 找出该函数组件对应的 fiber 节点的第一个具有真实 DOM 句柄(fiber.stateNode)的子 fiber 节点
+			 * 找出当前 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的子 fiber 节点
 			 */
 			let childFiber: TFiberNode = fiber.child as TFiberNode
 			while (!childFiber.stateNode) {
 				childFiber = childFiber.child as TFiberNode
 			}
 			if (isInsideFragmentFunction(childFiber) && childFiber.child) {
-				hhh(childFiber.child, childFiber.stateNode)
+				handleFragmentDom(childFiber.child, childFiber.stateNode)
 				return
 			}
 			/**
-			 * 找出该函数组件对应的 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的父 fiber 节点
+			 * 找出当前 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的父 fiber 节点
 			 */
 			let parentFiber: TFiberNode | null = fiber.parent
 			while (parentFiber && !parentFiber.stateNode) {
@@ -53,7 +53,7 @@ function handleDom(fiber: TFiberNode): void {
 	const nowStateNode: TExtendHTMLDOMElment = fiber.stateNode as TExtendHTMLDOMElment
 	if (isInsideFragmentFunction(fiber) && fiber.child) {
 		if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
-			hhh(fiber.child, nowStateNode)
+			handleFragmentDom(fiber.child, nowStateNode)
 			return
 		}
 	}
