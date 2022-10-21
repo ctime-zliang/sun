@@ -36,6 +36,9 @@ function handleDom(fiber: TFiberNode): void {
 					return
 				}
 				removeChild(childFiber.stateNode, (parentFiber as TFiberNode).stateNode)
+				if (childFiber.props.ref) {
+					childFiber.props.ref.current = null
+				}
 			}
 			return
 		}

@@ -13,7 +13,7 @@ import { TimeoutReadStateOnClosure, IntervalSetCountOnClosure } from './componen
 import { FormInput1 } from './component/form'
 import { UseCallback1 } from './component/hookUseCallback'
 import { UseMemo1 } from './component/hookUseMemo'
-import { UseRef1 } from './component/hookUseRef'
+import { UseRef1, UseRef2, UseRef3 } from './component/hookUseRef'
 import { UseEffectExecOnComponentTree } from './component/hookUseEffectExecOnComponentTree'
 import { ClockTag } from './component/clockTag'
 import { StandardClock } from './component/standardClock'

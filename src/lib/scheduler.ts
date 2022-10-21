@@ -9,6 +9,7 @@ import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
 import { ECOMMIT_DOM_ACTION } from '../config/commitDom.enum'
 import { TAllHooksStruct, TUseCallbackHookStruct, TUseEffectHookStruct, TUseMemoHookStruct, TUseStateHookStruct } from '../types/hooks.types'
+import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 
 export function startReconciliation(rootFiber: TFiberNode): void {
 	/**
@@ -245,6 +246,14 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 			}
 		}
 		reconcileChilren(fiber, deletions)
+	}
+	if (fiber.props.ref) {
+		if (fiber.effectTag === ENUM_EFFECT_TAG.PLACEMENT) {
+			fiber.props.ref.current = fiber.stateNode
+		}
+		if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
+			fiber.props.ref.current = null
+		}
 	}
 
 	fiber.triggerUpdate = false

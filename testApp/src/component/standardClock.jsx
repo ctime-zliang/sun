@@ -1,17 +1,20 @@
 /**
  *	首屏案例: 经典时钟
  */
-import Sun, { useState, useEffect, memo } from '@/'
+import Sun, { useState, useEffect, useRef, useCallback } from '@/'
 import { formatDates } from '../utils/utils'
 
 let timer = null
 let clockContainerStyle = {
 	display: `flex`,
 	justifyContent: `center`,
+	alignItems: `center`,
+	alignContent: `center`,
 }
 let clockWrapperStyle = {
 	width: `fit-content`,
 	transform: `scale(1.5)`,
+	transformOrigin: `center center`,
 }
 let clockCotentStyle = {
 	color: `#333333`,
@@ -25,45 +28,51 @@ let leftAreaStyle = {
 }
 let tipsShowStyle = {
 	transform: `scaleY(1.5)`,
-	transformOrigin: `left top`,
 }
 let splitUnderlineStyle = {
 	width: `98%`,
 	height: `3px`,
-	backgroundColor: `#444444`,
-	transform: `scaleX(1) translateY(0.5em) translateX(0.05em)`,
-	transformOrigin: `left top`,
+	backgroundColor: `#333333`,
+	transform: `scaleX(1) translateY(4px) translateX(1px)`,
 }
 let dateShowStyle = {
 	fontSize: `0.75em`,
-	transform: `scaleX(1.3) translateY(0.6em)`,
-	transformOrigin: `left top`,
+	transform: `scaleX(1.3) scaleY(1.15) translateY(5px) translateX(13px)`,
 }
 let rightAreaStyle = {
 	height: `100%`,
 }
 let timeShowStyle = {
-	transform: `scaleY(3) scaleX(1.05) translateY(-0.155em)`,
-	transformOrigin: `left top`,
+	transform: `scaleY(3.25) scaleX(1.05) translateY(4px)`,
 	textIndent: `5px`,
 }
 export function StandardClock(props) {
 	console.log('Component: StandardClock')
 	const [dateValue, setDateValue] = useState(`yyyy-mm-dd`)
 	const [timeValue, setTimeValue] = useState(`hh:mm:ss`)
+	const wrapperRef = useRef(null)
+	const resizeHandler = useCallback(() => {
+		if (wrapperRef.current) {
+			const viewClientWidth = document.documentElement.clientWidth
+			wrapperRef.current.style.transform = `scale(${(viewClientWidth / 1000) * 1.5})`
+		}
+	})
 	useEffect(() => {
 		timer = window.setInterval(() => {
 			const v = formatDates().split(' ')
 			setDateValue(v[0])
 			setTimeValue(v[1])
 		})
+		resizeHandler()
+		window.addEventListener('resize', resizeHandler)
 		return () => {
 			window.clearInterval(timer)
+			window.removeEventListener('resize', resizeHandler)
 		}
 	}, [])
 	return (
 		<div className="clock-container" style={clockContainerStyle}>
-			<div className="clock-wrapper" style={clockWrapperStyle}>
+			<div ref={wrapperRef} className="clock-wrapper" style={clockWrapperStyle}>
 				<div className="clock-content" style={clockCotentStyle}>
 					<div className="left-area" style={leftAreaStyle}>
 						<div className="tips-show" style={tipsShowStyle}>
