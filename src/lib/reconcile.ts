@@ -4,6 +4,16 @@ import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TVDom } from '../types/vdom.types'
 
+function getEffectTag(childVDomItem: TVDom, oldChildFiberOfNowWIPFiber: TFiberNode): string {
+	if (!oldChildFiberOfNowWIPFiber) {
+		return ENUM_EFFECT_TAG.PLACEMENT
+	}
+	if (childVDomItem.type === oldChildFiberOfNowWIPFiber.type) {
+		return ENUM_EFFECT_TAG.UPDATE
+	}
+	return ENUM_EFFECT_TAG.REPLACE
+}
+
 export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNode>): void {
 	/**
 	 * 获取当前 fiber 节点下所有子节点的 vDom 列表
@@ -42,13 +52,9 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 			}
 			continue
 		}
-		const sameType: boolean = !!(oldChildFiberOfNowWIPFiber && childVDomItem.type == oldChildFiberOfNowWIPFiber.type)
 		const triggerUpdate: boolean = !!(oldChildFiberOfNowWIPFiber && oldChildFiberOfNowWIPFiber.triggerUpdate)
-		if (sameType) {
-			/**
-			 * 之前存在的节点, 需要更新
-			 * 		通过该层的 vDom 重建对应的 fiber 节点
-			 */
+		const effectTag: string = getEffectTag(childVDomItem, oldChildFiberOfNowWIPFiber as TFiberNode)
+		if (effectTag === ENUM_EFFECT_TAG.UPDATE) {
 			newChildFiber = generateFiberStructData({
 				stateNode: (oldChildFiberOfNowWIPFiber as TFiberNode).stateNode,
 				type: childVDomItem.type,
@@ -61,10 +67,6 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 				hooks: (oldChildFiberOfNowWIPFiber as TFiberNode).hooks,
 			})
 		} else {
-			/**
-			 * 之前不存在的节点, 需要新建并插入
-			 * 		通过该层的 vDom 创建对应的 fiber 节点
-			 */
 			newChildFiber = generateFiberStructData({
 				stateNode: null,
 				type: childVDomItem.type,
@@ -72,7 +74,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 				parent: wipFiber,
 				dirty: true,
 				alternate: null,
-				effectTag: ENUM_EFFECT_TAG.PLACEMENT,
+				effectTag,
 			})
 			if (oldChildFiberOfNowWIPFiber) {
 				oldChildFiberOfNowWIPFiber.effectTag = ENUM_EFFECT_TAG.DELETION

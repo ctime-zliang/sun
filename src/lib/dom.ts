@@ -4,7 +4,7 @@ import { TFiberNode } from '../types/fiber.types'
 import { TExtendHTMLDOMElment } from '../types/dom.types'
 
 /**
- * @description 追加 DOM
+ * @description 追加 DOM 子节点
  * @function appendChild
  * @param {TExtendHTMLDOMElment} childDom 被追加的子节点
  * @param {TExtendHTMLDOMElment | null} parentDom 目标父节点
@@ -18,7 +18,7 @@ export function appendChild(childDom: TExtendHTMLDOMElment | null, parentDom: TE
 }
 
 /**
- * @description 移除 DOM
+ * @description 移除 DOM 子节点
  * @function removeChild
  * @param {TExtendHTMLDOMElment} childDom 被追加的子节点
  * @param {TExtendHTMLDOMElment | null} parentDom 目标父节点
@@ -29,6 +29,29 @@ export function removeChild(childDom: TExtendHTMLDOMElment | null, parentDom: TE
 		return
 	}
 	parentDom.removeChild(childDom)
+}
+
+/**
+ * @description 插入 DOM 子节点
+ * @function insertChild
+ * @param {TExtendHTMLDOMElment} childDom 被插入的子节点
+ * @param {TExtendHTMLDOMElment} beforeAtDom 参考的子节点, 插入到该节点之前
+ * @param {TExtendHTMLDOMElment | null} parentDom 目标父节点
+ * @return {undefined}
+ */
+export function insertChild(
+	childDom: TExtendHTMLDOMElment | null,
+	beforeAtDom: TExtendHTMLDOMElment | null,
+	parentDom: TExtendHTMLDOMElment | null
+): void {
+	if (!parentDom || !childDom) {
+		return
+	}
+	if (!beforeAtDom) {
+		parentDom.appendChild(childDom)
+		return
+	}
+	parentDom.insertBefore(childDom, beforeAtDom)
 }
 
 /**

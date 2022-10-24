@@ -7,7 +7,7 @@ import { setDocumentBackgroudColor } from './modules/setDocumentBackgroudColor'
 import Sun, { render, createRoot } from '../../src/index'
 /* ... */
 import { DynamicallyAddChilds1, DynamicallyAddChilds2 } from './component/addChilds'
-import { BaseComponentParent, BaseComponentChild, BaseComponentChildMemo } from './component/baseComponent'
+import { MemoParent, MemoChild1, MemoChild1Memo } from './component/memo'
 import { TraverseFiberTree } from './component/traverseFiberTree'
 import { TimeoutReadStateOnClosure, IntervalSetCountOnClosure } from './component/closure'
 import { FormInput1 } from './component/form'
@@ -18,6 +18,7 @@ import { UseEffectExecOnComponentTree } from './component/hookUseEffectExecOnCom
 import { ClockTag } from './component/clockTag'
 import { StandardClock } from './component/standardClock'
 import { FragmentElement1 } from './component/fragment'
+import { ConditionParent1, ConditionParentG1, ConditionParentG2, ConditionParentG3, ConditionParentG4 } from './component/conditionChilds'
 
 function App() {
 	console.log(`Component: App`)
@@ -43,12 +44,12 @@ function App() {
 /************************************************/
 /************************************************/
 /************************************************/
-render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockApp`))
+// render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockApp`))
 /************************************************/
 /************************************************/
 /************************************************/
 
-createRoot(document.querySelector(`#app`)).render(<BaseComponentParent />)
+createRoot(document.querySelector(`#app`)).render(<FragmentElement1 />)
 // createRoot(document.querySelector(`#app2`)).render(<App />)
 
 window.addEventListener('DOMContentLoaded', function (e) {

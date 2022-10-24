@@ -1,9 +1,9 @@
 import { __RTP__ } from '../core/runtime'
-import { updateDOM, appendChild, removeChild } from './dom'
+import { updateDOM, appendChild, removeChild, insertChild } from './dom'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TExtendHTMLDOMElment } from 'src/types/dom.types'
-import { isFunctionComponent, isInsideFragmentFunction } from '../utils/utils'
+import { getNearestChildFiberWithHoldDom, getNearestParentFiberWithHoldDom, isFunctionComponent, isInsideFragmentFunction } from '../utils/utils'
 import { ECOMMIT_DOM_ACTION, HTMLELEMENT_NODETYPE } from '../config/commitDom.enum'
 import { TUseEffectHookStruct } from '../types/hooks.types'
 
@@ -20,33 +20,30 @@ function handleFragmentDom(fiber: TFiberNode, topParentElement: TExtendHTMLDOMEl
 }
 
 function handleDom(fiber: TFiberNode): void {
+	const parentFiber: TFiberNode = getNearestParentFiberWithHoldDom(fiber.parent as TFiberNode)
+	const childFiber: TFiberNode = getNearestChildFiberWithHoldDom(fiber.child as TFiberNode)
 	if (isFunctionComponent(fiber)) {
 		if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
-			/**
-			 * 找出当前 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的子 fiber 节点
-			 */
-			let childFiber: TFiberNode = fiber.child as TFiberNode
-			while (!childFiber.stateNode) {
-				childFiber = childFiber.child as TFiberNode
-			}
-			if (isInsideFragmentFunction(childFiber) && childFiber.child) {
+			if (isInsideFragmentFunction(childFiber) && childFiber.child && childFiber.stateNode) {
 				handleFragmentDom(childFiber.child, childFiber.stateNode)
 				return
 			}
-			/**
-			 * 找出当前 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的父 fiber 节点
-			 */
-			let parentFiber: TFiberNode | null = fiber.parent
-			while (parentFiber && !parentFiber.stateNode) {
-				parentFiber = parentFiber.parent
-			}
-			if (childFiber.stateNode === (parentFiber as TFiberNode).stateNode) {
+			if (childFiber.stateNode === parentFiber.stateNode) {
 				return
 			}
-			removeChild(childFiber.stateNode, (parentFiber as TFiberNode).stateNode)
+			removeChild(childFiber.stateNode, parentFiber.stateNode)
 			if (childFiber.props.ref) {
 				childFiber.props.ref.current = null
 			}
+			return
+		}
+		if (fiber.effectTag === ENUM_EFFECT_TAG.REPLACE) {
+			if (parentFiber) {
+				const siblingFiber: TFiberNode = getNearestChildFiberWithHoldDom(fiber.sibling as TFiberNode)
+				insertChild(childFiber.stateNode, siblingFiber ? siblingFiber.stateNode : null, parentFiber.stateNode)
+				childFiber.effectTag = ENUM_EFFECT_TAG.NO_EFFECT
+			}
+			return
 		}
 		return
 	}
@@ -57,32 +54,26 @@ function handleDom(fiber: TFiberNode): void {
 			return
 		}
 	}
-	/**
-	 * 找出当前 fiber 节点距离最近的具有真实 DOM 句柄(fiber.stateNode)的父 fiber 节点
-	 */
-	let parentFiber: TFiberNode | null = fiber.parent
-	while (parentFiber && !parentFiber.stateNode) {
-		parentFiber = parentFiber.parent
-	}
-	if (parentFiber && parentFiber.stateNode) {
+	if (parentFiber) {
 		if (String(nowStateNode.nodeType) === HTMLELEMENT_NODETYPE.DOCUMENT_FRAGMENT_NODE) {
 			fiber.stateNode = parentFiber.stateNode
 			return
 		}
-		switch (fiber.effectTag) {
-			case ENUM_EFFECT_TAG.PLACEMENT: {
-				appendChild(fiber.stateNode, parentFiber.stateNode)
-				break
-			}
-			case ENUM_EFFECT_TAG.DELETION: {
-				removeChild(fiber.stateNode, parentFiber.stateNode)
-				break
-			}
-			case ENUM_EFFECT_TAG.UPDATE: {
-				updateDOM(nowStateNode, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
-				break
-			}
-			default:
+		if (fiber.effectTag === ENUM_EFFECT_TAG.PLACEMENT) {
+			appendChild(fiber.stateNode, parentFiber.stateNode)
+			return
+		}
+		if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
+			removeChild(fiber.stateNode, parentFiber.stateNode)
+			return
+		}
+		if (fiber.effectTag === ENUM_EFFECT_TAG.UPDATE) {
+			updateDOM(nowStateNode, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
+			return
+		}
+		if (fiber.effectTag === ENUM_EFFECT_TAG.REPLACE) {
+			insertChild(fiber.stateNode, fiber.sibling ? fiber.sibling.stateNode : null, parentFiber.stateNode)
+			return
 		}
 	}
 }
@@ -130,6 +121,7 @@ export function commit(fiber: TFiberNode, action: string): void {
 	while (current) {
 		if (current.dirty) {
 			handleDom(current)
+			cacheFunctionComponentUseEffectHooks(current, action)
 			current.dirty = false
 		}
 		if (current.child) {
@@ -146,7 +138,7 @@ export function commit(fiber: TFiberNode, action: string): void {
 				while (nowFunctionParentFiber && !(nowFunctionParentFiber.type instanceof Function)) {
 					nowFunctionParentFiber = nowFunctionParentFiber.parent as TFiberNode
 				}
-				cacheFunctionComponentUseEffectHooks(nowFunctionParentFiber, action)
+				// cacheFunctionComponentUseEffectHooks(nowFunctionParentFiber, action)
 			}
 			if (current.dirty) {
 				handleDom(current)
@@ -155,9 +147,8 @@ export function commit(fiber: TFiberNode, action: string): void {
 			continue
 		}
 		if (current === root) {
-			cacheFunctionComponentUseEffectHooks(current, action)
-			console.warn(`===>>> current === root <<<===`)
-			console.warn(`There may be problems with the fiber tree.`)
+			// cacheFunctionComponentUseEffectHooks(current, action)
+			console.warn(`[fiber warning] This fiber node has no children or siblings.`)
 			return
 		}
 		/**
@@ -167,9 +158,9 @@ export function commit(fiber: TFiberNode, action: string): void {
 			/**
 			 * 如果向上查找过程中遇到了函数组件对应的 fiber 节点, 缓存该函数组件下的所有 hooks
 			 */
-			cacheFunctionComponentUseEffectHooks(current, action)
+			// cacheFunctionComponentUseEffectHooks(current, action)
 			if (current.parent === root) {
-				cacheFunctionComponentUseEffectHooks(current, action)
+				// cacheFunctionComponentUseEffectHooks(current, action)
 				return
 			}
 			current = current.parent as TFiberNode
@@ -177,7 +168,7 @@ export function commit(fiber: TFiberNode, action: string): void {
 		/**
 		 * 如果被找到的目标 fiber 节点是函数组件对应的 fiber 节点, 缓存该函数组件下的所有 hooks
 		 */
-		cacheFunctionComponentUseEffectHooks(current, action)
+		// cacheFunctionComponentUseEffectHooks(current, action)
 		current = current.sibling
 	}
 }

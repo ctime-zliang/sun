@@ -69,7 +69,7 @@ export function generateInitialFiberStructData(): TFiberNode {
 
 /**
  * @description 创建适用于非根节点的 Fiber 结构体数据
- * @function generateInitialFiberStructData
+ * @function generateFiberStructData
  * @param {any} args 满足 TFiberNode 节点的配置项
  * @return {TFiberNode}
  */
@@ -83,7 +83,7 @@ export function generateFiberStructData(args: any = {}): TFiberNode {
 
 /**
  * @description 获取根 Fiber 节点
- * @function generateRootFiberStructData
+ * @function getRootFiber
  * @param {TFiberNode} fiber fiber 节点
  * @return {TFiberNode}
  */
@@ -93,6 +93,36 @@ export function getRootFiber(fiber: TFiberNode): TFiberNode {
 		rootFiber = rootFiber.parent as TFiberNode
 	}
 	return rootFiber
+}
+
+/**
+ * @description 获取当前函数组件 fiber 的最近的具有真实 DOM 句柄的父 fiber 节点
+ * 		fiber 节点对应函数节点时, 执行 while 循环
+ * 		fiber 节点对应 Host 节点时, 自动跳过 while 循环
+ * @function getNearestParentFiberWithHoldDom
+ * @param {TFiberNode} fiber fiber 节点
+ * @return {TFiberNode}
+ */
+export function getNearestParentFiberWithHoldDom(parentFiber: TFiberNode): TFiberNode {
+	while (parentFiber && !parentFiber.stateNode) {
+		parentFiber = parentFiber.parent as TFiberNode
+	}
+	return parentFiber
+}
+
+/**
+ * @description 获取当前函数组件 fiber 的最近的具有真实 DOM 句柄的子 fiber 节点
+ * 		fiber 节点对应函数节点时, 执行 while 循环
+ * 		fiber 节点对应 Host 节点时, 自动跳过 while 循环
+ * @function getNearestChildFiberWithHoldDom
+ * @param {TFiberNode} fiber fiber 节点
+ * @return {TFiberNode}
+ */
+export function getNearestChildFiberWithHoldDom(childFiber: TFiberNode): TFiberNode {
+	while (childFiber && !childFiber.stateNode) {
+		childFiber = childFiber.child as TFiberNode
+	}
+	return childFiber
 }
 
 /**

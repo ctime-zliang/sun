@@ -5,7 +5,7 @@
  */
 import Sun, { useState, useEffect, memo } from '@/'
 
-export function BaseComponentChild(props) {
+export function MemoChild1(props) {
 	console.log('Component: Child', props)
 	const [childCount, setChildCount] = useState(1)
 	const btnClickAction = () => {
@@ -21,9 +21,9 @@ export function BaseComponentChild(props) {
 	)
 }
 
-export const BaseComponentChildMemo = memo(BaseComponentChild)
+export const MemoChild1Memo = memo(MemoChild1)
 
-export function BaseComponentParent(props) {
+export function MemoParent(props) {
 	console.log('Component: Parent', props)
 	const [parentCount, setParentCount] = useState(1)
 	const btnClickAction = () => {
@@ -35,8 +35,8 @@ export function BaseComponentParent(props) {
 		<article data-tagitem="parent">
 			<button onClick={btnClickAction}>Set Count</button>
 			<div>{parentCount}</div>
-			<BaseComponentChild parent={1} />
-			<BaseComponentChildMemo parent={2} />
+			<MemoChild1 parent={1} />
+			<MemoChild1Memo parent={2} />
 		</article>
 	)
 }
