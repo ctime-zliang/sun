@@ -56,7 +56,7 @@ export function StandardClock(props) {
 			const viewClientWidth = document.documentElement.clientWidth
 			wrapperRef.current.style.transform = `scale(${(viewClientWidth / 1000) * 1.5})`
 		}
-	})
+	}, [])
 	useEffect(() => {
 		timer = window.setInterval(() => {
 			const v = formatDates().split(' ')
