@@ -48,8 +48,8 @@ let timeShowStyle = {
 }
 export function StandardClock(props) {
 	console.log('Component: StandardClock')
-	const [dateValue, setDateValue] = useState(`yyyy-mm-dd`)
-	const [timeValue, setTimeValue] = useState(`hh:mm:ss`)
+	const [dateValue, setDateValue] = useState(`0000-00-00`)
+	const [timeValue, setTimeValue] = useState(`00:00:00`)
 	const wrapperRef = useRef(null)
 	const resizeHandler = useCallback(() => {
 		if (wrapperRef.current) {
