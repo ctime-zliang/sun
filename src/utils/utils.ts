@@ -1,6 +1,9 @@
 import { TVDom } from '../types/vdom.types'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
+import { TUseEffectHookStruct } from 'src/types/hooks.types'
+import { __RTP__ } from '../core/runtime'
+import { HTMLELEMENT_NODETYPE } from '../config/commitDom.enum'
 
 /**
  * @description 创建初始 vDom 结构体数据
@@ -119,7 +122,7 @@ export function getNearestParentFiberWithHoldDom(parentFiber: TFiberNode): TFibe
  * @return {TFiberNode}
  */
 export function getNearestChildFiberWithHoldDom(childFiber: TFiberNode): TFiberNode {
-	while (childFiber && !childFiber.stateNode) {
+	while (childFiber && (!childFiber.stateNode || String(childFiber.stateNode.nodeType) === HTMLELEMENT_NODETYPE.DOCUMENT_FRAGMENT_NODE)) {
 		childFiber = childFiber.child as TFiberNode
 	}
 	return childFiber
@@ -198,7 +201,7 @@ export function isApprovedComponent(fiber: TFiberNode): boolean {
  * @param {TFiberNode} fiber fiber 节点
  * @return {boolean}
  */
-export function isFunctionComponent(fiber: TFiberNode): boolean {
+export function isFunctionComponent(fiber: TFiberNode | TVDom): boolean {
 	return !!(fiber.type && fiber.type instanceof Function && typeof (fiber.type as any)['__@@INSIDE_FRAGMENT_ANCHOR'] === 'undefined')
 }
 
@@ -208,7 +211,7 @@ export function isFunctionComponent(fiber: TFiberNode): boolean {
  * @param {TFiberNode} fiber fiber 节点
  * @return {boolean}
  */
-export function isInsideFragmentFunction(fiber: TFiberNode): boolean {
+export function isInsideFragmentFunction(fiber: TFiberNode | TVDom): boolean {
 	return !!(fiber.type && (fiber.type as any)['__@@INSIDE_FRAGMENT_ANCHOR'] === true)
 }
 
@@ -280,4 +283,42 @@ export function checkComponentPropsChanged(fiber: TFiberNode): boolean {
 		}
 	}
 	return isChanged
+}
+
+/**
+ * @description 收集函数组件 useEffect 用户回调
+ * 		在组件挂载后执行
+ * @function cacheFunctionComponentUseEffectHooksOnMounted
+ * @param {TFiberNode} fiber 函数组件所对应的 fiber 节点
+ * @return {boolean}
+ */
+export function cacheFunctionComponentUseEffectHooksOnMounted(fiber: TFiberNode): void {
+	if (!fiber.effectCachedMounted) {
+		for (let i: number = 0; i < fiber.hooks.length; i++) {
+			const hookItem: TUseEffectHookStruct = fiber.hooks[i] as TUseEffectHookStruct
+			if (hookItem.useEffect && hookItem.isUpdated) {
+				__RTP__.mountedHooksCache.push(fiber.hooks[i])
+			}
+		}
+		fiber.effectCachedMounted = true
+	}
+}
+
+/**
+ * @description 收集函数组件 useEffect 用户回调
+ * 		在组件卸载后执行
+ * @function cacheFunctionComponentUseEffectHooksOnUnmounted
+ * @param {TFiberNode} fiber 函数组件所对应的 fiber 节点
+ * @return {boolean}
+ */
+export function cacheFunctionComponentUseEffectHooksOnUnmounted(fiber: TFiberNode): void {
+	if (!fiber.effectCachedUnmounted) {
+		for (let i: number = 0; i < fiber.hooks.length; i++) {
+			const hookItem: TUseEffectHookStruct = fiber.hooks[i] as TUseEffectHookStruct
+			if (hookItem.useEffect) {
+				__RTP__.unmountedHooksCache.push(fiber.hooks[i])
+			}
+		}
+		fiber.effectCachedUnmounted = true
+	}
 }

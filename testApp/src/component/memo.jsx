@@ -3,7 +3,7 @@
  * 		组件嵌套
  * 		memo 处理
  */
-import Sun, { useState, useEffect, memo } from '@/'
+import Sun, { useState, memo } from '@/'
 
 export function MemoChild1(props) {
 	console.log('Component: Child', props)

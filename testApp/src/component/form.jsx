@@ -1,7 +1,7 @@
 /**
  * 表单交互
  */
-import Sun, { render, useState, useEffect, useMemo } from '@/'
+import Sun, { useState } from '@/'
 
 export function FormInput1() {
 	console.log('Component: FormInput1')

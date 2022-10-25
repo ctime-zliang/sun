@@ -19,6 +19,8 @@ import { ClockTag } from './component/clockTag'
 import { StandardClock } from './component/standardClock'
 import { FragmentElement1 } from './component/fragment'
 import { ConditionParent1, ConditionParentG1, ConditionParentG2, ConditionParentG3, ConditionParentG4 } from './component/conditionChilds'
+import { UseState1 } from './component/hookUseState'
+import { UseEffectInfiniteLoop, UseEffect1, UseEffect2 } from './component/hookUseEffect'
 
 function App() {
 	console.log(`Component: App`)
@@ -44,7 +46,7 @@ function App() {
 /************************************************/
 /************************************************/
 /************************************************/
-// render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockApp`))
+render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockApp`))
 /************************************************/
 /************************************************/
 /************************************************/

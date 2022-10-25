@@ -1,7 +1,7 @@
 /**
  * 密集型 setState 调用
  */
-import Sun, { useState, useEffect, memo } from '@/'
+import Sun, { useState, useEffect } from '@/'
 import { formatDates } from '../utils/utils'
 
 let intervalNumber = 1

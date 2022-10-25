@@ -1,10 +1,13 @@
 import { __RTP__ } from '../core/runtime'
-import { generateFiberStructData } from '../utils/utils'
+import { generateFiberStructData, isFunctionComponent, isInsideFragmentFunction } from '../utils/utils'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TVDom } from '../types/vdom.types'
 
-function getEffectTag(childVDomItem: TVDom, oldChildFiberOfNowWIPFiber: TFiberNode): string {
+function getEffectTag(childVDomItem: TVDom, oldChildFiberOfNowWIPFiber: TFiberNode, wipFiber: TFiberNode): string {
+	if (wipFiber.effectTag === ENUM_EFFECT_TAG.REPLACE) {
+		return ENUM_EFFECT_TAG.REPLACE
+	}
 	if (!oldChildFiberOfNowWIPFiber) {
 		return ENUM_EFFECT_TAG.PLACEMENT
 	}
@@ -53,7 +56,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 			continue
 		}
 		const triggerUpdate: boolean = !!(oldChildFiberOfNowWIPFiber && oldChildFiberOfNowWIPFiber.triggerUpdate)
-		const effectTag: string = getEffectTag(childVDomItem, oldChildFiberOfNowWIPFiber as TFiberNode)
+		const effectTag: string = getEffectTag(childVDomItem, oldChildFiberOfNowWIPFiber as TFiberNode, wipFiber)
 		if (effectTag === ENUM_EFFECT_TAG.UPDATE) {
 			newChildFiber = generateFiberStructData({
 				stateNode: (oldChildFiberOfNowWIPFiber as TFiberNode).stateNode,

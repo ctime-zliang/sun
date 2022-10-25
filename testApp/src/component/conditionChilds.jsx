@@ -3,7 +3,7 @@
  *      增删子组件
  *      增删子元素
  */
-import Sun, { useState, useEffect } from '@/'
+import Sun, { useState } from '@/'
 
 export function ConditionParent1() {
 	console.log(`Component: ConditionParent1`)
@@ -17,15 +17,15 @@ export function ConditionParent1() {
 		<main>
 			<button onClick={setNumberAction}>Set Number({number})</button>
 			{number < 1 ? <ConditionChild1 /> : <ConditionChild2 />}
-			<ConditionChild0 />
-			<h3>ConditionParent1 CONTENT</h3>
+			<OneFunctionComponent />
+			<h3>H3 Content</h3>
 		</main>
 	)
 }
 
-function ConditionChild0() {
-	console.log(`Component: ConditionChild0 CONTENT`)
-	return <h2>ConditionChild0 CONTENT</h2>
+function OneFunctionComponent() {
+	console.log(`Component: OneFunctionComponent`)
+	return <h2>OneFunctionComponent</h2>
 }
 
 function ConditionChild1() {

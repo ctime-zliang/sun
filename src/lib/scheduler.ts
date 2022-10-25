@@ -1,5 +1,5 @@
 import { __RTP__, __RTCP__ } from '../core/runtime'
-import { commit } from './commitDom'
+import { commit, commitDeletion } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 import { checkComponentPropsChanged, generateFiberStructData, isFunctionComponent, isInsideFragmentFunction } from '../utils/utils'
@@ -7,7 +7,6 @@ import { TFiberNode, TFunctionComponentFunction, TTASKQUEUE_ITEM } from '../type
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
-import { ECOMMIT_DOM_ACTION } from '../config/commitDom.enum'
 import { TAllHooksStruct, TUseCallbackHookStruct, TUseEffectHookStruct, TUseMemoHookStruct, TUseStateHookStruct } from '../types/hooks.types'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 
@@ -92,9 +91,9 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	 */
 	// console.time('commit')
 	deletions.forEach((item: TFiberNode): void => {
-		commit(item, ECOMMIT_DOM_ACTION.DELETION)
+		commitDeletion(item)
 	})
-	commit(currentRootFiber.child as TFiberNode, ECOMMIT_DOM_ACTION.NORMAL)
+	commit(currentRootFiber.child as TFiberNode)
 	// console.timeEnd('commit')
 	// console.log('%c===>>> App Task Finished', 'color: #ff0000;')
 

@@ -47,7 +47,7 @@ export function insertChild(
 	if (!parentDom || !childDom) {
 		return
 	}
-	if (!beforeAtDom) {
+	if (!beforeAtDom || beforeAtDom.parentElement !== parentDom) {
 		parentDom.appendChild(childDom)
 		return
 	}

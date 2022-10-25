@@ -1,7 +1,7 @@
 /**
  *	useCallback 测试
  */
-import Sun, { useState, useEffect, useCallback } from '@/'
+import Sun, { useState, useCallback } from '@/'
 
 const sourceCallback = () => {
 	console.log(`123456`)

@@ -3,7 +3,7 @@
  * 		逐一追加子节点
  * 		批量覆写更新过量子节点
  */
-import Sun, { useState, useEffect } from '@/'
+import Sun, { useState } from '@/'
 
 let childLength1 = 0
 export function DynamicallyAddChilds1() {
