@@ -51,12 +51,12 @@ render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockA
 /************************************************/
 /************************************************/
 
-createRoot(document.querySelector(`#app`)).render(<FragmentElement1 />)
+createRoot(document.querySelector(`#app`)).render(<App />)
 // createRoot(document.querySelector(`#app2`)).render(<App />)
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()
 	// frameCountPerSecond()
 	// updateInnerContentMain()
-	setDocumentBackgroudColor('rgba(185, 185, 185, 0.5)')
+	setDocumentBackgroudColor('rgba(185, 185, 185, 0.7)')
 })
