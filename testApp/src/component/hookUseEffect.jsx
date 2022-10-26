@@ -64,3 +64,16 @@ export function UseEffectInfiniteLoop() {
 		</div>
 	)
 }
+
+export function UseEffect3() {
+	console.log(`Component: UseEffect3`)
+	const [count, setCount] = useState(1)
+	useEffect(() => {
+		console.log(document.getElementById('UseEffect3Element'))
+	}, [])
+	return (
+		<div>
+			<div id="UseEffect3Element">{count}</div>
+		</div>
+	)
+}
