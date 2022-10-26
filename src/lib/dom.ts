@@ -10,11 +10,12 @@ import { TExtendHTMLDOMElment } from '../types/dom.types'
  * @param {TExtendHTMLDOMElment | null} parentDom 目标父节点
  * @return {undefined}
  */
-export function appendChild(childDom: TExtendHTMLDOMElment | null, parentDom: TExtendHTMLDOMElment | null): void {
-	if (!parentDom || !childDom) {
-		return
+export function appendChild(childDom: TExtendHTMLDOMElment | null, parentDom: TExtendHTMLDOMElment | null): boolean {
+	if (!parentDom || !childDom || parentDom === childDom) {
+		return false
 	}
 	parentDom.appendChild(childDom)
+	return true
 }
 
 /**
@@ -24,11 +25,12 @@ export function appendChild(childDom: TExtendHTMLDOMElment | null, parentDom: TE
  * @param {TExtendHTMLDOMElment | null} parentDom 目标父节点
  * @return {undefined}
  */
-export function removeChild(childDom: TExtendHTMLDOMElment | null, parentDom: TExtendHTMLDOMElment | null): void {
-	if (!parentDom || !childDom) {
-		return
+export function removeChild(childDom: TExtendHTMLDOMElment | null, parentDom: TExtendHTMLDOMElment | null): boolean {
+	if (!parentDom || !childDom || parentDom === childDom) {
+		return false
 	}
 	parentDom.removeChild(childDom)
+	return true
 }
 
 /**
@@ -43,15 +45,16 @@ export function insertChild(
 	childDom: TExtendHTMLDOMElment | null,
 	beforeAtDom: TExtendHTMLDOMElment | null,
 	parentDom: TExtendHTMLDOMElment | null
-): void {
+): boolean {
 	if (!parentDom || !childDom) {
-		return
+		return false
 	}
 	if (!beforeAtDom || beforeAtDom.parentElement !== parentDom) {
 		parentDom.appendChild(childDom)
-		return
+		return false
 	}
 	parentDom.insertBefore(childDom, beforeAtDom)
+	return true
 }
 
 /**

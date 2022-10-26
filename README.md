@@ -24,8 +24,8 @@
 | useCallback    | √    |                                                              | -        |
 | useRef         | √    |                                                              | -        |
 | createRoot     | √    |                                                              | -        |
-| memo           | √    | 性能优化，防止属性未变更的情况下，子组件跟随执行             | -        |
-| renderToString | ×    | 直接生成 html 字符串                                         | 预期实现 |
+| memo           | √    |                                                              | -        |
+| renderToString | ×    |                                                              | 预期实现 |
 
 
 

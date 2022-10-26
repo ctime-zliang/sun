@@ -17,7 +17,7 @@ export function FragmentElement1() {
 			<div>
 				{number < 1 ? <GroupFragmentChildA /> : <GroupFragmentChildB />}
 				<OneFunctionComponent />
-				<h3>H3 Content</h3>
+				<h3 style={{ color: number < 1 ? 'yellow' : 'red' }}>H3 Content</h3>
 			</div>
 		</section>
 	)

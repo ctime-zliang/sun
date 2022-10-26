@@ -8,7 +8,7 @@ import { initAsyncWorkLoop, initSyncWorkLoop } from './scheduler'
 let renderIndex: number = -1
 
 export class RootFiberController {
-	private _rootFiber: TFiberNode
+	private _rootFiber: TFiberNode | null
 
 	constructor() {
 		/* ... */
@@ -18,7 +18,7 @@ export class RootFiberController {
 		this._rootFiber = value
 	}
 	public get rootFiber(): TFiberNode {
-		return this._rootFiber
+		return this._rootFiber as TFiberNode
 	}
 
 	public createRootFiber(container: HTMLElement): void {
@@ -45,7 +45,7 @@ export class RootFiberController {
 	}
 
 	public render(element: TVDom): void {
-		const rootFiber: TFiberNode = this._rootFiber
+		const rootFiber: TFiberNode = this._rootFiber as TFiberNode
 		rootFiber.props.children.push(element)
 		rootFiber.dirty = true
 		if (!__RTP__.profile.async || (__RTP__.globalFiberRoot && !__RTP__.globalFiberRoot.current)) {
@@ -56,6 +56,7 @@ export class RootFiberController {
 			} else {
 				initSyncWorkLoop()()
 			}
+			this._rootFiber = null
 		}
 	}
 }

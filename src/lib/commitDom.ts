@@ -22,11 +22,7 @@ function handleDeletionDom(fiber: TFiberNode): boolean {
 		fiber.stateNode = parentFiber.stateNode
 	}
 	if (parentFiber && parentFiber.stateNode) {
-		if (fiber.stateNode === parentFiber.stateNode) {
-			return false
-		}
-		removeChild(fiber.stateNode, parentFiber.stateNode)
-		return true
+		return removeChild(fiber.stateNode, parentFiber.stateNode)
 	}
 	return false
 }
@@ -70,6 +66,12 @@ export function commitDeletion(fiber: TFiberNode): void {
 /******************************************************************************************/
 /******************************************************************************************/
 
+/**
+ * 对于 effectTag === ENUM_EFFECT_TAG.REPLACE 的 fiber 节点树(该节点和其下的子孙 fiber 节点)
+ * 在进入该树的遍历时, 需要记录该树的树根 fiber 节点 A
+ * 在执行插入时, 需要尝试找到 A 节点的下一个兄弟节点 B, 并将该树对应的 DOM 树插入到 B 节点对应的真实 DOM 之前
+ * 如果 B 不存在, 则直接添加(追加)到 A 的父节点对应的真实 DOM 树中
+ */
 let openStartRecord: boolean = false
 let startFiberOfSetReplace: TFiberNode | undefined = undefined
 function handleDom(fiber: TFiberNode): void {
@@ -85,7 +87,6 @@ function handleDom(fiber: TFiberNode): void {
 		return
 	}
 	const parentFiber: TFiberNode = getNearestParentFiberWithHoldDom(fiber.parent as TFiberNode)
-	const nowStateNode: TExtendHTMLDOMElment = fiber.stateNode as TExtendHTMLDOMElment
 	if (isInsideFragmentFunction(fiber)) {
 		fiber.stateNode = parentFiber.stateNode
 	}
@@ -98,7 +99,7 @@ function handleDom(fiber: TFiberNode): void {
 			return
 		}
 		if (fiber.effectTag === ENUM_EFFECT_TAG.UPDATE) {
-			updateDOM(nowStateNode, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
+			updateDOM(fiber.stateNode as TExtendHTMLDOMElment, fiber.alternate ? fiber.alternate.props : {}, fiber.props)
 			return
 		}
 		if (fiber.effectTag === ENUM_EFFECT_TAG.REPLACE) {

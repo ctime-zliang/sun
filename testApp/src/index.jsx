@@ -46,12 +46,12 @@ function App() {
 /************************************************/
 /************************************************/
 /************************************************/
-render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockApp`))
+// render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockApp`))
 /************************************************/
 /************************************************/
 /************************************************/
 
-createRoot(document.querySelector(`#app`)).render(<App />)
+createRoot(document.querySelector(`#app`)).render(<FragmentElement1 />)
 // createRoot(document.querySelector(`#app2`)).render(<App />)
 
 window.addEventListener('DOMContentLoaded', function (e) {

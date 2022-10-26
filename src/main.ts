@@ -15,7 +15,6 @@ window.__RTCP__ = __RTCP__
 
 /**
  * 创建一个全局顶层 fiber: globalFiberRoot
- *
  * 		当需要 render 多个实例时(仅指首次 render)
  * 		globalFiberRoot.current 将依次(按照 render 调用先后顺序)指向各个 <App /> 对应的 fiber 树的根 fiber 节点
  */
@@ -64,8 +63,7 @@ export function createTextElement(text: string): TVDom {
 }
 
 /**
- * @description 设置 fiber 树遍历模式
- * 		设置为 同步递归 模式
+ * @description 设置 fiber 树遍历模式为 同步递归 模式
  * @function setSyncMode
  * @return {void}
  */
@@ -102,7 +100,7 @@ export function createRoot(container: HTMLElement): RootFiberController {
 }
 
 /**
- * @description 处理 JSX Element 元素
+ * @description memo 优化
  * 		设置当 props 浅对比为 false 时跳过该 JSX Element 的本次执行
  * @function memo
  * @param {JSXElement} element JSX 节点
@@ -114,7 +112,12 @@ export function memo(element: TFunctionComponentFunction): TFunctionComponentFun
 	return typeFunction
 }
 
-export function Fragment() {
+/**
+ * @description 文档碎片 JSX 元素
+ * @function Fragment
+ * @return {DocumentFragment}
+ */
+export function Fragment(): DocumentFragment {
 	return document.createDocumentFragment()
 }
 Fragment['__@@INSIDE_FRAGMENT_ANCHOR'] = true
