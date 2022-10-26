@@ -1,7 +1,7 @@
 import { TVDom } from '../types/vdom.types'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
-import { TUseEffectHookStruct } from 'src/types/hooks.types'
+import { TEffectStruct, TUseEffectHookStruct, TUseLayoutEffectHookStruct } from 'src/types/hooks.types'
 import { __RTP__ } from '../core/runtime'
 import { HTMLELEMENT_NODETYPE } from '../config/commitDom.enum'
 
@@ -62,10 +62,7 @@ export function generateInitialFiberStructData(): TFiberNode {
 		dirty: false,
 		// 触发更新的标记位
 		triggerUpdate: false,
-		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
 		effectCachedMounted: false,
-		// 处于 commit 阶段在处理函数组件对应的 fiber 节点时是否已缓存其下的所有 hooks
-		// 针对需要删除的 fiber 节点
 		effectCachedUnmounted: false,
 	}
 }
@@ -288,16 +285,19 @@ export function checkComponentPropsChanged(fiber: TFiberNode): boolean {
 /**
  * @description 收集函数组件 useEffect 用户回调
  * 		在组件挂载后执行
- * @function cacheFunctionComponentUseEffectHooksOnMounted
+ * @function cacheFCptEffectHooksOnMounted
  * @param {TFiberNode} fiber 函数组件所对应的 fiber 节点
  * @return {boolean}
  */
-export function cacheFunctionComponentUseEffectHooksOnMounted(fiber: TFiberNode): void {
+export function cacheFCptEffectHooksOnMounted(fiber: TFiberNode): void {
 	if (!fiber.effectCachedMounted) {
 		for (let i: number = 0; i < fiber.hooks.length; i++) {
-			const hookItem: TUseEffectHookStruct = fiber.hooks[i] as TUseEffectHookStruct
-			if (hookItem.useEffect && hookItem.isUpdated) {
-				__RTP__.mountedHooksCache.push(fiber.hooks[i])
+			const hookItem: TEffectStruct = fiber.hooks[i] as TEffectStruct
+			if (
+				((hookItem as TUseEffectHookStruct).useEffect && hookItem.isUpdated) ||
+				((hookItem as TUseLayoutEffectHookStruct).useLayoutEffect && hookItem.isUpdated)
+			) {
+				__RTP__.effectCacheOnMounted.push(hookItem)
 			}
 		}
 		fiber.effectCachedMounted = true
@@ -307,16 +307,16 @@ export function cacheFunctionComponentUseEffectHooksOnMounted(fiber: TFiberNode)
 /**
  * @description 收集函数组件 useEffect 用户回调
  * 		在组件卸载后执行
- * @function cacheFunctionComponentUseEffectHooksOnUnmounted
+ * @function cacheFCptEffectHooksOnUnmounted
  * @param {TFiberNode} fiber 函数组件所对应的 fiber 节点
  * @return {boolean}
  */
-export function cacheFunctionComponentUseEffectHooksOnUnmounted(fiber: TFiberNode): void {
+export function cacheFCptEffectHooksOnUnmounted(fiber: TFiberNode): void {
 	if (!fiber.effectCachedUnmounted) {
 		for (let i: number = 0; i < fiber.hooks.length; i++) {
-			const hookItem: TUseEffectHookStruct = fiber.hooks[i] as TUseEffectHookStruct
-			if (hookItem.useEffect) {
-				__RTP__.unmountedHooksCache.push(fiber.hooks[i])
+			const hookItem: TEffectStruct = fiber.hooks[i] as TEffectStruct
+			if ((hookItem as TUseEffectHookStruct).useEffect || (hookItem as TUseLayoutEffectHookStruct).useLayoutEffect) {
+				__RTP__.effectCacheOnUnmounted.push(hookItem)
 			}
 		}
 		fiber.effectCachedUnmounted = true

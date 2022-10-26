@@ -1,6 +1,7 @@
 import { createElement, createTextElement, setSyncMode, Fragment, render as _render, createRoot as _createRoot, memo as _memo } from './main'
 import { useState as useStateHook } from './hooks/useState'
 import { useEffect as useEffectHook } from './hooks/useEffect'
+import { useLayoutEffect as useLayoutEffectHook } from './hooks/useLayoutEffect'
 import { useMemo as useMemoHook } from './hooks/useMemo'
 import { useCallback as useCallbackHook } from './hooks/useCallback'
 import { useRef as useRefHook } from './hooks/useRef'
@@ -24,6 +25,7 @@ Sun.createRoot = _createRoot as (container: HTMLElement) => RootFiberController
 Sun.memo = _memo as (element: TFunctionComponentFunction) => TFunctionComponentFunction
 Sun.useState = useStateHook as (initialValue: any) => TUseStateHook
 Sun.useEffect = useEffectHook as (callback: () => any, dependences: Array<any> | undefined) => void
+Sun.useLayoutEffect = useLayoutEffectHook as (callback: () => any, dependences: Array<any> | undefined) => void
 Sun.useMemo = useMemoHook as (callback: () => any, dependences: Array<any> | undefined) => any
 Sun.useCallback = useCallbackHook as (callback: () => any, dependences: Array<any> | undefined) => any
 Sun.useRef = useRefHook as (initialValue: any) => { current: any }
@@ -33,6 +35,7 @@ export const createRoot: (container: HTMLElement) => RootFiberController = _crea
 export const memo: (element: TFunctionComponentFunction) => TFunctionComponentFunction = _memo
 export const useState: (initialValue: any) => TUseStateHook = useStateHook
 export const useEffect: (callback: () => any, dependences: Array<any> | undefined) => void = useEffectHook
+export const useLayoutEffect: (callback: () => any, dependences: Array<any> | undefined) => void = useLayoutEffectHook
 export const useMemo: (callback: () => any, dependences: Array<any> | undefined) => any = useMemoHook
 export const useCallback: (callback: () => any, dependences: Array<any> | undefined) => any = useCallbackHook
 export const useRef: (initialValue: any) => { current: any } = useRefHook

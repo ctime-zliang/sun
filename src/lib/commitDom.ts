@@ -4,8 +4,8 @@ import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TExtendHTMLDOMElment } from '../types/dom.types'
 import {
-	cacheFunctionComponentUseEffectHooksOnMounted,
-	cacheFunctionComponentUseEffectHooksOnUnmounted,
+	cacheFCptEffectHooksOnMounted,
+	cacheFCptEffectHooksOnUnmounted,
 	getNearestChildFiberWithHoldDom,
 	getNearestParentFiberWithHoldDom,
 	isFunctionComponent,
@@ -13,8 +13,11 @@ import {
 } from '../utils/utils'
 
 function handleDeletionDom(fiber: TFiberNode): boolean {
+	if (fiber.props.ref) {
+		fiber.props.ref.current = null
+	}
 	if (isFunctionComponent(fiber)) {
-		cacheFunctionComponentUseEffectHooksOnUnmounted(fiber)
+		cacheFCptEffectHooksOnUnmounted(fiber)
 		return false
 	}
 	const parentFiber: TFiberNode = getNearestParentFiberWithHoldDom(fiber.parent as TFiberNode)
@@ -83,12 +86,15 @@ function handleDom(fiber: TFiberNode): void {
 		startFiberOfSetReplace = fiber
 	}
 	if (isFunctionComponent(fiber)) {
-		cacheFunctionComponentUseEffectHooksOnMounted(fiber)
+		cacheFCptEffectHooksOnMounted(fiber)
 		return
 	}
 	const parentFiber: TFiberNode = getNearestParentFiberWithHoldDom(fiber.parent as TFiberNode)
 	if (isInsideFragmentFunction(fiber)) {
 		fiber.stateNode = parentFiber.stateNode
+	}
+	if (fiber.props.ref) {
+		fiber.props.ref.current = fiber.stateNode
 	}
 	if (parentFiber && parentFiber.stateNode) {
 		if (fiber.stateNode === parentFiber.stateNode) {

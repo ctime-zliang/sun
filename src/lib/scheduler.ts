@@ -7,8 +7,15 @@ import { TFiberNode, TFunctionComponentFunction, TTASKQUEUE_ITEM } from '../type
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
-import { TAllHooksStruct, TUseCallbackHookStruct, TUseEffectHookStruct, TUseMemoHookStruct, TUseStateHookStruct } from '../types/hooks.types'
-import { ENUM_EFFECT_TAG } from '../config/effect.enum'
+import {
+	TAllHooksStruct,
+	TEffectStruct,
+	TUseCallbackHookStruct,
+	TUseEffectHookStruct,
+	TUseLayoutEffectHookStruct,
+	TUseMemoHookStruct,
+	TUseStateHookStruct,
+} from '../types/hooks.types'
 
 export function startReconciliation(rootFiber: TFiberNode): void {
 	/**
@@ -104,24 +111,25 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	currentRootFiber.queueUp = false
 	deletions.length = 0
 
-	const useEffectHooks: Array<TUseEffectHookStruct> = [...__RTP__.unmountedHooksCache, ...__RTP__.mountedHooksCache] as Array<TUseEffectHookStruct>
+	const useEffectHooks: Array<TEffectStruct> = [...__RTP__.effectCacheOnUnmounted, ...__RTP__.effectCacheOnMounted] as Array<TEffectStruct>
 	for (let i: number = 0; i < useEffectHooks.length; i++) {
-		if (useEffectHooks[i].returnCallback instanceof Function) {
-			;(useEffectHooks[i].returnCallback as Function).call(undefined)
+		const hookItem: TEffectStruct = useEffectHooks[i]
+		if (hookItem.returnCallback instanceof Function) {
+			hookItem.returnCallback.call(undefined)
 		}
 	}
-	__RTP__.unmountedHooksCache.length = 0
+	__RTP__.effectCacheOnUnmounted.length = 0
 	/**
 	 * 在组件树全部挂载并视图渲染完毕后的下一个事件循环中执行 useEffect 的回调函数
 	 */
 	window.setTimeout((): void => {
-		for (let i: number = 0; i < __RTP__.mountedHooksCache.length; i++) {
-			const hookItem: TUseEffectHookStruct = __RTP__.mountedHooksCache[i] as TUseEffectHookStruct
+		for (let i: number = 0; i < __RTP__.effectCacheOnMounted.length; i++) {
+			const hookItem: TEffectStruct = __RTP__.effectCacheOnMounted[i] as TEffectStruct
 			if (hookItem.isUpdated && hookItem.callback instanceof Function) {
 				hookItem.returnCallback = hookItem.callback.call(undefined)
 			}
 		}
-		__RTP__.mountedHooksCache.length = 0
+		__RTP__.effectCacheOnMounted.length = 0
 	})
 
 	/**
@@ -163,6 +171,10 @@ function updateHookFiberReference(fiber: TFiberNode): void {
 		}
 		if ((hooks[i] as TUseEffectHookStruct).useEffect) {
 			const hookItem: TUseEffectHookStruct = hooks[i] as TUseEffectHookStruct
+			hookItem.isUpdated = false
+		}
+		if ((hooks[i] as TUseLayoutEffectHookStruct).useLayoutEffect) {
+			const hookItem: TUseLayoutEffectHookStruct = hooks[i] as TUseLayoutEffectHookStruct
 			hookItem.isUpdated = false
 		}
 		if ((hooks[i] as TUseMemoHookStruct).useMemo) {
@@ -245,14 +257,6 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 			}
 		}
 		reconcileChilren(fiber, deletions)
-	}
-	if (fiber.props.ref) {
-		if (fiber.effectTag === ENUM_EFFECT_TAG.PLACEMENT) {
-			fiber.props.ref.current = fiber.stateNode
-		}
-		if (fiber.effectTag === ENUM_EFFECT_TAG.DELETION) {
-			fiber.props.ref.current = null
-		}
 	}
 
 	fiber.triggerUpdate = false

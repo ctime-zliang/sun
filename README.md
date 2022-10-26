@@ -15,17 +15,18 @@
 
 > **目前仅支持函数组件**
 
-| 功能点         | 支持 | 备注                                                         | 计划     |
-| -------------- | ---- | ------------------------------------------------------------ | -------- |
-| render         | √    | 视图渲染，支持同时 render 多个应用                           | -        |
-| useState       | √    |                                                              | -        |
-| useEffect      | √    | 在父-子-孙组件树结构中，各级 useEffect 回调的执行顺序、useEffect 回调的返回函数的执行顺序还是与 React 存在差异 | -        |
-| useMemo        | √    |                                                              | -        |
-| useCallback    | √    |                                                              | -        |
-| useRef         | √    |                                                              | -        |
-| createRoot     | √    |                                                              | -        |
-| memo           | √    |                                                              | -        |
-| renderToString | ×    |                                                              | 预期实现 |
+| 功能点          | 支持 | 备注                                                         | 计划     |
+| --------------- | ---- | ------------------------------------------------------------ | -------- |
+| render          | √    | 视图渲染，支持同时 render 多个应用                           | -        |
+| useState        | √    |                                                              | -        |
+| useEffect       | √    | 在父-子-孙组件树结构中，各级 useEffect 回调的执行顺序、useEffect 回调的返回函数的执行顺序还是与 React 存在差异 | -        |
+| useLayoutEffect | √    | 目前还没有做到类同 React 那样在视图刷新前执行，因此目前的实现更像是 useEffect 的翻版 | -        |
+| useMemo         | √    |                                                              | -        |
+| useCallback     | √    |                                                              | -        |
+| useRef          | √    |                                                              | -        |
+| createRoot      | √    |                                                              | -        |
+| memo            | √    |                                                              | -        |
+| renderToString  | ×    |                                                              | 预期实现 |
 
 
 
