@@ -28,6 +28,7 @@ export type TFiberNode = {
 	triggerUpdate: boolean
 	hooks: Array<TAllHooksStruct>
 	effectCachedMounted: boolean
+	layoutEffectCachedMounted: boolean
 	effectCachedUnmounted: boolean
 	/* ... */
 	root?: boolean

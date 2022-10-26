@@ -60,6 +60,7 @@ export function StandardClock(props) {
 	useEffect(() => {
 		timer = window.setInterval(() => {
 			const v = formatDates().split(' ')
+			// const v = `2018-08-08 20:56:36`.split(' ')
 			setDateValue(v[0])
 			setTimeValue(v[1])
 		})

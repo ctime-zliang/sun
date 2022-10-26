@@ -1,4 +1,4 @@
-import { TEffectStruct } from '../types/hooks.types'
+import { TEffectStruct, TUseEffectHookStruct, TUseLayoutEffectHookStruct } from '../types/hooks.types'
 import { TFiberNode, TFiberRootNode, TTASKQUEUE_ITEM } from '../types/fiber.types'
 
 type T__RTP__ = {
@@ -8,7 +8,8 @@ type T__RTP__ = {
 	taskGroupQueue: Array<TTASKQUEUE_ITEM>
 	taskGroupIndex: number
 	nextWorkUnitFiber: TFiberNode
-	effectCacheOnMounted: Array<TEffectStruct>
+	effectCacheOnMounted: Array<TUseEffectHookStruct>
+	layoutEffectCacheOnMounted: Array<TUseLayoutEffectHookStruct>
 	effectCacheOnUnmounted: Array<TEffectStruct>
 	updateRangeStartFiber: TFiberNode | null
 }
@@ -20,6 +21,7 @@ export const __RTP__: T__RTP__ = Object.create({
 	taskGroupIndex: -1,
 	nextWorkUnitFiber: null,
 	effectCacheOnMounted: [],
+	layoutEffectCacheOnMounted: [],
 	effectCacheOnUnmounted: [],
 	updateRangeStartFiber: null,
 })

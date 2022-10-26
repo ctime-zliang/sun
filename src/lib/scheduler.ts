@@ -119,12 +119,16 @@ function workEnd(deletions: Array<TFiberNode>): void {
 		}
 	}
 	__RTP__.effectCacheOnUnmounted.length = 0
-	/**
-	 * 在组件树全部挂载并视图渲染完毕后的下一个事件循环中执行 useEffect 的回调函数
-	 */
+	for (let i: number = 0; i < __RTP__.layoutEffectCacheOnMounted.length; i++) {
+		const hookItem: TUseLayoutEffectHookStruct = __RTP__.layoutEffectCacheOnMounted[i] as TUseLayoutEffectHookStruct
+		if (hookItem.isUpdated && hookItem.callback instanceof Function) {
+			hookItem.returnCallback = hookItem.callback.call(undefined)
+		}
+	}
+	__RTP__.layoutEffectCacheOnMounted.length = 0
 	window.setTimeout((): void => {
 		for (let i: number = 0; i < __RTP__.effectCacheOnMounted.length; i++) {
-			const hookItem: TEffectStruct = __RTP__.effectCacheOnMounted[i] as TEffectStruct
+			const hookItem: TUseEffectHookStruct = __RTP__.effectCacheOnMounted[i] as TUseEffectHookStruct
 			if (hookItem.isUpdated && hookItem.callback instanceof Function) {
 				hookItem.returnCallback = hookItem.callback.call(undefined)
 			}

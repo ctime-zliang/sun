@@ -63,6 +63,7 @@ export function generateInitialFiberStructData(): TFiberNode {
 		// 触发更新的标记位
 		triggerUpdate: false,
 		effectCachedMounted: false,
+		layoutEffectCachedMounted: false,
 		effectCachedUnmounted: false,
 	}
 }
@@ -293,11 +294,13 @@ export function cacheFCptEffectHooksOnMounted(fiber: TFiberNode): void {
 	if (!fiber.effectCachedMounted) {
 		for (let i: number = 0; i < fiber.hooks.length; i++) {
 			const hookItem: TEffectStruct = fiber.hooks[i] as TEffectStruct
-			if (
-				((hookItem as TUseEffectHookStruct).useEffect && hookItem.isUpdated) ||
-				((hookItem as TUseLayoutEffectHookStruct).useLayoutEffect && hookItem.isUpdated)
-			) {
-				__RTP__.effectCacheOnMounted.push(hookItem)
+			if ((hookItem as TUseEffectHookStruct).useEffect && hookItem.isUpdated) {
+				__RTP__.effectCacheOnMounted.push(hookItem as TUseEffectHookStruct)
+				continue
+			}
+			if ((hookItem as TUseLayoutEffectHookStruct).useLayoutEffect && hookItem.isUpdated) {
+				__RTP__.layoutEffectCacheOnMounted.push(hookItem as TUseLayoutEffectHookStruct)
+				continue
 			}
 		}
 		fiber.effectCachedMounted = true

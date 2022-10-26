@@ -10,7 +10,7 @@ export function UseLayoutEffect1() {
 		console.log(`===>>> Hook: hookUseLayoutEffect`)
 		console.log(document.getElementById('UseLayoutEffect1Button'))
 		console.log(document.getElementById('UseLayoutEffect1Button').innerHTML)
-		setCount(1)
+		// setCount(1)
 	}, [])
 	useEffect(() => {
 		console.log(`===>>> Hook: useEffect`)
