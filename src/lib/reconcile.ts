@@ -86,6 +86,7 @@ export function reconcileChilren(wipFiber: TFiberNode, deletions: Array<TFiberNo
 				deletions.push(oldChildFiberOfNowWIPFiber)
 			}
 		}
+		newChildFiber.typeof = newChildFiber.props.$$typeof
 		/**
 		 * oldChildFiberOfNowWIPFiber 作为当前 wipFiber 的上一轮更新完毕后的镜像(引用持有)存储节点
 		 * 每轮循环中需随着循环进行, 后移到下一个兄弟节点

@@ -3,12 +3,13 @@
  */
 
 import { __RTP__, __RTCP__ } from './core/runtime'
-import { flatArray, generateInitialVDOMStructData } from './utils/utils'
+import { flatArray, generateFiberStructData, generateInitialVDOMStructData } from './utils/utils'
 import { TVDom } from './types/vdom.types'
 import { ENUM_NODE_TYPE } from './config/effect.enum'
 import { renderProfile } from './config/config'
 import { RootFiberController } from './lib/rootFiberController.class'
-import { TFunctionComponentFunction } from './types/fiber.types'
+import { TFiberNode } from './types/fiber.types'
+import { EFiberType } from './config/fiber.enum'
 
 window.__RTP__ = __RTP__
 window.__RTCP__ = __RTCP__
@@ -32,18 +33,21 @@ __RTP__.profile = { ...renderProfile }
  * @param {any} children 子节点列表
  * @return {TVDom}
  */
-export function createElement(type: string, props: { [key: string]: any }, ...children: Array<any>): TVDom {
+export function createElement(type: any, props: { [key: string]: any }, ...children: Array<any>): TVDom {
+	let _type: any = typeof type === 'object' ? type.type : type
+	let $$typeof: any = typeof type === 'object' && type.typeof ? type.typeof : _type instanceof Function ? 'function' : _type
 	/**
 	 * Array.flat(Infinity) 性能问题
 	 * 这可能不是一个好的实现方式
 	 */
 	// const flatChildren: Array<any> = (children as any).flat(Infinity) // or children.flat(1)
 	const flatChildren: Array<any> = flatArray(children)
-	const elementVDom: TVDom = generateInitialVDOMStructData(type, {
+	const elementVDom: TVDom = generateInitialVDOMStructData(_type, {
 		...props,
 		children: flatChildren.map((child: any): void => {
 			return typeof child === 'object' ? child : createTextElement(child)
 		}),
+		$$typeof,
 	})
 	return elementVDom
 }
@@ -58,6 +62,7 @@ export function createTextElement(text: string): TVDom {
 	const textVDom: TVDom = generateInitialVDOMStructData(ENUM_NODE_TYPE.TEXT_NODE, {
 		children: [],
 		nodeValue: text,
+		$$typeof: `text`,
 	})
 	return textVDom
 }
@@ -106,10 +111,11 @@ export function createRoot(container: HTMLElement): RootFiberController {
  * @param {JSXElement} element JSX 节点
  * @return {JSXElement}
  */
-export function memo(element: TFunctionComponentFunction): TFunctionComponentFunction {
-	const typeFunction: TFunctionComponentFunction = element.bind(undefined)
-	typeFunction['__@@IS_USE_MEMO_ANCHOR'] = true
-	return typeFunction
+export function memo(element: Function): TFiberNode {
+	return generateFiberStructData({
+		type: element,
+		typeof: EFiberType.Memo,
+	})
 }
 
 /**

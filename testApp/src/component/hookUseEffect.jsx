@@ -1,3 +1,6 @@
+/**
+ * useEffect 调用测试
+ */
 import Sun, { useState, useEffect } from '@/'
 
 export function UseEffect1() {

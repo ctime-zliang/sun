@@ -22,6 +22,7 @@ import { ConditionParent1, ConditionParentG1, ConditionParentG2, ConditionParent
 import { UseState1 } from './component/hookUseState'
 import { UseEffectInfiniteLoop, UseEffect1, UseEffect2, UseEffect3 } from './component/hookUseEffect'
 import { UseLayoutEffect1 } from './component/hookUseLayoutEffect'
+import { Parent1 } from './component/childrenSlot'
 
 function App() {
 	console.log(`Component: App`)
@@ -47,12 +48,12 @@ function App() {
 /************************************************/
 /************************************************/
 /************************************************/
-render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockApp`))
+// render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockApp`))
 /************************************************/
 /************************************************/
 /************************************************/
 
-createRoot(document.querySelector(`#app`)).render(<App />)
+createRoot(document.querySelector(`#app`)).render(<MemoParent />)
 // createRoot(document.querySelector(`#app2`)).render(<App />)
 
 window.addEventListener('DOMContentLoaded', function (e) {

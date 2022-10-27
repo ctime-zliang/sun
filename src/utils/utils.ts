@@ -16,7 +16,7 @@ export function generateInitialVDOMStructData(type: string, props: { [key: strin
 	return {
 		type,
 		props,
-		__classOf: typeof type,
+		$$typeof: props.$$typeof,
 	}
 }
 
@@ -58,6 +58,8 @@ export function generateInitialFiberStructData(): TFiberNode {
 		key: undefined,
 		// hooks
 		hooks: [],
+		// vdom 类型标记位
+		typeof: ``,
 		// 是否需要更新 fiber 节点
 		dirty: false,
 		// 触发更新的标记位

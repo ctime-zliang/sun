@@ -116,6 +116,9 @@ export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: 
 	for (let i: number = 0; i < commPropsOfNewProps.length; i++) {
 		const item: string = commPropsOfNewProps[i]
 		if (isNewlyHandlerNewProps(item)) {
+			if (/^\$/gi.test(item)) {
+				continue
+			}
 			switch (item) {
 				case 'style': {
 					if (Object.prototype.toString.call(newProps[item]).toLowerCase() === '[object object]') {

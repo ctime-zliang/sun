@@ -27,6 +27,7 @@ export type TFiberNode = {
 	dirty: boolean
 	triggerUpdate: boolean
 	hooks: Array<TAllHooksStruct>
+	typeof: string
 	effectCachedMounted: boolean
 	layoutEffectCachedMounted: boolean
 	effectCachedUnmounted: boolean
@@ -35,8 +36,4 @@ export type TFiberNode = {
 	index?: number
 	current?: TFiberNode | null
 	queueUp?: boolean
-}
-
-export type TFunctionComponentFunction = Function & {
-	['__@@IS_USE_MEMO_ANCHOR']: boolean
 }

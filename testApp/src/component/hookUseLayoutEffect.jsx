@@ -1,3 +1,6 @@
+/**
+ * useLayoutEffect 调用测试
+ */
 import Sun, { useState, useEffect, useLayoutEffect } from '@/'
 
 export function UseLayoutEffect1() {

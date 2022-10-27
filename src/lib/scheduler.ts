@@ -3,7 +3,7 @@ import { commit, commitDeletion } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
 import { checkComponentPropsChanged, generateFiberStructData, isFunctionComponent, isInsideFragmentFunction } from '../utils/utils'
-import { TFiberNode, TFunctionComponentFunction, TTASKQUEUE_ITEM } from '../types/fiber.types'
+import { TFiberNode, TTASKQUEUE_ITEM } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
@@ -16,6 +16,7 @@ import {
 	TUseMemoHookStruct,
 	TUseStateHookStruct,
 } from '../types/hooks.types'
+import { EFiberType } from '../config/fiber.enum'
 
 export function startReconciliation(rootFiber: TFiberNode): void {
 	/**
@@ -210,7 +211,7 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 		 * 对于一个被 memo 处理过的函数组件, 其 fiber 节点的 type(该函数组件本身) 对象上将标记 __@@IS_USE_MEMO_ANCHOR
 		 */
 		let isRegardAsPropsChanged: boolean = true
-		if ((fiber.type as TFunctionComponentFunction)['__@@IS_USE_MEMO_ANCHOR']) {
+		if (fiber.typeof === EFiberType.Memo) {
 			isRegardAsPropsChanged = !fiber.triggerUpdate ? checkComponentPropsChanged(fiber) : true
 		}
 		if (isRegardAsPropsChanged && !!__RTP__.updateRangeStartFiber) {
@@ -225,7 +226,14 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 			 * 		在编译后的代码中, 函数内的 JSX 将被编译成 createElement/createTextElement 的嵌套调用
 			 * 		因此执行函数将返回一系列 vDom 嵌套对象
 			 */
-			const childrenVDomItems: Array<TVDom> = [(fiber.type as Function).call(undefined, fiber.props)]
+			const childrenVDomItems: Array<TVDom> = [
+				(fiber.type as Function).call(undefined, {
+					...fiber.props,
+					children: fiber.props.children.map((item: TVDom): TVDom => {
+						return item
+					}),
+				}),
+			]
 			fiber.props.children = childrenVDomItems
 		} else {
 			/**
