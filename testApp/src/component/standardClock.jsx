@@ -54,13 +54,12 @@ export function StandardClock(props) {
 	const resizeHandler = useCallback(() => {
 		if (wrapperRef.current) {
 			const viewClientWidth = document.documentElement.clientWidth
-			wrapperRef.current.style.transform = `scale(${(viewClientWidth / 1000) * 1.5})`
+			wrapperRef.current.style.transform = `scale(${(viewClientWidth / 1000) * 1.75})`
 		}
 	}, [])
 	useEffect(() => {
 		timer = window.setInterval(() => {
 			const v = formatDates().split(' ')
-			// const v = `2018-08-08 20:56:36`.split(' ')
 			setDateValue(v[0])
 			setTimeValue(v[1])
 		})
