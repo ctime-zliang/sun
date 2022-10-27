@@ -43,7 +43,7 @@ let rightAreaStyle = {
 	height: `100%`,
 }
 let timeShowStyle = {
-	transform: `scaleY(3.25) scaleX(1.05) translateY(4px)`,
+	transform: `scaleY(3.25) scaleX(1.35) translateY(4px) translateX(12px)`,
 	textIndent: `5px`,
 }
 export function StandardClock(props) {
