@@ -109,7 +109,7 @@ export function createRoot(container: HTMLElement): RootFiberController {
  * 		设置当 props 浅对比为 false 时跳过该 JSX Element 的本次执行
  * @function memo
  * @param {JSXElement} element JSX 节点
- * @return {JSXElement}
+ * @return {TFiberNode}
  */
 export function memo(element: Function): TFiberNode {
 	return generateFiberStructData({
