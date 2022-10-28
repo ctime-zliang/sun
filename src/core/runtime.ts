@@ -9,7 +9,6 @@ type T__RTP__ = {
 	taskGroupIndex: number
 	nextWorkUnitFiber: TFiberNode
 	effectCacheOnMounted: Array<TUseEffectHookStruct>
-	layoutEffectCacheOnMounted: Array<TUseLayoutEffectHookStruct>
 	effectCacheOnUnmounted: Array<TEffectStruct>
 	updateRangeStartFiber: TFiberNode | null
 }
@@ -21,7 +20,6 @@ export const __RTP__: T__RTP__ = Object.create({
 	taskGroupIndex: -1,
 	nextWorkUnitFiber: null,
 	effectCacheOnMounted: [],
-	layoutEffectCacheOnMounted: [],
 	effectCacheOnUnmounted: [],
 	updateRangeStartFiber: null,
 })

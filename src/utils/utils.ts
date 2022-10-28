@@ -300,10 +300,6 @@ export function cacheFCptEffectHooksOnMounted(fiber: TFiberNode): void {
 				__RTP__.effectCacheOnMounted.push(hookItem as TUseEffectHookStruct)
 				continue
 			}
-			if ((hookItem as TUseLayoutEffectHookStruct).useLayoutEffect && hookItem.isUpdated) {
-				__RTP__.layoutEffectCacheOnMounted.push(hookItem as TUseLayoutEffectHookStruct)
-				continue
-			}
 		}
 		fiber.effectCachedMounted = true
 	}
@@ -325,5 +321,20 @@ export function cacheFCptEffectHooksOnUnmounted(fiber: TFiberNode): void {
 			}
 		}
 		fiber.effectCachedUnmounted = true
+	}
+}
+
+/**
+ * @description 执行 useLayoutEffect 回调
+ * @function runFCptLayoutEffectHooksOnAppended
+ * @param {TFiberNode} fiber 函数组件所对应的 fiber 节点
+ * @return {boolean}
+ */
+export function runFCptLayoutEffectHooksOnAppended(fiber: TFiberNode): void {
+	for (let i: number = 0; i < fiber.hooks.length; i++) {
+		const hookItem: TEffectStruct = fiber.hooks[i] as TEffectStruct
+		if ((hookItem as TUseLayoutEffectHookStruct).useLayoutEffect && hookItem.isUpdated && hookItem.callback instanceof Function) {
+			hookItem.returnCallback = hookItem.callback.call(undefined)
+		}
 	}
 }

@@ -3,28 +3,43 @@
  */
 import Sun, { useState, useEffect, useLayoutEffect } from '@/'
 
-export function UseLayoutEffect1() {
-	console.log(`Component: UseLayoutEffect1`)
+export function UseLayoutEffectParent1() {
+	console.log(`Component: UseLayoutEffectParent1`)
 	const [count, setCount] = useState(0)
 	const setCountAction = () => {
 		// setCount(count + 1)
 	}
 	useLayoutEffect(() => {
-		console.log(`===>>> Hook: hookUseLayoutEffect`)
-		console.log(document.getElementById('UseLayoutEffect1Button'))
-		console.log(document.getElementById('UseLayoutEffect1Button').innerHTML)
-		// setCount(1)
+		console.log(`===>>> useLayoutEffect: UseLayoutEffectParent1`)
+		console.log(document.getElementById('DDD'))
+		console.log(document.getElementById('DDD').innerHTML)
+		setCount(1)
 	}, [])
 	useEffect(() => {
-		console.log(`===>>> Hook: useEffect`)
-		console.log(document.getElementById('UseLayoutEffect1Button'))
-		console.log(document.getElementById('UseLayoutEffect1Button').innerHTML)
+		console.log(`===>>> useEffect: UseLayoutEffectParent1`)
+		console.log(document.getElementById('DDD'))
+		console.log(document.getElementById('DDD').innerHTML)
 		// setCount(1)
 	}, [])
 	return (
 		<div>
 			<button onClick={setCountAction}>Set Count</button>
-			<div id="UseLayoutEffect1Button">{count}</div>
+			<section>
+				<UseLayoutEffectChild1 />
+			</section>
+			<div id="DDD">{count}</div>
 		</div>
 	)
+}
+
+function UseLayoutEffectChild1() {
+	console.log(`Component: UseLayoutEffectChild1`)
+	const [number, setNumber] = useState(0)
+	useLayoutEffect(() => {
+		console.log(`===>>> useLayoutEffect: UseLayoutEffectChild1`)
+	}, [])
+	useEffect(() => {
+		console.log(`===>>> useEffect: UseLayoutEffectChild1`)
+	}, [])
+	return <main>{number}</main>
 }

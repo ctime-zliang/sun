@@ -10,6 +10,7 @@ import {
 	getNearestParentFiberWithHoldDom,
 	isFunctionComponent,
 	isInsideFragmentFunction,
+	runFCptLayoutEffectHooksOnAppended,
 } from '../utils/utils'
 
 function handleDeletionDom(fiber: TFiberNode): boolean {
@@ -125,7 +126,7 @@ export function commit(fiber: TFiberNode): void {
 	const root: TFiberNode = fiber
 	let current: TFiberNode = fiber
 
-	while (current) {
+	loopOuter: while (current) {
 		if (current.dirty) {
 			handleDom(current)
 			current.dirty = false
@@ -139,15 +140,26 @@ export function commit(fiber: TFiberNode): void {
 			continue
 		}
 		if (current === root) {
-			console.warn(`[fiber warning] This fiber node has no children or siblings.`)
-			return
+			break loopOuter
 		}
 		while (!current.sibling) {
+			if (isFunctionComponent(current) && !current.dirty) {
+				runFCptLayoutEffectHooksOnAppended(current)
+			}
 			if (current.parent === root) {
-				return
+				break loopOuter
 			}
 			current = current.parent as TFiberNode
 		}
 		current = current.sibling
+	}
+
+	if (current === root) {
+		runFCptLayoutEffectHooksOnAppended(current)
+		return
+	}
+	if (current.parent) {
+		runFCptLayoutEffectHooksOnAppended(current.parent)
+		return
 	}
 }

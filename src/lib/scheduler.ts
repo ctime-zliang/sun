@@ -120,13 +120,6 @@ function workEnd(deletions: Array<TFiberNode>): void {
 		}
 	}
 	__RTP__.effectCacheOnUnmounted.length = 0
-	for (let i: number = 0; i < __RTP__.layoutEffectCacheOnMounted.length; i++) {
-		const hookItem: TUseLayoutEffectHookStruct = __RTP__.layoutEffectCacheOnMounted[i] as TUseLayoutEffectHookStruct
-		if (hookItem.isUpdated && hookItem.callback instanceof Function) {
-			hookItem.returnCallback = hookItem.callback.call(undefined)
-		}
-	}
-	__RTP__.layoutEffectCacheOnMounted.length = 0
 	window.setTimeout((): void => {
 		for (let i: number = 0; i < __RTP__.effectCacheOnMounted.length; i++) {
 			const hookItem: TUseEffectHookStruct = __RTP__.effectCacheOnMounted[i] as TUseEffectHookStruct
