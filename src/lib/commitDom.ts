@@ -125,6 +125,7 @@ export function commit(fiber: TFiberNode): void {
 	}
 	const root: TFiberNode = fiber
 	let current: TFiberNode = fiber
+	let isWillExit: boolean = false
 
 	loopOuter: while (current) {
 		if (current.dirty) {
@@ -140,6 +141,8 @@ export function commit(fiber: TFiberNode): void {
 			continue
 		}
 		if (current === root) {
+			runFCptLayoutEffectHooksOnAppended(current)
+			isWillExit = true
 			break loopOuter
 		}
 		while (!current.sibling) {
@@ -147,6 +150,7 @@ export function commit(fiber: TFiberNode): void {
 				runFCptLayoutEffectHooksOnAppended(current)
 			}
 			if (current.parent === root) {
+				isWillExit = true
 				break loopOuter
 			}
 			current = current.parent as TFiberNode
@@ -154,12 +158,7 @@ export function commit(fiber: TFiberNode): void {
 		current = current.sibling
 	}
 
-	if (current === root) {
-		runFCptLayoutEffectHooksOnAppended(current)
-		return
-	}
-	if (current.parent) {
+	if (!isWillExit && current.parent) {
 		runFCptLayoutEffectHooksOnAppended(current.parent)
-		return
 	}
 }
