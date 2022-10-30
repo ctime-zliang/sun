@@ -10,16 +10,24 @@ export function UseLayoutEffectParent1() {
 		// setCount(count + 1)
 	}
 	useLayoutEffect(() => {
-		console.log(`===>>> useLayoutEffect: UseLayoutEffectParent1`)
-		console.log(document.getElementById('DDD'))
-		console.log(document.getElementById('DDD').innerHTML)
-		setCount(1)
-	}, [])
-	useEffect(() => {
-		console.log(`===>>> useEffect: UseLayoutEffectParent1`)
+		console.log(`===>>> UseLayoutEffectParent1: useLayoutEffect`)
 		console.log(document.getElementById('DDD'))
 		console.log(document.getElementById('DDD').innerHTML)
 		// setCount(1)
+	}, [])
+	useEffect(() => {
+		console.log(`===>>> UseLayoutEffectParent1: useEffect`)
+		console.log(document.getElementById('DDD'))
+		console.log(document.getElementById('DDD').innerHTML)
+		// setCount((value) => {
+		// 	return value + 1
+		// })
+		// setCount((value) => {
+		// 	return value + 1
+		// })
+		// setCount((value) => {
+		// 	return value + 1
+		// })
 	}, [])
 	return (
 		<div>
@@ -36,10 +44,10 @@ function UseLayoutEffectChild1() {
 	console.log(`Component: UseLayoutEffectChild1`)
 	const [number, setNumber] = useState(0)
 	useLayoutEffect(() => {
-		console.log(`===>>> useLayoutEffect: UseLayoutEffectChild1`)
+		console.log(`===>>> UseLayoutEffectChild1: useLayoutEffect`)
 	}, [])
 	useEffect(() => {
-		console.log(`===>>> useEffect: UseLayoutEffectChild1`)
+		console.log(`===>>> UseLayoutEffectChild1: useEffect`)
 	}, [])
 	return <main>{number}</main>
 }
