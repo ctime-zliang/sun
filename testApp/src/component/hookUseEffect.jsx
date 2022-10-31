@@ -7,10 +7,13 @@ export function UseEffect1() {
 	console.log(`Component: UseEffect1`)
 	const [count, setCount] = useState(1)
 	const setCountAction = () => {
-		// setCount(count + 1)
+		setCount(count + 1)
 	}
 	useEffect(() => {
-		console.log(`===>>> Hook: useEffect`)
+		console.log(`===>>> useEffect: UseEffect1`)
+		return () => {
+			console.log(`--->>> useEffect.return-cb: UseEffect1`)
+		}
 	})
 	return (
 		<div>
@@ -27,10 +30,10 @@ export function UseEffect2() {
 		setCount(count + 1)
 	}
 	// useEffect(() => {
-	// 	console.log(`===>>> Hook: useEffect`)
+	// 	console.log(`===>>> useEffect: UseEffect2`)
 	// })
 	useEffect(() => {
-		console.log(`===>>> Hook: useEffect`)
+		console.log(`===>>> useEffect: UseEffect2`)
 	}, [])
 	return (
 		<div>
@@ -41,12 +44,26 @@ export function UseEffect2() {
 	)
 }
 
+export function UseEffect3() {
+	console.log(`Component: UseEffect3`)
+	const [count, setCount] = useState(1)
+	useEffect(() => {
+		console.log(`===>>> useEffect: UseEffect3`)
+		console.log(document.getElementById('useEffect3Element'))
+	}, [])
+	return (
+		<div>
+			<div id="useEffect3Element">{count}</div>
+		</div>
+	)
+}
+
 function ChildComponent1() {
 	console.log(`Component: ChildComponent1`)
 	useEffect(() => {
-		console.log(`--->>> Hook: useEffect - ChildComponent1 - Mounted`)
+		console.log(`--->>> useEffect: ChildComponent1`)
 		return () => {
-			console.log(`--->>> Hook: useEffect - ChildComponent1 - Unmounted`)
+			console.log(`--->>> useEffect.return-cb: ChildComponent1`)
 		}
 	}, [])
 	return <div>ChildComponent 1</div>
@@ -64,19 +81,6 @@ export function UseEffectInfiniteLoop() {
 	return (
 		<div>
 			<div>{count}</div>
-		</div>
-	)
-}
-
-export function UseEffect3() {
-	console.log(`Component: UseEffect3`)
-	const [count, setCount] = useState(1)
-	useEffect(() => {
-		console.log(document.getElementById('UseEffect3Element'))
-	}, [])
-	return (
-		<div>
-			<div id="UseEffect3Element">{count}</div>
 		</div>
 	)
 }
