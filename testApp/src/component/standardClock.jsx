@@ -10,51 +10,69 @@ let clockContainerStyle = {
 	justifyContent: `center`,
 	alignItems: `center`,
 	alignContent: `center`,
+	width: `250px`,
+	height: `60px`,
 }
 let clockWrapperStyle = {
-	width: `fit-content`,
-	transform: `scale(1.5)`,
+	width: `100%`,
+	height: `100%`,
+	// transform: `scale(1.5)`,
 	transformOrigin: `center center`,
 }
-let clockCotentStyle = {
+let clockContentStyle = {
 	color: `#333333`,
 	fontSize: `20px`,
 	fontWeight: 900,
 	whiteSpace: `nowrap`,
 	display: `flex`,
-}
-let leftAreaStyle = {
+	justifyContent: `center`,
+	alignItems: `center`,
+	alignContent: `center`,
+	width: `100%`,
 	height: `100%`,
 }
+let leftAreaStyle = {
+	width: `45%`,
+	height: `100%`,
+	display: `flex`,
+	flexDirection: 'column',
+	justifyContent: `center`,
+	alignItems: `center`,
+	alignContent: `center`,
+}
 let tipsShowStyle = {
-	transform: `scaleY(1.5)`,
+	transform: `scaleX(1.02)`,
 }
 let splitUnderlineStyle = {
-	width: `98%`,
+	width: `100%`,
 	height: `3px`,
 	backgroundColor: `#333333`,
-	transform: `scaleX(1) translateY(4px) translateX(1px)`,
 }
 let dateShowStyle = {
 	fontSize: `0.75em`,
-	transform: `scaleX(1.3) scaleY(1.15) translateY(5px) translateX(13px)`,
+	transform: `scaleX(1.31)`,
 }
 let rightAreaStyle = {
+	width: `55%`,
 	height: `100%`,
+	display: `flex`,
+	flexDirection: 'column',
+	justifyContent: `center`,
+	alignItems: `center`,
+	alignContent: `center`,
 }
 let timeShowStyle = {
-	transform: `scaleY(3.25) scaleX(1.35) translateY(4px) translateX(12px)`,
-	textIndent: `5px`,
+	transform: `scaleY(2.58) scaleX(1.45)`,
 }
 export function StandardClock(props) {
 	console.log('Component: StandardClock')
 	const [dateValue, setDateValue] = useState(`0000-00-00`)
 	const [timeValue, setTimeValue] = useState(`00:00:00`)
-	const wrapperRef = useRef(null)
+	const containerRef = useRef(null)
 	const resizeHandler = useCallback(() => {
-		if (wrapperRef.current) {
+		if (containerRef.current) {
 			const viewClientWidth = document.documentElement.clientWidth
-			wrapperRef.current.style.transform = `scale(${(viewClientWidth / 1000) * 1.75})`
+			containerRef.current.style.transform = `scale(${(viewClientWidth / 1000) * 1.75})`
 		}
 	}, [])
 	useEffect(() => {
@@ -71,9 +89,9 @@ export function StandardClock(props) {
 		}
 	}, [])
 	return (
-		<div className="clock-container" style={clockContainerStyle}>
-			<div ref={wrapperRef} className="clock-wrapper" style={clockWrapperStyle}>
-				<div className="clock-content" style={clockCotentStyle}>
+		<div ref={containerRef} className="clock-container" style={clockContainerStyle}>
+			<div className="clock-wrapper" style={clockWrapperStyle}>
+				<div className="clock-content" style={clockContentStyle}>
 					<div className="left-area" style={leftAreaStyle}>
 						<div className="tips-show" style={tipsShowStyle}>
 							<span>NOW TIME</span>
