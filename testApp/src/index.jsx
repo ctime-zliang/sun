@@ -7,7 +7,7 @@ import { setDocumentBackgroudColor } from './modules/setDocumentBackgroudColor'
 import Sun, { render, createRoot } from '../../src/index'
 /* ... */
 import { DynamicallyAddChilds1, DynamicallyAddChilds2 } from './component/addChilds'
-import { MemoParent, MemoChild1, MemoChild1Memo } from './component/memo'
+import { MemoParent1, MemoChild1, MemoChild1Memo } from './component/memo'
 import { TraverseFiberTree } from './component/traverseFiberTree'
 import { TimeoutReadStateOnClosure, IntervalSetCountOnClosure } from './component/closure'
 import { FormInput1 } from './component/form'
@@ -53,7 +53,7 @@ render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockA
 /************************************************/
 /************************************************/
 
-// createRoot(document.querySelector(`#app`)).render(<App />)
+// createRoot(document.querySelector(`#app`)).render(<MemoParent1 />)
 // createRoot(document.querySelector(`#app2`)).render(<App />)
 
 window.addEventListener('DOMContentLoaded', function (e) {

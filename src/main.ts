@@ -34,15 +34,26 @@ __RTP__.profile = { ...renderProfile }
  * @return {TVDom}
  */
 export function createElement(type: any, props: { [key: string]: any }, ...children: Array<any>): TVDom {
-	let _type: any = typeof type === 'object' ? type.type : type
-	let $$typeof: any = typeof type === 'object' && type.typeof ? type.typeof : _type instanceof Function ? 'function' : _type
+	let $$type: any = typeof type === 'object' ? type.type : type
+	let $$typeof: any = undefined
+	if (typeof type === 'object' && type.typeof) {
+		$$typeof = type.typeof
+	} else if (type instanceof Function) {
+		if (type['__@@INSIDE_FRAGMENT_ANCHOR'] === true) {
+			$$typeof = EFiberType.Fragment
+		} else {
+			$$typeof = 'function'
+		}
+	} else {
+		$$typeof = $$type
+	}
 	/**
 	 * Array.flat(Infinity) 性能问题
 	 * 这可能不是一个好的实现方式
 	 */
 	// const flatChildren: Array<any> = (children as any).flat(Infinity) // or children.flat(1)
 	const flatChildren: Array<any> = flatArray(children)
-	const elementVDom: TVDom = generateInitialVDOMStructData(_type, {
+	const elementVDom: TVDom = generateInitialVDOMStructData($$type, {
 		...props,
 		children: flatChildren.map((child: any): void => {
 			return typeof child === 'object' ? child : createTextElement(child)

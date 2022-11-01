@@ -206,16 +206,6 @@ export function isFunctionComponent(fiber: TFiberNode | TVDom): boolean {
 }
 
 /**
- * @description 判断是否是内置的 Fragment 生成函数
- * @function isFunctionComponent
- * @param {TFiberNode} fiber fiber 节点
- * @return {boolean}
- */
-export function isInsideFragmentFunction(fiber: TFiberNode | TVDom): boolean {
-	return !!(fiber.type && (fiber.type as any)['__@@INSIDE_FRAGMENT_ANCHOR'] === true)
-}
-
-/**
  * @description 同步阻塞
  * @function syncBlock
  * @param {number} delay 阻塞时长

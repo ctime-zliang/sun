@@ -2,7 +2,7 @@ import { __RTP__, __RTCP__ } from '../core/runtime'
 import { commit, commitDeletion } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
-import { checkComponentPropsChanged, generateFiberStructData, isFunctionComponent, isInsideFragmentFunction } from '../utils/utils'
+import { checkComponentPropsChanged, generateFiberStructData, isFunctionComponent } from '../utils/utils'
 import { TFiberNode, TTASKQUEUE_ITEM } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
 import { TVDom } from '../types/vdom.types'
@@ -255,7 +255,7 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 		reconcileChilren(fiber, deletions)
 	} else {
 		if (!fiber.stateNode) {
-			if (isInsideFragmentFunction(fiber)) {
+			if (fiber.typeof === EFiberType.Fragment) {
 				fiber.stateNode = (fiber.type as Function)()
 			} else {
 				fiber.stateNode = createDOM(fiber)

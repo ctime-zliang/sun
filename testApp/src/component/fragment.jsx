@@ -1,7 +1,7 @@
 /**
  * Fragment Element
  */
-import Sun, { useState } from '@/'
+import Sun, { useState, Fragment } from '@/'
 
 export function FragmentElement1() {
 	console.log(`Component: FragmentElement1`)

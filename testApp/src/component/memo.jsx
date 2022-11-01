@@ -14,17 +14,17 @@ export function MemoChild1(props) {
 		})
 	}
 	return (
-		<article data-tagitem="child">
+		<>
 			<button onClick={btnClickAction}>Set Number</button>
 			<div>{childCount}</div>
-		</article>
+		</>
 	)
 }
 
 export const MemoChild1Memo = memo(MemoChild1)
 
-export function MemoParent(props) {
-	console.log('Component: Parent', props)
+export function MemoParent1(props) {
+	console.log('Component: MemoParent1', props)
 	const [parentCount, setParentCount] = useState(1)
 	const btnClickAction = () => {
 		setParentCount(count => {

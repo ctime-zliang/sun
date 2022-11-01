@@ -9,9 +9,9 @@ import {
 	getNearestChildFiberWithHoldDom,
 	getNearestParentFiberWithHoldDom,
 	isFunctionComponent,
-	isInsideFragmentFunction,
 	runFCptLayoutEffectHooksOnAppended,
 } from '../utils/utils'
+import { EFiberType } from '../config/fiber.enum'
 
 function handleDeletionDom(fiber: TFiberNode): boolean {
 	if (fiber.props.ref) {
@@ -22,7 +22,7 @@ function handleDeletionDom(fiber: TFiberNode): boolean {
 		return false
 	}
 	const parentFiber: TFiberNode = getNearestParentFiberWithHoldDom(fiber.parent as TFiberNode)
-	if (isInsideFragmentFunction(fiber)) {
+	if (fiber.typeof === EFiberType.Fragment) {
 		fiber.stateNode = parentFiber.stateNode
 	}
 	if (parentFiber && parentFiber.stateNode) {
@@ -91,7 +91,7 @@ function handleDom(fiber: TFiberNode): void {
 		return
 	}
 	const parentFiber: TFiberNode = getNearestParentFiberWithHoldDom(fiber.parent as TFiberNode)
-	if (isInsideFragmentFunction(fiber)) {
+	if (fiber.typeof === EFiberType.Fragment) {
 		fiber.stateNode = parentFiber.stateNode
 	}
 	if (fiber.props.ref) {

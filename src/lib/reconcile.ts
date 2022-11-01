@@ -1,5 +1,5 @@
 import { __RTP__ } from '../core/runtime'
-import { generateFiberStructData, isFunctionComponent, isInsideFragmentFunction } from '../utils/utils'
+import { generateFiberStructData } from '../utils/utils'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TVDom } from '../types/vdom.types'
