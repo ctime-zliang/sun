@@ -53,7 +53,7 @@ render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockA
 /************************************************/
 /************************************************/
 
-// createRoot(document.querySelector(`#app`)).render(<MemoParent1 />)
+// createRoot(document.querySelector(`#app`)).render(<DynamicallyAddChilds1 />)
 // createRoot(document.querySelector(`#app2`)).render(<App />)
 
 window.addEventListener('DOMContentLoaded', function (e) {

@@ -3,13 +3,14 @@
  */
 
 import { __RTP__, __RTCP__ } from './core/runtime'
-import { flatArray, generateFiberStructData, generateInitialVDOMStructData } from './utils/utils'
+import { createRootFiber, flatArray, generateFiberStructData, generateInitialVDOMStructData } from './utils/utils'
 import { TVDom } from './types/vdom.types'
 import { ENUM_NODE_TYPE } from './config/effect.enum'
-import { renderProfile } from './config/config'
-import { RootFiberController } from './lib/rootFiberController.class'
+import { globalConfig, renderProfile } from './config/config'
 import { TFiberNode } from './types/fiber.types'
 import { EFiberType } from './config/fiber.enum'
+import { initAsyncWorkLoop, initSyncWorkLoop } from './lib/scheduler'
+import { TCreateRootFiberResult } from './types/commmon'
 
 window.__RTP__ = __RTP__
 window.__RTCP__ = __RTCP__
@@ -96,8 +97,8 @@ export function setSyncMode(): void {
  * @return {void}
  */
 export function render(element: TVDom, container: HTMLElement): void {
-	const rfcInstance: RootFiberController = createRoot(container)
-	rfcInstance.render(element)
+	const handler: TCreateRootFiberResult = createRoot(container)
+	handler.render(element)
 }
 
 /**
@@ -109,10 +110,23 @@ export function render(element: TVDom, container: HTMLElement): void {
  * @param {object} profile 配置项
  * @return {RootFiberController}
  */
-export function createRoot(container: HTMLElement): RootFiberController {
-	const rfcInstance: RootFiberController = new RootFiberController()
-	rfcInstance.createRootFiber(container)
-	return rfcInstance
+export function createRoot(container: HTMLElement): TCreateRootFiberResult {
+	const rootFiber: TFiberNode = createRootFiber(container)
+	return {
+		render(element: TVDom) {
+			rootFiber.props.children.push(element)
+			rootFiber.dirty = true
+			if (!__RTP__.profile.async || (__RTP__.globalFiberRoot && !__RTP__.globalFiberRoot.current)) {
+				__RTP__.globalFiberRoot.current = rootFiber
+				__RTP__.nextWorkUnitFiber = rootFiber
+				if (__RTP__.profile.async) {
+					window.requestIdleCallback(initAsyncWorkLoop(), { timeout: globalConfig.requestIdleCallbackTimeout })
+				} else {
+					initSyncWorkLoop()()
+				}
+			}
+		},
+	}
 }
 
 /**

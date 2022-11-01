@@ -328,3 +328,26 @@ export function runFCptLayoutEffectHooksOnAppended(fiber: TFiberNode): void {
 		}
 	}
 }
+
+let renderIndex: number = -1
+export function createRootFiber(container: HTMLElement): TFiberNode {
+	const nodeName: string = container.nodeName.toLowerCase()
+	const rootFiber: TFiberNode = generateFiberStructData({
+		type: nodeName,
+		props: { children: [] },
+		stateNode: container,
+		dirty: false,
+		/**
+		 * 当前 fiber 的索引编号, 保证值与该 fiber 在 rootFiberList 中的位置索引一致
+		 */
+		index: ++renderIndex,
+		root: true,
+		queueUp: false,
+	})
+	rootFiber.triggerUpdate = true
+	const rootFiberIndex: number = rootFiber.index as number
+
+	__RTP__.rootFiberList.push(rootFiber)
+	__RTP__.taskGroupQueue[rootFiberIndex] = { count: 0 }
+	return rootFiber
+}
