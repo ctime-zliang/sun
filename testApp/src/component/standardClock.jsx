@@ -32,7 +32,7 @@ let clockContentStyle = {
 	height: `100%`,
 }
 let leftAreaStyle = {
-	width: `45%`,
+	width: `47%`,
 	height: `100%`,
 	display: `flex`,
 	flexDirection: 'column',
@@ -41,7 +41,7 @@ let leftAreaStyle = {
 	alignContent: `center`,
 }
 let tipsShowStyle = {
-	transform: `scaleX(1.02)`,
+	transform: `scaleX(1.07)`,
 }
 let splitUnderlineStyle = {
 	width: `100%`,
@@ -50,10 +50,10 @@ let splitUnderlineStyle = {
 }
 let dateShowStyle = {
 	fontSize: `0.75em`,
-	transform: `scaleX(1.31)`,
+	transform: `scaleX(1.38)`,
 }
 let rightAreaStyle = {
-	width: `55%`,
+	width: `53%`,
 	height: `100%`,
 	display: `flex`,
 	flexDirection: 'column',
