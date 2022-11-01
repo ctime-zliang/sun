@@ -111,7 +111,7 @@ export function render(element: TVDom, container: HTMLElement): void {
  * @return {RootFiberController}
  */
 export function createRoot(container: HTMLElement): TCreateRootFiberResult {
-	const rootFiber: TFiberNode = createRootFiber(container)
+	let rootFiber: TFiberNode = createRootFiber(container)
 	return {
 		render(element: TVDom) {
 			rootFiber.props.children.push(element)
@@ -125,6 +125,7 @@ export function createRoot(container: HTMLElement): TCreateRootFiberResult {
 					initSyncWorkLoop()()
 				}
 			}
+			rootFiber = undefined as unknown as TFiberNode
 		},
 	}
 }
