@@ -4,6 +4,7 @@ module.exports = {
 	contentBase: path.join(__dirname, '/src/'),
 	disableHostCheck: true,
 	host: '127.0.0.1',
+	port: 8088,
 	compress: true,
 	progress: true,
 	hot: true,
