@@ -60,4 +60,5 @@ window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()
 	// frameCountPerSecond()
 	// updateInnerContentMain()
+	setDocumentBackgroudColor(`rgba(185, 185, 185, 0.2)`)
 })

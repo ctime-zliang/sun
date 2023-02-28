@@ -315,8 +315,8 @@ export class ClockCanvas extends ClockCanvasProfile {
 		const lingradOutline = ctx.createLinearGradient(this.innerClockRadius, 0, -this.innerClockRadius, 0)
 		ctx.beginPath()
 		ctx.lineWidth = this.clockOutlineWidth
-		lingradOutline.addColorStop(0, '#adb9c5')
-		lingradOutline.addColorStop(1, '#e9eced')
+		lingradOutline.addColorStop(0, '#C0C0C0')
+		lingradOutline.addColorStop(1, '#C0C0C0')
 		ctx.strokeStyle = lingradOutline
 		ctx.arc(0, 0, this.innerClockRadius, 0, Math.PI * 2, true)
 		ctx.stroke()

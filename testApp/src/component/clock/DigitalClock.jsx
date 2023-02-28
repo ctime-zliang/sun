@@ -17,7 +17,7 @@ const clockWrapperStyle = {
 	transformOrigin: `center center`,
 }
 const clockContentStyle = {
-	color: `#333333`,
+	color: `#444444`,
 	fontSize: `20px`,
 	fontWeight: 900,
 	whiteSpace: `nowrap`,
