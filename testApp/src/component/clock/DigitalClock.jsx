@@ -1,25 +1,22 @@
-/**
- *	首屏案例: 经典时钟
- */
 import Sun, { useState, useEffect, useRef, useCallback } from '@/'
-import { formatDates } from '../utils/utils'
+import { formatDates } from '../../utils/utils'
 
-let timer = null
-let clockContainerStyle = {
+const clockContainerStyle = {
 	display: `flex`,
 	justifyContent: `center`,
 	alignItems: `center`,
 	alignContent: `center`,
 	width: `250px`,
 	height: `60px`,
-}
-let clockWrapperStyle = {
-	width: `100%`,
-	height: `100%`,
-	// transform: `scale(1.5)`,
+	opacity: 0,
 	transformOrigin: `center center`,
 }
-let clockContentStyle = {
+const clockWrapperStyle = {
+	width: `100%`,
+	height: `100%`,
+	transformOrigin: `center center`,
+}
+const clockContentStyle = {
 	color: `#333333`,
 	fontSize: `20px`,
 	fontWeight: 900,
@@ -31,7 +28,7 @@ let clockContentStyle = {
 	width: `100%`,
 	height: `100%`,
 }
-let leftAreaStyle = {
+const leftAreaStyle = {
 	width: `47%`,
 	height: `100%`,
 	display: `flex`,
@@ -40,19 +37,19 @@ let leftAreaStyle = {
 	alignItems: `center`,
 	alignContent: `center`,
 }
-let tipsShowStyle = {
+const tipsShowStyle = {
 	transform: `scaleX(1.07)`,
 }
-let splitUnderlineStyle = {
+const splitUnderlineStyle = {
 	width: `100%`,
 	height: `3px`,
 	backgroundColor: `#333333`,
 }
-let dateShowStyle = {
+const dateShowStyle = {
 	fontSize: `0.75em`,
 	transform: `scaleX(1.38)`,
 }
-let rightAreaStyle = {
+const rightAreaStyle = {
 	width: `53%`,
 	height: `100%`,
 	display: `flex`,
@@ -61,18 +58,24 @@ let rightAreaStyle = {
 	alignItems: `center`,
 	alignContent: `center`,
 }
-let timeShowStyle = {
+const timeShowStyle = {
 	transform: `scaleY(2.58) scaleX(1.45)`,
 }
-export function StandardClock(props) {
-	console.log('Component: StandardClock')
+
+let timer = null
+
+export function DigitalClock(props) {
+	console.log('Component: DigitalClock')
 	const [dateValue, setDateValue] = useState(`0000-00-00`)
 	const [timeValue, setTimeValue] = useState(`00:00:00`)
 	const containerRef = useRef(null)
 	const resizeHandler = useCallback(() => {
 		if (containerRef.current) {
 			const viewClientWidth = document.documentElement.clientWidth
-			containerRef.current.style.transform = `scale(${(viewClientWidth / 1000) * 1.75})`
+			const viewClientHeight = document.documentElement.clientHeight
+			const scale = (viewClientWidth / 1000) * 1.05
+			containerRef.current.style.opacity = `1`
+			containerRef.current.style.transform = `scale(${scale}) translate3d(0, ${(viewClientHeight * 0.25) / scale}px, 5px)`
 		}
 	}, [])
 	useEffect(() => {

@@ -1,10 +1,11 @@
-/* ... */
 import frameCountPerSecond from './modules/frameCountPerSecond'
 import { setIntervalAnimateMain } from './modules/setIntervalAnimate'
 import { updateInnerContentMain } from './modules/updateElementInnerContent'
 import { setDocumentBackgroudColor } from './modules/setDocumentBackgroudColor'
 /* ... */
 import Sun, { render, createRoot } from '../../src/index'
+/* ... */
+import { ClockView } from './component/clock'
 /* ... */
 import { DynamicallyAddChilds1, DynamicallyAddChilds2 } from './component/addChilds'
 import { MemoParent1, MemoChild1, MemoChild1Memo } from './component/memo'
@@ -16,7 +17,6 @@ import { UseMemo1 } from './component/hookUseMemo'
 import { UseRef1, UseRef2, UseRef3 } from './component/hookUseRef'
 import { UseEffectExecOnComponentTree } from './component/hookUseEffectExecOnComponentTree'
 import { ClockTag } from './component/clockTag'
-import { StandardClock } from './component/standardClock'
 import { FragmentElement1 } from './component/fragment'
 import { ConditionParent1, ConditionParentG1, ConditionParentG2, ConditionParentG3, ConditionParentG4 } from './component/conditionChilds'
 import { UseState1 } from './component/hookUseState'
@@ -48,7 +48,7 @@ function App() {
 /************************************************/
 /************************************************/
 /************************************************/
-render(<StandardClock rootId={Math.random()} />, document.querySelector(`#clockApp`))
+render(<ClockView rootId={Math.random()} />, document.querySelector(`#clockApp`))
 /************************************************/
 /************************************************/
 /************************************************/
