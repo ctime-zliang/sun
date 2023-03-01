@@ -26,7 +26,7 @@ export function MechanicalClock() {
 		const viewClientWidth = document.documentElement.clientWidth
 		const viewClientHeight = document.documentElement.clientHeight
 		const areaHeight = viewClientHeight - BETWEEN_HEIGHT
-		canvsWrapperReference.current.style.transform = `translate3d(0, ${-1 * viewClientHeight * 0.125}px, 5px)`
+		canvsWrapperReference.current.style.transform = `translate3d(0, ${-1 * viewClientHeight * 0.08}px, 5px)`
 		if (clockReference.current) {
 			clockReference.current.stop()
 			clockReference.current.setCanvasRect(areaHeight * RATIO, areaHeight * RATIO)

@@ -77,7 +77,7 @@ export function DigitalClock(props) {
 			const viewClientHeight = document.documentElement.clientHeight
 			const scale = (viewClientHeight / 1000) * RATIO
 			containerRef.current.style.opacity = `1`
-			containerRef.current.style.transform = `scale(${scale}) translate3d(0, ${(viewClientHeight * 0.25) / scale}px, 5px)`
+			containerRef.current.style.transform = `scale(${scale}) translate3d(0, ${(viewClientHeight * 0.3) / scale}px, 5px)`
 		}
 	}, [])
 	useEffect(() => {
