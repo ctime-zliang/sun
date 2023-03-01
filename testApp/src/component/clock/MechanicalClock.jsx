@@ -3,6 +3,7 @@ import { ClockCanvas } from '../../utils/ClockCanvas'
 
 const BETWEEN_HEIGHT = 100
 const RATIO = 0.65
+
 const clockContainerStyle = {
 	position: `absolute`,
 	display: `flex`,

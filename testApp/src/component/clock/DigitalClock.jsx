@@ -1,6 +1,8 @@
 import Sun, { useState, useEffect, useRef, useCallback } from '@/'
 import { formatDates } from '../../utils/utils'
 
+const RATIO = 1.75
+
 const clockContainerStyle = {
 	display: `flex`,
 	justifyContent: `center`,
@@ -73,7 +75,7 @@ export function DigitalClock(props) {
 		if (containerRef.current) {
 			const viewClientWidth = document.documentElement.clientWidth
 			const viewClientHeight = document.documentElement.clientHeight
-			const scale = (viewClientWidth / 1000) * 1.05
+			const scale = (viewClientHeight / 1000) * RATIO
 			containerRef.current.style.opacity = `1`
 			containerRef.current.style.transform = `scale(${scale}) translate3d(0, ${(viewClientHeight * 0.25) / scale}px, 5px)`
 		}
