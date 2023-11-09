@@ -1,7 +1,6 @@
 export type TGlobalConfig = {
 	requestIdleCallbackTimeout: number
-	[key: string]: any
-}
+} & PlainObject
 export const globalConfig: TGlobalConfig = {
 	requestIdleCallbackTimeout: 100,
 }
@@ -9,6 +8,6 @@ export const globalConfig: TGlobalConfig = {
 export type TRenderProfile = {
 	async: boolean
 }
-export const renderProfile: TRenderProfile = {
+export const initRenderProfile: TRenderProfile = {
 	async: true,
 }

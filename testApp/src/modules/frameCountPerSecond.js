@@ -3,7 +3,7 @@
 		/**
 		 * 帧率刷新间隔(ms)
 		 */
-		interval: 100,
+		interval: 200,
 		/**
 		 * 帧率告警阈值边界
 		 */
@@ -17,7 +17,8 @@
                 display: block;
                 position: fixed; 
                 top: 0;
-                right: 0;
+                left: 0;
+				cursor: move;
                 line-height: 14px;
                 padding: 2px 4px;
                 border: 1px solid #dcdcdc;
@@ -45,8 +46,8 @@
 
 	const createHtmlString = () => {
 		const htmlString = `
-            <div id="_fpsMonitorContainer" class="_fps-monitor-container">
-                <div id="_fpsMonitorWrapper">
+            <div class="_fps-monitor-container">
+                <div>
                     <div data-tagitem="_fps-raf-count"></div>
                     <div data-tagitem="_fps-raf-interval-count"></div>
                     <div data-tagitem="_fps-ric-count"></div>
@@ -80,8 +81,8 @@
 	}
 
 	const initElementHandler = runtimeConfig => {
-		runtimeConfig.containerElement = document.getElementById('_fpsMonitorContainer')
-		runtimeConfig.wrapperElement = document.getElementById('_fpsMonitorWrapper')
+		runtimeConfig.containerElement = document.querySelector('._fps-monitor-container')
+		runtimeConfig.wrapperElement = runtimeConfig.containerElement.firstElementChild
 		runtimeConfig.rAFCountItemElement = runtimeConfig.containerElement.querySelector('[data-tagitem="_fps-raf-count"]')
 		runtimeConfig.rAFIntervalCountItemElement = runtimeConfig.containerElement.querySelector('[data-tagitem="_fps-raf-interval-count"]')
 		runtimeConfig.rICCountItemElement = runtimeConfig.containerElement.querySelector('[data-tagitem="_fps-ric-count"]')
@@ -93,6 +94,45 @@
 			window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
 			window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame']
 		}
+	}
+
+	const bindEvent = hostElement => {
+		const dot = {}
+		const mousedownHandler = evte => {
+			dot.isMoudeDown = true
+			dot.distX = evte.clientX - hostElement.offsetLeft
+			dot.distY = evte.clientY - hostElement.offsetTop
+			document.addEventListener('mousemove', mousemoveHandler)
+			document.addEventListener('mouseup', mouseupHandler)
+		}
+		const mousemoveHandler = evte => {
+			if (!dot.isMoudeDown) {
+				return
+			}
+			const rect = hostElement.getBoundingClientRect()
+			let moveX = evte.clientX - dot.distX
+			let moveY = evte.clientY - dot.distY
+			if (moveX <= 0) {
+				moveX = 0
+			}
+			if (moveX >= document.documentElement.clientWidth - rect.width) {
+				moveX = document.documentElement.clientWidth - rect.width
+			}
+			if (moveY <= 0) {
+				moveY = 0
+			}
+			if (moveY >= document.documentElement.clienHeight - rect.height) {
+				moveY = document.documentElement.clienHeight - rect.height
+			}
+			hostElement.style.left = moveX + 'px'
+			hostElement.style.top = moveY + 'px'
+		}
+		const mouseupHandler = evte => {
+			dot.isMoudeDown = false
+			document.removeEventListener('mousemove', mousemoveHandler)
+			document.removeEventListener('mousemove', mousemoveHandler)
+		}
+		hostElement.addEventListener('mousedown', mousedownHandler)
 	}
 
 	/************************************ ************************************/
@@ -118,8 +158,7 @@
 	}
 
 	const countRAF = timeStamp => {
-		const now = performance.now()
-		runtimeConfig._rAFCountInEveryInterval++
+		const now = timeStamp
 		if (now - runtimeConfig._rAFSetCountLastTime >= runtimeConfig.interval) {
 			runtimeConfig.rAFCount = runtimeConfig._rAFCountInEveryInterval / ((now - runtimeConfig._rAFSetCountLastTime) / 1000)
 			runtimeConfig.rAFIntervalCount = runtimeConfig._rAFCountInEveryInterval
@@ -128,6 +167,7 @@
 			runtimeConfig._rAFCountInEveryInterval = 0
 			runtimeConfig._rAFSetCountLastTime = now
 		}
+		runtimeConfig._rAFCountInEveryInterval++
 		window.requestAnimationFrame(countRAF)
 	}
 
@@ -148,12 +188,13 @@
 		runtimeConfig.rAFCountItemElement.innerHTML = `RAF COUNT: <span>${runtimeConfig.rAFCount.toFixed(4)}</span>`
 		runtimeConfig.rAFIntervalCountItemElement.innerHTML = `RAF COUNT: <span>${runtimeConfig.rAFIntervalCount.toFixed(4)}</span>`
 		runtimeConfig.rICCountItemElement.innerHTML = `RIC COUNT: <span>${runtimeConfig.rICCount.toFixed(4)}</span>`
-		if (runtimeConfig.rAFCount >= runtimeConfig.warning[0] && runtimeConfig.rAFCount <= runtimeConfig.warning[1]) {
+		const rAFCount = runtimeConfig.rAFCount >> 0
+		if (rAFCount >= runtimeConfig.warning[0] && rAFCount <= runtimeConfig.warning[1]) {
 			runtimeConfig.wrapperElement.classList.add('_fps-monitor-tips-warning')
 		} else {
 			runtimeConfig.wrapperElement.classList.remove('_fps-monitor-tips-warning')
 		}
-		if (runtimeConfig.rAFCount >= runtimeConfig.serious[0] && runtimeConfig.rAFCount <= runtimeConfig.serious[1]) {
+		if (rAFCount >= runtimeConfig.serious[0] && rAFCount <= runtimeConfig.serious[1]) {
 			runtimeConfig.wrapperElement.classList.add('_fps-monitor-tips-serious')
 		} else {
 			runtimeConfig.wrapperElement.classList.remove('_fps-monitor-tips-serious')
@@ -170,6 +211,7 @@
 		initProfile()
 		initElementHandler(runtimeConfig)
 		initRAF()
+		bindEvent(runtimeConfig.containerElement)
 		window.requestAnimationFrame(countRAF)
 		window.requestIdleCallback(countRIC)
 	}

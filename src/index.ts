@@ -15,19 +15,19 @@ import { useCallback as useCallbackHook } from './hooks/useCallback'
 import { useRef as useRefHook } from './hooks/useRef'
 /* ... */
 import { TUseStateHook } from './types/hooks.types'
-import { TVDom } from './types/vdom.types'
+import { TVDOM } from './types/vdom.types'
 import { TFiberNode } from './types/fiber.types'
 import { TCreateRootFiberResult } from './types/commmon'
 
-const Sun = Object.create(null)
+const Sun: any = Object.create(null)
 
 window.__SUN__ = Sun
 
-Sun.createElement = createElement as (type: string, props: { [key: string]: any }, ...children: any[]) => TVDom
-Sun.createTextElement = createTextElement as (text: string) => TVDom
+Sun.createElement = createElement as (type: string, props: PlainObject, ...children: any[]) => TVDOM
+Sun.createTextElement = createTextElement as (text: string) => TVDOM
 Sun.setSyncMode = setSyncMode as () => void
 
-Sun.render = _render as (element: TVDom, containe: HTMLElement) => void
+Sun.render = _render as (element: TVDOM, containe: HTMLElement) => void
 Sun.createRoot = _createRoot as (container: HTMLElement) => TCreateRootFiberResult
 Sun.Fragment = _Fragment as () => DocumentFragment
 Sun.memo = _memo as (element: Function) => TFiberNode
@@ -38,7 +38,7 @@ Sun.useMemo = useMemoHook as (callback: () => any, dependences: Array<any> | und
 Sun.useCallback = useCallbackHook as (callback: () => any, dependences: Array<any> | undefined) => any
 Sun.useRef = useRefHook as (initialValue: any) => { current: any }
 
-export const render: (element: TVDom, container: HTMLElement) => void = _render
+export const render: (element: TVDOM, container: HTMLElement) => void = _render
 export const createRoot: (container: HTMLElement) => TCreateRootFiberResult = _createRoot
 export const Fragment: () => DocumentFragment = _Fragment
 export const memo: (element: Function) => TFiberNode = _memo

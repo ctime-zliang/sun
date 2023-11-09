@@ -1,5 +1,5 @@
-import { TVDom } from './vdom.types'
+import { TVDOM } from './vdom.types'
 
 export type TCreateRootFiberResult = {
-	render(element: TVDom): void
+	render(element: TVDOM): void
 }

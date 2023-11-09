@@ -2,10 +2,10 @@ import { __RTP__, __RTCP__ } from '../core/runtime'
 import { commit, commitDeletion } from './commitDom'
 import { reconcileChilren } from './reconcile'
 import { createDOM } from './dom'
-import { checkComponentPropsChanged, generateFiberStructData, isFunctionComponent } from '../utils/utils'
+import { checkComponentPropsChanged, createFiberStructData, isFunctionComponent } from '../utils/utils'
 import { TFiberNode, TTASKQUEUE_ITEM } from '../types/fiber.types'
 import { TRequestIdleCallbackParams } from '../types/hostApi.types'
-import { TVDom } from '../types/vdom.types'
+import { TVDOM } from '../types/vdom.types'
 import { globalConfig } from '../config/config'
 import {
 	TAllHooksStruct,
@@ -22,7 +22,7 @@ export function startReconciliation(rootFiber: TFiberNode): void {
 	/**
 	 * 重新创建 <App /> 应用对应的 fiber 树的根 fiber 节点
 	 */
-	const newRootFiber: TFiberNode = generateFiberStructData({
+	const newRootFiber: TFiberNode = createFiberStructData({
 		stateNode: rootFiber.stateNode,
 		type: rootFiber.type,
 		props: rootFiber.props,
@@ -89,10 +89,10 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	/**
 	 * 全局状态变量复位
 	 */
-	__RTP__.globalFiberRoot.current = undefined
-	__RTP__.updateRangeStartFiber = null
+	__RTP__.globalFiberRoot.current = (void 0)!
+	__RTP__.updateRangeStartFiber = null!
 	__RTCP__.hookIndexOfNowFunctionCompt = -1
-	__RTCP__.wipFiberOfNowFunctionCompt = null
+	__RTCP__.wipFiberOfNowFunctionCompt = null!
 
 	/**
 	 * 提交 DOM 操作
@@ -136,7 +136,7 @@ function workEnd(deletions: Array<TFiberNode>): void {
 	 *
 	 * 需要在检查 setState 任务队列之前执行, 即需要保证尽快渲染出下一个 <App /> 应用
 	 */
-	const nextRootFiber: TFiberNode = __RTP__.rootFiberList[(currentRootFiber.index as number) + 1] || undefined
+	const nextRootFiber: TFiberNode = __RTP__.rootFiberList[(currentRootFiber.index as number) + 1] || void 0
 	if (nextRootFiber && nextRootFiber.dirty) {
 		__RTP__.nextWorkUnitFiber = nextRootFiber
 		__RTP__.globalFiberRoot.current = nextRootFiber
@@ -219,10 +219,10 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 			 * 		在编译后的代码中, 函数内的 JSX 将被编译成 createElement/createTextElement 的嵌套调用
 			 * 		因此执行函数将返回一系列 vDom 嵌套对象
 			 */
-			const childrenVDomItems: Array<TVDom> = [
+			const childrenVDomItems: Array<TVDOM> = [
 				(fiber.type as Function).call(undefined, {
 					...fiber.props,
-					children: fiber.props.children.map((item: TVDom): TVDom => {
+					children: fiber.props.children.map((item: TVDOM): TVDOM => {
 						return item
 					}),
 				}),
@@ -248,7 +248,7 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 				const alternate: TFiberNode = fiber.alternate as TFiberNode
 				fiber.hooks = alternate.hooks
 				fiber.props.children = alternate.props.children
-				fiber.alternate.alternate = null
+				fiber.alternate.alternate = null!
 				updateHookFiberReference(fiber)
 			}
 		}
@@ -278,7 +278,7 @@ export function performUnitWork(fiber: TFiberNode, deletions: Array<TFiberNode>)
 		 * 当重新回到标记根 fiber 节点时, 代表更新范围内的 fiber 树已遍历处理完毕
 		 */
 		if (__RTP__.updateRangeStartFiber === fiber) {
-			__RTP__.updateRangeStartFiber = null
+			__RTP__.updateRangeStartFiber = null!
 		}
 		fiber = fiber.parent as TFiberNode
 	}

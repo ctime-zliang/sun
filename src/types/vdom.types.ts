@@ -1,6 +1,6 @@
-export type TVDom = {
+export type TVDOM = {
 	type: string
-	props?: { [key: string]: any }
-	children?: Array<TVDom> | Array<any>
+	props?: PlainObject
+	children?: Array<TVDOM> | Array<any>
 	$$typeof?: string
 }

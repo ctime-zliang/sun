@@ -7,14 +7,14 @@ function createHookItem(callback: () => any): TUseLayoutEffectHookStruct {
 	const hookItem: TUseLayoutEffectHookStruct = {
 		useLayoutEffect: true,
 		isUpdated: false,
-		dependences: undefined,
+		dependences: (void 0)!,
 		callback,
-		returnCallback: undefined,
+		returnCallback: (void 0)!,
 	}
 	return hookItem
 }
 
-export function useLayoutEffect(callback: () => any, dependences: Array<any> | undefined = undefined): void {
+export function useLayoutEffect(callback: () => any, dependences: Array<any> = (void 0)!): void {
 	const oldHookOfCompt: TUseLayoutEffectHookStruct = getHookItem(__RTCP__.hookIndexOfNowFunctionCompt) as TUseLayoutEffectHookStruct
 	const nowFiber: TFiberNode = __RTCP__.wipFiberOfNowFunctionCompt as TFiberNode
 	if (!oldHookOfCompt) {
@@ -23,7 +23,7 @@ export function useLayoutEffect(callback: () => any, dependences: Array<any> | u
 	const hookItem: TUseLayoutEffectHookStruct = nowFiber.hooks[__RTCP__.hookIndexOfNowFunctionCompt] as TUseLayoutEffectHookStruct
 	if (!oldHookOfCompt) {
 		hookItem.isUpdated = true
-		hookItem.dependences = dependences instanceof Array ? Array.from(dependences) : undefined
+		hookItem.dependences = dependences instanceof Array ? Array.from(dependences) : (void 0)!
 	} else {
 		hookItem.isUpdated = false
 		hookItem.callback = oldHookOfCompt.callback

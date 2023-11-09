@@ -11,7 +11,7 @@ function createHookItem(rootFiber: TFiberNode, nowFiber: TFiberNode, initValue: 
 		state: initValue,
 		preState: initValue,
 		isChanged: false,
-		setState: () => undefined,
+		setState: () => (void 0)!,
 		/* ... */
 		rootFiber,
 		nowFiber,
@@ -31,7 +31,7 @@ export function useState(initValue: any): TUseStateHook {
 		hookItem.setState = (action: any): void => {
 			hookItem.preState = hookItem.state
 			if (action instanceof Function) {
-				hookItem.state = action.call(undefined, hookItem.state)
+				hookItem.state = action.call((void 0)!, hookItem.state)
 			} else {
 				hookItem.state = action
 			}

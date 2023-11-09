@@ -19,8 +19,8 @@ export function TraverseFiberTree() {
 			</li> */}
 			<li data-tag="li-1">{status}</li>
 			<li data-tag="li-2" onClick={modifyFontSize}>
-				<div>Li 2 div 1</div>
-				<div>Li 2 div 2 - {fontSize}</div>
+				<main>Li 2 div 1</main>
+				<section>Li 2 div 2 - {fontSize}</section>
 			</li>
 			<li data-tag="li-3">Li 3</li>
 		</ul>

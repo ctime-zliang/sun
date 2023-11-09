@@ -36,7 +36,7 @@ export function DynamicallyAddChilds2() {
 	const modifyList = () => {
 		const array = []
 		childLength2++
-		for (let i = 0; i < 60000; i++) {
+		for (let i = 0; i < 30000; i++) {
 			array.push(i + 1)
 		}
 		setList(array)

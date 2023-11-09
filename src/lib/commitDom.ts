@@ -4,21 +4,21 @@ import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TExtendHTMLDOMElment } from '../types/dom.types'
 import {
-	cacheFCptEffectHooksOnMounted,
-	cacheFCptEffectHooksOnUnmounted,
+	cacheFuncComponentEffectHooksOnMounted,
+	cacheFuncComponentEffectHooksOnUnmounted,
 	getNearestChildFiberWithHoldDom,
 	getNearestParentFiberWithHoldDom,
 	isFunctionComponent,
-	runFCptLayoutEffectHooksOnAppended,
+	runFuncComponentLayoutEffectHooksOnAppended,
 } from '../utils/utils'
 import { EFiberType } from '../config/fiber.enum'
 
 function handleDeletionDom(fiber: TFiberNode): boolean {
 	if (fiber.props.ref) {
-		fiber.props.ref.current = null
+		fiber.props.ref.current = null!
 	}
 	if (isFunctionComponent(fiber)) {
-		cacheFCptEffectHooksOnUnmounted(fiber)
+		cacheFuncComponentEffectHooksOnUnmounted(fiber)
 		return false
 	}
 	const parentFiber: TFiberNode = getNearestParentFiberWithHoldDom(fiber.parent as TFiberNode)
@@ -77,7 +77,7 @@ export function commitDeletion(fiber: TFiberNode): void {
  * 如果 B 不存在, 则直接添加(追加)到 A 的父节点对应的真实 DOM 树中
  */
 let openStartRecord: boolean = false
-let startFiberOfSetReplace: TFiberNode | undefined = undefined
+let startFiberOfSetReplace: TFiberNode = (void 0)!
 function handleDom(fiber: TFiberNode): void {
 	if (openStartRecord && startFiberOfSetReplace === fiber) {
 		openStartRecord = false
@@ -87,7 +87,7 @@ function handleDom(fiber: TFiberNode): void {
 		startFiberOfSetReplace = fiber
 	}
 	if (isFunctionComponent(fiber)) {
-		cacheFCptEffectHooksOnMounted(fiber)
+		cacheFuncComponentEffectHooksOnMounted(fiber)
 		return
 	}
 	const parentFiber: TFiberNode = getNearestParentFiberWithHoldDom(fiber.parent as TFiberNode)
@@ -112,7 +112,7 @@ function handleDom(fiber: TFiberNode): void {
 		if (fiber.effectTag === ENUM_EFFECT_TAG.REPLACE) {
 			if (startFiberOfSetReplace) {
 				const siblingChildFiber: TFiberNode = getNearestChildFiberWithHoldDom(startFiberOfSetReplace.sibling as TFiberNode)
-				insertChild(fiber.stateNode, siblingChildFiber ? siblingChildFiber.stateNode : null, parentFiber.stateNode)
+				insertChild(fiber.stateNode, siblingChildFiber ? siblingChildFiber.stateNode : null!, parentFiber.stateNode)
 			}
 			return
 		}
@@ -140,15 +140,15 @@ export function commit(fiber: TFiberNode): void {
 			continue
 		}
 		if (current === root) {
-			runFCptLayoutEffectHooksOnAppended(current)
+			runFuncComponentLayoutEffectHooksOnAppended(current)
 			return
 		}
 		while (!current.sibling) {
 			if (isFunctionComponent(current) && !current.dirty) {
-				runFCptLayoutEffectHooksOnAppended(current)
+				runFuncComponentLayoutEffectHooksOnAppended(current)
 			}
 			if (current.parent === root) {
-				runFCptLayoutEffectHooksOnAppended(current.parent)
+				runFuncComponentLayoutEffectHooksOnAppended(current.parent)
 				return
 			}
 			current = current.parent as TFiberNode

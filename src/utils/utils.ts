@@ -1,4 +1,4 @@
-import { TVDom } from '../types/vdom.types'
+import { TVDOM } from '../types/vdom.types'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
 import { TEffectStruct, TUseEffectHookStruct, TUseLayoutEffectHookStruct } from 'src/types/hooks.types'
@@ -7,12 +7,12 @@ import { HTMLELEMENT_NODETYPE } from '../config/commitDom.enum'
 
 /**
  * @description 创建初始 vDom 结构体数据
- * @function generateInitialVDOMStructData
+ * @function createInitialVDOMStructData
  * @param {string} type HTML DOM tagName
  * @param {object} props HTML DOM vDom 定义属性
- * @return {TVDom}
+ * @return {TVDOM}
  */
-export function generateInitialVDOMStructData(type: string, props: { [key: string]: any }): TVDom {
+export function createInitialVDOMStructData(type: string, props: PlainObject): TVDOM {
 	return {
 		type,
 		props,
@@ -22,10 +22,10 @@ export function generateInitialVDOMStructData(type: string, props: { [key: strin
 
 /**
  * @description 创建初始 Fiber 结构体数据
- * @function generateInitialFiberStructData
+ * @function createInitialFiberStructData
  * @return {TFiberNode}
  */
-export function generateInitialFiberStructData(): TFiberNode {
+export function createInitialFiberStructData(): TFiberNode {
 	return {
 		/* 
 			FunctionComponent = 函数本身
@@ -37,25 +37,25 @@ export function generateInitialFiberStructData(): TFiberNode {
 		// 对于 ClassComponent, 即 class
 		// 对于 HostComponent, 指 DOM 节点 tagName
 		// 此项对应 React Fiber 设计中的 fiber.type
-		type: null,
+		type: null!,
 		// fiber 节点的 vDom 属性
 		props: {},
 		// 标记当前 Fiber 节点对应的 DOM 节点类型
 		// elementType: undefined,
 		// 当前 Fiber 节点对应的真实 DOM
-		stateNode: null,
+		stateNode: null!,
 		// fiber 节点的第一个子节点 fiber
-		child: null,
+		child: null!,
 		// fiber 节点的返回节点(父节点)
-		parent: null,
+		parent: null!,
 		// fiber 节点的下一个兄弟节点
-		sibling: null,
+		sibling: null!,
 		// 当前 fiber 节点在更新前的上一轮 fiber 节点对象
-		alternate: null,
+		alternate: null!,
 		// fiber 节点的更新状态
 		effectTag: ENUM_EFFECT_TAG.NO_EFFECT,
 		// 索引键
-		key: undefined,
+		key: (void 0)!,
 		// hooks
 		hooks: [],
 		// vdom 类型标记位
@@ -72,12 +72,12 @@ export function generateInitialFiberStructData(): TFiberNode {
 
 /**
  * @description 创建适用于非根节点的 Fiber 结构体数据
- * @function generateFiberStructData
+ * @function createFiberStructData
  * @param {any} args 满足 TFiberNode 节点的配置项
  * @return {TFiberNode}
  */
-export function generateFiberStructData(args: any = {}): TFiberNode {
-	const defaults: TFiberNode = generateInitialFiberStructData()
+export function createFiberStructData(args: any = {}): TFiberNode {
+	const defaults: TFiberNode = createInitialFiberStructData()
 	return {
 		...defaults,
 		...args,
@@ -135,7 +135,7 @@ export function getNearestChildFiberWithHoldDom(childFiber: TFiberNode): TFiberN
  * @param {any} newObj 新节点属性
  * @return {function}
  */
-export function isNewly(oldObj: { [key: string]: any }, newObj: { [key: string]: any }): (key: string) => boolean {
+export function isNewly(oldObj: PlainObject, newObj: PlainObject): (key: string) => boolean {
 	return (key: string): boolean => {
 		return oldObj[key] !== newObj[key]
 	}
@@ -148,7 +148,7 @@ export function isNewly(oldObj: { [key: string]: any }, newObj: { [key: string]:
  * @param {any} newObj 新节点属性
  * @return {function}
  */
-export function isOld(oldObj: { [key: string]: any }, newObj: { [key: string]: any }): (key: string) => boolean {
+export function isOld(oldObj: PlainObject, newObj: PlainObject): (key: string) => boolean {
 	return (key: string): boolean => {
 		return !(key in newObj)
 	}
@@ -201,22 +201,8 @@ export function isApprovedComponent(fiber: TFiberNode): boolean {
  * @param {TFiberNode} fiber fiber 节点
  * @return {boolean}
  */
-export function isFunctionComponent(fiber: TFiberNode | TVDom): boolean {
+export function isFunctionComponent(fiber: TFiberNode | TVDOM): boolean {
 	return !!(fiber.type && fiber.type instanceof Function && typeof (fiber.type as any)['__@@INSIDE_FRAGMENT_ANCHOR'] === 'undefined')
-}
-
-/**
- * @description 同步阻塞
- * @function syncBlock
- * @param {number} delay 阻塞时长
- * @return {void}
- */
-export function syncBlock(delay: number = 1000): void {
-	const end: number = new Date().getTime() + delay
-	let i: number = 0
-	while (new Date().getTime() < end) {
-		++i
-	}
 }
 
 /**
@@ -278,11 +264,11 @@ export function checkComponentPropsChanged(fiber: TFiberNode): boolean {
 /**
  * @description 收集函数组件 useEffect 用户回调
  * 		在组件挂载后执行
- * @function cacheFCptEffectHooksOnMounted
+ * @function cacheFuncComponentEffectHooksOnMounted
  * @param {TFiberNode} fiber 函数组件所对应的 fiber 节点
  * @return {boolean}
  */
-export function cacheFCptEffectHooksOnMounted(fiber: TFiberNode): void {
+export function cacheFuncComponentEffectHooksOnMounted(fiber: TFiberNode): void {
 	if (!fiber.effectCachedMounted) {
 		for (let i: number = 0; i < fiber.hooks.length; i++) {
 			const hookItem: TEffectStruct = fiber.hooks[i] as TEffectStruct
@@ -298,11 +284,11 @@ export function cacheFCptEffectHooksOnMounted(fiber: TFiberNode): void {
 /**
  * @description 收集函数组件 useEffect 用户回调
  * 		在组件卸载后执行
- * @function cacheFCptEffectHooksOnUnmounted
+ * @function cacheFuncComponentEffectHooksOnUnmounted
  * @param {TFiberNode} fiber 函数组件所对应的 fiber 节点
  * @return {boolean}
  */
-export function cacheFCptEffectHooksOnUnmounted(fiber: TFiberNode): void {
+export function cacheFuncComponentEffectHooksOnUnmounted(fiber: TFiberNode): void {
 	if (!fiber.effectCachedUnmounted) {
 		for (let i: number = 0; i < fiber.hooks.length; i++) {
 			const hookItem: TEffectStruct = fiber.hooks[i] as TEffectStruct
@@ -316,11 +302,11 @@ export function cacheFCptEffectHooksOnUnmounted(fiber: TFiberNode): void {
 
 /**
  * @description 执行 useLayoutEffect 回调
- * @function runFCptLayoutEffectHooksOnAppended
+ * @function runFuncComponentLayoutEffectHooksOnAppended
  * @param {TFiberNode} fiber 函数组件所对应的 fiber 节点
  * @return {boolean}
  */
-export function runFCptLayoutEffectHooksOnAppended(fiber: TFiberNode): void {
+export function runFuncComponentLayoutEffectHooksOnAppended(fiber: TFiberNode): void {
 	for (let i: number = 0; i < fiber.hooks.length; i++) {
 		const hookItem: TEffectStruct = fiber.hooks[i] as TEffectStruct
 		if ((hookItem as TUseLayoutEffectHookStruct).useLayoutEffect && hookItem.isUpdated && hookItem.callback instanceof Function) {
@@ -332,7 +318,7 @@ export function runFCptLayoutEffectHooksOnAppended(fiber: TFiberNode): void {
 let renderIndex: number = -1
 export function createRootFiber(container: HTMLElement): TFiberNode {
 	const nodeName: string = container.nodeName.toLowerCase()
-	const rootFiber: TFiberNode = generateFiberStructData({
+	const rootFiber: TFiberNode = createFiberStructData({
 		type: nodeName,
 		props: { children: [] },
 		stateNode: container,

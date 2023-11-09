@@ -1,29 +1,26 @@
 import { TExtendHTMLDOMElment } from './dom.types'
 import { TAllHooksStruct } from './hooks.types'
-import { TVDom } from './vdom.types'
+import { TVDOM } from './vdom.types'
 
 export type TTASKQUEUE_ITEM = {
 	count: number
 }
 
 export type TFiberRootNode = {
-	current: TFiberNode | null | undefined
+	current: TFiberNode
 }
 
 export type TFiberNode = {
-	// FunctionComponent: Function
-	// ClassComponent: Function,
-	// HostComponent: any
-	type: Function | string | null
-	props: TVDom | any
-	// elementType: string | undefined
-	stateNode: TExtendHTMLDOMElment | null
-	child: TFiberNode | null
-	parent: TFiberNode | null
-	sibling: TFiberNode | null
-	alternate: TFiberNode | null
+	type: Function | string
+	props: TVDOM | any
+	// elementType: string
+	stateNode: TExtendHTMLDOMElment
+	child: TFiberNode
+	parent: TFiberNode
+	sibling: TFiberNode
+	alternate: TFiberNode
 	effectTag: string
-	key: string | undefined
+	key: string
 	dirty: boolean
 	triggerUpdate: boolean
 	hooks: Array<TAllHooksStruct>
@@ -34,6 +31,6 @@ export type TFiberNode = {
 	/* ... */
 	root?: boolean
 	index?: number
-	current?: TFiberNode | null
+	current?: TFiberNode
 	queueUp?: boolean
 }

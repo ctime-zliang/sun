@@ -3,7 +3,7 @@ import { setIntervalAnimateMain } from './modules/setIntervalAnimate'
 import { updateInnerContentMain } from './modules/updateElementInnerContent'
 import { setDocumentBackgroudColor } from './modules/setDocumentBackgroudColor'
 /* ... */
-import Sun, { render, createRoot } from '../../src/index'
+import Sun, { render, createRoot } from '../../src'
 /* ... */
 import { ClockView } from './component/clock'
 /* ... */
@@ -26,20 +26,28 @@ import { Parent1 } from './component/childrenSlot'
 
 function App() {
 	console.log(`Component: App`)
-	const [text] = Sun.useState('Hello Sun Application')
-	const [count, setCount] = Sun.useState(0)
+	const [helloText] = Sun.useState('Hello Sun Application')
+	const [count1, setCount1] = Sun.useState(0)
+	const [count2, setCount2] = Sun.useState(0)
+	const clickAction1 = () => {
+		setCount1(count1 + 1)
+	}
+	const clickAction2 = () => {
+		setCount2(prev => {
+			return prev + 2
+		})
+	}
 	return (
 		<div className="row-index" style={{ border: '1px solid red' }}>
-			<div>
-				<button
-					onClick={() => {
-						setCount(count + 1)
-					}}
-				>
-					Set Count({count})
-				</button>
-			</div>
-			<div>{text}</div>
+			<section>
+				<button onClick={clickAction1}>Set Count 1</button>
+				<span>Now Count 1: {count1}</span>
+			</section>
+			<section>
+				<button onClick={clickAction2}>Set Count 2</button>
+				<span>Now Count 2: {count2}</span>
+			</section>
+			<div>{helloText}</div>
 		</div>
 	)
 }
@@ -49,16 +57,14 @@ function App() {
 /************************************************/
 /************************************************/
 render(<ClockView rootId={Math.random()} />, document.querySelector(`#clockApp`))
-/************************************************/
-/************************************************/
-/************************************************/
-
-// createRoot(document.querySelector(`#app`)).render(<DynamicallyAddChilds1 />)
+// createRoot(document.querySelector(`#app1`)).render(<DynamicallyAddChilds2 />)
 // createRoot(document.querySelector(`#app2`)).render(<App />)
+/************************************************/
+/************************************************/
+/************************************************/
 
 window.addEventListener('DOMContentLoaded', function (e) {
 	// setIntervalAnimateMain()
-	// frameCountPerSecond()
 	// updateInnerContentMain()
-	setDocumentBackgroudColor(`rgba(185, 185, 185, 0.2)`)
+	setDocumentBackgroudColor(`rgba(235, 235, 235, 0.5)`)
 })

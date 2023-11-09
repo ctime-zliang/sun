@@ -7,10 +7,10 @@ import { TExtendHTMLDOMElment } from '../types/dom.types'
  * @description 追加 DOM 子节点
  * @function appendChild
  * @param {TExtendHTMLDOMElment} childDom 被追加的子节点
- * @param {TExtendHTMLDOMElment | null} parentDom 目标父节点
+ * @param {TExtendHTMLDOMElment} parentDom 目标父节点
  * @return {undefined}
  */
-export function appendChild(childDom: TExtendHTMLDOMElment | null, parentDom: TExtendHTMLDOMElment | null): boolean {
+export function appendChild(childDom: TExtendHTMLDOMElment, parentDom: TExtendHTMLDOMElment): boolean {
 	if (!parentDom || !childDom || parentDom === childDom) {
 		return false
 	}
@@ -22,10 +22,10 @@ export function appendChild(childDom: TExtendHTMLDOMElment | null, parentDom: TE
  * @description 移除 DOM 子节点
  * @function removeChild
  * @param {TExtendHTMLDOMElment} childDom 被追加的子节点
- * @param {TExtendHTMLDOMElment | null} parentDom 目标父节点
+ * @param {TExtendHTMLDOMElment} parentDom 目标父节点
  * @return {undefined}
  */
-export function removeChild(childDom: TExtendHTMLDOMElment | null, parentDom: TExtendHTMLDOMElment | null): boolean {
+export function removeChild(childDom: TExtendHTMLDOMElment, parentDom: TExtendHTMLDOMElment): boolean {
 	if (!parentDom || !childDom || parentDom === childDom) {
 		return false
 	}
@@ -38,14 +38,10 @@ export function removeChild(childDom: TExtendHTMLDOMElment | null, parentDom: TE
  * @function insertChild
  * @param {TExtendHTMLDOMElment} childDom 被插入的子节点
  * @param {TExtendHTMLDOMElment} beforeAtDom 参考的子节点, 插入到该节点之前
- * @param {TExtendHTMLDOMElment | null} parentDom 目标父节点
+ * @param {TExtendHTMLDOMElment} parentDom 目标父节点
  * @return {undefined}
  */
-export function insertChild(
-	childDom: TExtendHTMLDOMElment | null,
-	beforeAtDom: TExtendHTMLDOMElment | null,
-	parentDom: TExtendHTMLDOMElment | null
-): boolean {
+export function insertChild(childDom: TExtendHTMLDOMElment, beforeAtDom: TExtendHTMLDOMElment, parentDom: TExtendHTMLDOMElment): boolean {
 	if (!parentDom || !childDom) {
 		return false
 	}
@@ -68,7 +64,7 @@ export function createDOM(fiber: TFiberNode): TExtendHTMLDOMElment {
 		fiber.type === ENUM_NODE_TYPE.TEXT_NODE
 			? (document.createTextNode(``) as TExtendHTMLDOMElment)
 			: (document.createElement(fiber.type as string) as TExtendHTMLDOMElment)
-	updateDOM(dom, {}, fiber.props as { [key: string]: any })
+	updateDOM(dom, {}, fiber.props as PlainObject)
 	return dom
 }
 
@@ -80,7 +76,7 @@ export function createDOM(fiber: TFiberNode): TExtendHTMLDOMElment {
  * @param {object} newProps Props 属性对象
  * @return {undefined}
  */
-export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: { [key: string]: any } = {}, newProps: { [key: string]: any } = {}): void {
+export function updateDOM(dom: TExtendHTMLDOMElment, oldProps: PlainObject = {}, newProps: PlainObject = {}): void {
 	const systemEventOfOldProps = Object.keys(oldProps).filter(isSystemEvent)
 	const systemEventOfNewProps = Object.keys(newProps).filter(isSystemEvent)
 	const commPropsOfOldProps = Object.keys(oldProps).filter(isProperty)

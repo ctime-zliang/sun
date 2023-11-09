@@ -24,7 +24,7 @@ export type TUseStateHookStruct = {
 export type TUseEffectHookStruct = {
 	useEffect: boolean
 	isUpdated: boolean
-	dependences: Array<any> | undefined
+	dependences: Array<any>
 	callback?: Function
 	returnCallback?: Function
 }
@@ -32,7 +32,7 @@ export type TUseEffectHookStruct = {
 export type TUseLayoutEffectHookStruct = {
 	useLayoutEffect: boolean
 	isUpdated: boolean
-	dependences: Array<any> | undefined
+	dependences: Array<any>
 	callback?: Function
 	returnCallback?: Function
 }
@@ -40,7 +40,7 @@ export type TUseLayoutEffectHookStruct = {
 export type TUseMemoHookStruct = {
 	useMemo: boolean
 	isUpdated: boolean
-	dependences: Array<any> | undefined
+	dependences: Array<any>
 	callback?: Function
 	returnValue?: any
 }
@@ -48,7 +48,7 @@ export type TUseMemoHookStruct = {
 export type TUseCallbackHookStruct = {
 	useCallback: boolean
 	isUpdated: boolean
-	dependences: Array<any> | undefined
+	dependences: Array<any>
 	callback?: Function
 	returnCallback?: any
 }

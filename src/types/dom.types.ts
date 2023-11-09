@@ -3,7 +3,7 @@ export type TExtendHTMLElment = IHTMLElement & {}
 
 interface IHTMLDOMElment extends Text {
 	removeAttribute?: (...args: any) => void
-	style?: any
+	style?: PlainObject
 	[key: string]: any
 }
 export type TExtendHTMLDOMElment = TExtendHTMLElment & IHTMLDOMElment
