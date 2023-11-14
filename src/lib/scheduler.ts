@@ -12,7 +12,6 @@ import {
 	TEffectStruct,
 	TUseCallbackHookStruct,
 	TUseEffectHookStruct,
-	TUseLayoutEffectHookStruct,
 	TUseMemoHookStruct,
 	TUseStateHookStruct,
 } from '../types/hooks.types'
@@ -169,10 +168,6 @@ function updateHookFiberReference(fiber: TFiberNode): void {
 		}
 		if ((hooks[i] as TUseEffectHookStruct).useEffect) {
 			const hookItem: TUseEffectHookStruct = hooks[i] as TUseEffectHookStruct
-			hookItem.isUpdated = false
-		}
-		if ((hooks[i] as TUseLayoutEffectHookStruct).useLayoutEffect) {
-			const hookItem: TUseLayoutEffectHookStruct = hooks[i] as TUseLayoutEffectHookStruct
 			hookItem.isUpdated = false
 		}
 		if ((hooks[i] as TUseMemoHookStruct).useMemo) {

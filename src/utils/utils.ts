@@ -1,7 +1,7 @@
 import { TVDOM } from '../types/vdom.types'
 import { ENUM_EFFECT_TAG } from '../config/effect.enum'
 import { TFiberNode } from '../types/fiber.types'
-import { TEffectStruct, TUseEffectHookStruct, TUseLayoutEffectHookStruct } from 'src/types/hooks.types'
+import { TEffectStruct, TUseEffectHookStruct } from 'src/types/hooks.types'
 import { __RTP__ } from '../core/runtime'
 import { HTMLELEMENT_NODETYPE } from '../config/commitDom.enum'
 
@@ -292,26 +292,11 @@ export function cacheFuncComponentEffectHooksOnUnmounted(fiber: TFiberNode): voi
 	if (!fiber.effectCachedUnmounted) {
 		for (let i: number = 0; i < fiber.hooks.length; i++) {
 			const hookItem: TEffectStruct = fiber.hooks[i] as TEffectStruct
-			if ((hookItem as TUseEffectHookStruct).useEffect || (hookItem as TUseLayoutEffectHookStruct).useLayoutEffect) {
+			if ((hookItem as TUseEffectHookStruct).useEffect) {
 				__RTP__.effectCacheOnUnmounted.push(hookItem)
 			}
 		}
 		fiber.effectCachedUnmounted = true
-	}
-}
-
-/**
- * @description 执行 useLayoutEffect 回调
- * @function runFuncComponentLayoutEffectHooksOnAppended
- * @param {TFiberNode} fiber 函数组件所对应的 fiber 节点
- * @return {boolean}
- */
-export function runFuncComponentLayoutEffectHooksOnAppended(fiber: TFiberNode): void {
-	for (let i: number = 0; i < fiber.hooks.length; i++) {
-		const hookItem: TEffectStruct = fiber.hooks[i] as TEffectStruct
-		if ((hookItem as TUseLayoutEffectHookStruct).useLayoutEffect && hookItem.isUpdated && hookItem.callback instanceof Function) {
-			hookItem.returnCallback = hookItem.callback.call(undefined)
-		}
 	}
 }
 

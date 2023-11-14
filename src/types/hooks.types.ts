@@ -1,14 +1,8 @@
 import { TFiberNode } from './fiber.types'
 
-export type TAllHooksStruct =
-	| TUseStateHookStruct
-	| TUseEffectHookStruct
-	| TUseMemoHookStruct
-	| TUseCallbackHookStruct
-	| TUseRefHookStruct
-	| TUseLayoutEffectHookStruct
+export type TAllHooksStruct = TUseStateHookStruct | TUseEffectHookStruct | TUseMemoHookStruct | TUseCallbackHookStruct | TUseRefHookStruct
 
-export type TEffectStruct = TUseEffectHookStruct | TUseLayoutEffectHookStruct
+export type TEffectStruct = TUseEffectHookStruct
 
 export type TUseStateHook = [any, (action: any) => void]
 export type TUseStateHookStruct = {
@@ -23,14 +17,6 @@ export type TUseStateHookStruct = {
 
 export type TUseEffectHookStruct = {
 	useEffect: boolean
-	isUpdated: boolean
-	dependences: Array<any>
-	callback?: Function
-	returnCallback?: Function
-}
-
-export type TUseLayoutEffectHookStruct = {
-	useLayoutEffect: boolean
 	isUpdated: boolean
 	dependences: Array<any>
 	callback?: Function

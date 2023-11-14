@@ -1,4 +1,4 @@
-import { TUseEffectHookStruct, TUseMemoHookStruct, TAllHooksStruct, TUseCallbackHookStruct, TUseLayoutEffectHookStruct } from '../types/hooks.types'
+import { TUseEffectHookStruct, TUseMemoHookStruct, TAllHooksStruct, TUseCallbackHookStruct } from '../types/hooks.types'
 import { __RTCP__ } from '../core/runtime'
 import { TFiberNode } from '../types/fiber.types'
 
@@ -14,7 +14,7 @@ export function getHookItem(index: number): TAllHooksStruct {
 }
 
 export function setHookUpdate(
-	hook: TUseEffectHookStruct | TUseMemoHookStruct | TUseCallbackHookStruct | TUseLayoutEffectHookStruct,
+	hook: TUseEffectHookStruct | TUseMemoHookStruct | TUseCallbackHookStruct,
 	outerDependences: Array<any> = (void 0)!
 ): void {
 	/**

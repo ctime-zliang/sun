@@ -9,7 +9,6 @@ import {
 } from './main'
 import { useState as useStateHook } from './hooks/useState'
 import { useEffect as useEffectHook } from './hooks/useEffect'
-import { useLayoutEffect as useLayoutEffectHook } from './hooks/useLayoutEffect'
 import { useMemo as useMemoHook } from './hooks/useMemo'
 import { useCallback as useCallbackHook } from './hooks/useCallback'
 import { useRef as useRefHook } from './hooks/useRef'
@@ -33,7 +32,7 @@ Sun.Fragment = _Fragment as () => DocumentFragment
 Sun.memo = _memo as (element: Function) => TFiberNode
 Sun.useState = useStateHook as (initialValue: any) => TUseStateHook
 Sun.useEffect = useEffectHook as (callback: () => any, dependences: Array<any> | undefined) => void
-Sun.useLayoutEffect = useLayoutEffectHook as (callback: () => any, dependences: Array<any> | undefined) => void
+Sun.useLayoutEffect = useEffectHook as (callback: () => any, dependences: Array<any> | undefined) => void
 Sun.useMemo = useMemoHook as (callback: () => any, dependences: Array<any> | undefined) => any
 Sun.useCallback = useCallbackHook as (callback: () => any, dependences: Array<any> | undefined) => any
 Sun.useRef = useRefHook as (initialValue: any) => { current: any }
@@ -44,7 +43,7 @@ export const Fragment: () => DocumentFragment = _Fragment
 export const memo: (element: Function) => TFiberNode = _memo
 export const useState: (initialValue: any) => TUseStateHook = useStateHook
 export const useEffect: (callback: () => any, dependences: Array<any> | undefined) => void = useEffectHook
-export const useLayoutEffect: (callback: () => any, dependences: Array<any> | undefined) => void = useLayoutEffectHook
+export const useLayoutEffect: (callback: () => any, dependences: Array<any> | undefined) => void = useEffectHook
 export const useMemo: (callback: () => any, dependences: Array<any> | undefined) => any = useMemoHook
 export const useCallback: (callback: () => any, dependences: Array<any> | undefined) => any = useCallbackHook
 export const useRef: (initialValue: any) => { current: any } = useRefHook

@@ -9,7 +9,6 @@ import {
 	getNearestChildFiberWithHoldDom,
 	getNearestParentFiberWithHoldDom,
 	isFunctionComponent,
-	runFuncComponentLayoutEffectHooksOnAppended,
 } from '../utils/utils'
 import { EFiberType } from '../config/fiber.enum'
 
@@ -140,15 +139,10 @@ export function commit(fiber: TFiberNode): void {
 			continue
 		}
 		if (current === root) {
-			runFuncComponentLayoutEffectHooksOnAppended(current)
 			return
 		}
 		while (!current.sibling) {
-			if (isFunctionComponent(current) && !current.dirty) {
-				runFuncComponentLayoutEffectHooksOnAppended(current)
-			}
 			if (current.parent === root) {
-				runFuncComponentLayoutEffectHooksOnAppended(current.parent)
 				return
 			}
 			current = current.parent as TFiberNode

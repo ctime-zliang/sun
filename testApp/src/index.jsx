@@ -21,7 +21,6 @@ import { FragmentElement1 } from './component/fragment'
 import { ConditionParent1, ConditionParentG1, ConditionParentG2, ConditionParentG3, ConditionParentG4 } from './component/conditionChilds'
 import { UseState1 } from './component/hookUseState'
 import { UseEffectInfiniteLoop, UseEffect1, UseEffect2, UseEffect3 } from './component/hookUseEffect'
-import { UseLayoutEffectParent1 } from './component/hookUseLayoutEffect'
 import { Parent1 } from './component/childrenSlot'
 
 function App() {
